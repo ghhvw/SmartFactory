@@ -1,0 +1,212 @@
+html {
+    
+}
+body {
+	background-color: #2F4F4F;
+	color: #DC143C;
+	text-align: center;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.header{
+	padding-top: 10px;
+	border-bottom: 5px solid #DC143C
+}
+
+.indexSelector{
+	padding-top: 20px;
+	padding-left: 20px;
+	padding-right: 20px;
+	padding-bottom: 50px;
+}
+.footer {
+	height: 25px;
+	padding-top: 7px;
+}
+
+.footer p {
+	margin: auto;
+}
+
+#blocklyArea{
+	background-color: #222;
+    height: calc(100vh - 160px); 
+    width:100%;
+    z-index: 10;
+}
+
+.blocklyMainBackground{
+	background-color: #444;
+}
+#blocklyDiv{
+    background-color: #333;
+    z-index: 20;
+}
+
+
+#extra_toolbar{
+	position: absolute; 
+	float: right; 	
+    left:10px; 
+    z-index: 16;
+}
+.extra_toolbar_button{
+	color: #fff;
+	padding: 0px 5px 0px 5px;
+	height: 50px; 
+	//width: 50px; 
+    background-color: #DC143C;
+    border: none;
+	padding-left: 15px;
+	padding-right: 15px;
+	border: 0;
+}
+button:focus {outline:0;}
+button:active { outline:none;} 
+
+.extra_toolbar_button.selected{
+    background-color: #c00000;
+}
+.extra_toolbar_button:hover{
+    background-color: #800000;
+}
+
+.extra_toolbar_dropdown
+{
+	-moz-appearance: none; 
+	-webkit-appearance: none; 
+	appearance: none;
+	color: #fff;
+	padding: 0px 5px 0px 5px;
+	height: 50px; 
+	//width: 50px; 
+    background-color: #DC143C;
+    border: none;
+	padding-left: 15px;
+	padding-right: 15px;
+	border: 0;
+}
+
+.extra_toolbar_dropdown:hover{
+    background-color: #800000;
+}
+
+.blocklyToolboxDiv {
+	background-color: #444;
+}
+
+.blocklyTreeRoot {
+	
+}
+
+.blocklySelected > .blocklyPath {
+    stroke: #DC143C;
+}
+
+.blocklyTreeRow{
+	height: 40px;
+	padding: 8px 50px 10px 0px;
+}
+
+.blocklyTreeRow:after {
+    /*background-image: url("data:image/svg+xml;charset=UTF-8,<svg xmlns=\"http://www.w3.org/2000/svg\"><g><path class=\"blocklyConSelected\" fill=\"%23222\" d=\"M1,41 v-11 l7.8,0.5 l2.5-5.5 c3-10.7,0.3-16.3-10.3-15.7 v-10 h30v41h-30z\"></path><path class=\"blocklyToolboxBackground\" stroke=\"%23222\" stroke-width=\"2\" fill=\"none\" d=\"M1,40 v-10 l7.8,0.5 l2.5-5.5 c3-10.7,0.3-16.3-10.3-15.7 v-10\"></path></g></svg>");
+    content: "";
+    width: 15px;
+    height: 40px;
+    float: right;
+    display: inline-block;*/
+}
+
+.blocklyTreeRow:not(.blocklyTreeSelected):hover {
+    background-color: #555;
+}
+.blocklyTreeLabel {
+	font-size: 18px;	
+}
+
+.blocklySvg {
+	background-color: #222;
+	background-image: url("images/big_robot_arm.jpg");
+	background-repeat: no-repeat;
+	background-position: bottom right;
+}
+
+.blocklyMainBackground {
+	stroke-width: 0;
+}
+
+
+#help_content {
+	 
+	//width: 100%;
+}
+
+
+#side_bar {
+	background-color: #000;
+	margin: 0px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+    height: 100%;
+    width: 500px;
+    float: right;
+    z-index: 15;
+}
+
+.from_right {
+    display: none;
+    position: relative;
+    z-index: 10;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+
+.from_right.right_active {
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    background-color: #222;
+    visibility: visible;
+    position: relative;
+    border-left: solid;
+    border-left-width: medium;
+    border-left-color: currentcolor;
+    border-left-width: 2px;
+    border-left-color: #111;
+}
+
+
+.block_info_category {
+    background-color: #DC143C;
+    padding: 5px 20px 2px 20px;
+    margin-top: 8px;
+    margin-bottom: 2px;
+}
+
+.block_info {
+    background-color: #444;
+    padding: 5px 20px 2px 20px;
+}
+
+.block_info.block_info_selected {
+    background-color: #555;
+}
+.well {
+	background-color:#DC143C;
+	border: 1px solid #DC143C;
+	text-align: center;
+	height: 400px;
+	padding-top: 10%;
+	padding-bottom: 20%;
+	border-radius: 10px;
+	
+	font-family: Calibri;
+	font-weight: bolder;
+	color: black;
+	font-size: 40px;
+}
+.wellTekst{
+	padding-top: 30%;
+}

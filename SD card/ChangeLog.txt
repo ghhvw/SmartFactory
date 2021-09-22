@@ -1,0 +1,12 @@
+0.2.1:
+- Talen toegevoegd
+- automatisch toolbox genereren
+- automatisch help genereren
+
+0.2.2:
+- project op PC laden en opslaan toegevoegd
+
+0.2.4:
+- nieuwe layout
+- start en loop block
+- enums toegevoegd

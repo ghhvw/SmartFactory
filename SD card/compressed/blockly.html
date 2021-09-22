@@ -1,0 +1,133 @@
+<!--
+Index.html
+bestand wat de Blockly Page draait. doe eerst terminal: python build.py ; om de blockly te bouwen voor gebruik in dit bestand. 
+--!>
+
+<!--/*
+
+https://www.youtube.com/watch?v=gqOEoUR5RHg
+
+
+*/-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	
+	<!-- bootstrap setup-->
+	
+	
+    <title>Arexx hERB - Easy Robo Building</title>
+    <meta name="description" content="Arexx">
+    
+    <script src="jmpTbl.js"></script>
+    <!-- code nodig voor blockly integratie /-->
+    <script src="Blockly/blockly_compressed.js"></script>
+    <script src="blockly/asm_compressed.js"></script>   
+ <!--   <script src="blockly/blocks_compressed.js"></script>
+          
+    <!-- deze code is nodig om de assembly om te zetten in machinecode -->  
+    <script src="assembler/AVRasm.js"></script>
+    
+	 <script src="js/Lang.js"></script>
+	 
+<!--
+Deze code moet verwijderd worden in de uiteindelijke versie. Dit zorgt ervoor dat build.py niet na elke verandering hoeft worden uitgevoerd
+--> 
+  
+     <script src="blockly/blocks/math.js"></script>
+    <script src="blockly/blocks/loops.js"></script>
+	<script src="blockly/blocks/logic.js"></script>
+    <script src="blockly/blocks/ZZZ0_variables.js"></script>
+    <script src="blockly/blocks/main.js"></script>
+	<script src="blockly/blocks/io.js"></script>
+    <script src="blockly/blocks/ZZZ1_functions.js"></script>
+  
+    <script src="Blockly/generators/asm.js"></script>
+    <script src="blockly/generators/asm/math.js"></script>
+    <script src="blockly/generators/asm/loops.js"></script>
+    <script src="blockly/generators/asm/logic.js"></script>
+    <script src="blockly/generators/asm/variables.js"></script>
+    <script src="blockly/generators/asm/main.js"></script>
+	<script src="blockly/generators/asm/io.js"></script>
+    <script src="blockly/generators/asm/functions.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="bootstrap-4.0.0-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="style.css">
+	
+  </head>
+
+
+  <body>
+    <div class="container-fluid">
+        <div class="row header">
+            <div class="row">
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+						</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+					<img src="images/Freestand AREXX -Logo(C).png" width="70%">
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+					<img src="images/vglogo1.png" width="100%">
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+					<img src="images/vglogo2.png" width="100%">
+				</div>
+				<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+					<img src="images/vglogo3.png" width="100%">
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+					<img src="images/AREXX  Schoollab LOGO.png" width="70%">
+				</div>
+			</div>
+			
+			
+            <div id="col-lg-4 col-md-4 col-sm-6 col-xs-6 text-right extra_toolbar">
+                <button id="help_button" class="extra_toolbar_button">Help</button>
+				<select id="languageMenu" class="extra_toolbar_dropdown"></select>
+				<button id="download_button" onclick="downloadSaveFile();" class="extra_toolbar_button">Save</button>
+				<button id="load_button" onclick="loadSaveFile();" class="extra_toolbar_button">Load</button>
+				<input id="loadFileSelector" type="file" accept=".xml" style="display: none;" onchange="onSaveFileLoaded();"/>
+				<button id="build_button" onclick="downloadFile('program.hex', hexFile);" class="extra_toolbar_button">Build</button>
+				<button id="run_button" class="extra_toolbar_button" onclick="runProgram();">Run</button>
+				<form id="hex_data_form" action="http://192.168.4.1" method="POST">
+					<input type='hidden' id='hex_data_input' name='hex_data'>
+				</form>
+            </div>
+			<div class="col-lg-8 col-md-8 col-sm-6 col-xs-6 text-middle">
+				
+			</div>
+        </div>
+
+
+        <div class="row">
+            <div id="blocklyArea">
+                <div id="blocklyDiv" style="position: absolute"></div>
+                <div id="side_bar" class="from_right">
+                    <div id="help_content" class="right_active"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row footer">
+            <p class="text-center">Copyright Arexx Engineering, coded by Jan-Cees Tjepkema, Rick Overhorst & Johan Ras</p>
+        </div>
+
+    </div>		
+
+    <script src="jquery/jquery.js"></script>
+  </body>
+</html>
+
+
+<xml id="startBlocks" style="display: none">
+    <block type="main_start" deletable="false" x="100" y="100"></block>
+	<block type="main_loop" deletable="false" x="100" y="200"></block>
+</xml>
+
+<script src="js/control.js"></script>
+
