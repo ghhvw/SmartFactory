@@ -104,7 +104,7 @@ Deze code moet verwijderd worden in de uiteindelijke versie. Dit zorgt ervoor da
 				<button id="load_button" onclick="loadSaveFile();" class="load_button"></button>
 				<input id="loadFileSelector" type="file" accept=".xml" style="display: none;" onchange="onSaveFileLoaded();"/>
 				<button id="build_button" onclick="downloadFile('program.hex', hexFile);" class="build_button"></button>
-				<button id="stop_button" class="stop_button" onclick="stopProgram();"></button>
+				<button id="stop_button" class="stop_button" onclick="stopProgram();getStartFeedback('stop_button');"></button>
 				<button id="start_button" class="start_button" onclick="runProgram();getStartFeedback('start_button');"></button>
 				<button id="wifi_button" class="start_button" onclick="switchWiFi();"></button>
 				<form id="hex_data_form" action="http://192.168.4.1" method="POST">
