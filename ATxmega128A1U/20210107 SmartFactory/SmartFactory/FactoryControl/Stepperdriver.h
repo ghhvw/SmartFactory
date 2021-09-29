@@ -36,15 +36,15 @@
 #define MOTOR_PWR_MEDIUM 1	//write to MOTORPOWER_REG
 #define MOTOR_PWR_MAX 2		//write to MOTORPOWER_REG
 
-#define BELT_1_MOTOR_ID 0x02
-#define BELT_2_MOTOR_ID 0x03
-#define BELT_3_MOTOR_ID 0x04
-#define BELT_4_MOTOR_ID 0x05
-#define SORTER_MOTOR_ID 0x01
-#define TURNTABLE_1_MOTOR_ID 0x01
-#define TURNTABLE_2_MOTOR_ID 0x01
-#define ELEVATOR_MOTOR_ID 0x01
-#define KABELBAAN_MOTOR_ID 0x04
+#define BELT_1_MOTOR_ID 0x01
+#define BELT_2_MOTOR_ID 0x02
+#define BELT_3_MOTOR_ID 0x03
+#define BELT_4_MOTOR_ID 0x04
+#define SORTER_MOTOR_ID 0x05
+#define TURNTABLE_1_MOTOR_ID 0x06
+#define TURNTABLE_2_MOTOR_ID 0x07
+#define ELEVATOR_MOTOR_ID 0x08
+#define KABELBAAN_MOTOR_ID 0x09
 
 
 void stepperWriteRegister(uint8_t address, const char* data, uint8_t length, uint8_t motorID, USART_struct &USART);
