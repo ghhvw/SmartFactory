@@ -80,3 +80,56 @@ function getStartFeedback(elem) {
     xhr.send();
   }, 100);
 }
+
+/* geef start-feedback in de start button in blockly.html */
+function getStopFeedback(elem) {
+  var prevText1 = "Stop";
+  if (Blockly.Msg.TXT_STOP != undefined) {
+    prevText1 = Blockly.Msg.TXT_STOP;
+  } else {
+//    prevText1 = document.getElementById(elem).innerHTML; //pak de tekst wat nu op de button staat
+    prevText1 = "Stop";
+  }
+
+//  document.getElementById(elem).innerHTML = "<img src=\"images/loading.gif\" height=80%/>";
+  document.getElementById(elem).innerHTML = "⏳";
+  
+  var xhr = new XMLHttpRequest();
+
+  xhr.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      if(this.responseText == 1){						//ATmega is gestop
+        document.getElementById(elem).innerHTML = "✔";
+        setTimeout(function() {
+          document.getElementById(elem).innerHTML = prevText1;
+        }, 3000); //3 sec ✔️ laten zien
+      } else {											//ATmega is nog niet gestop
+        setTimeout(function() {
+          getStopFeedback(elem); //check over 1 sec nog een keer
+        }, 1000);
+      }
+    }
+  };
+
+  xhr.ontimeout = function(e){                //Timeout
+    alert(Blockly.Msg.TXT_ONTIMEOUT);
+    document.getElementById(elem).innerHTML = "❌";
+    setTimeout(function() {
+      document.getElementById(elem).innerHTML = prevText1;
+    }, 3000); //3 sec ❌ laten zien
+  };
+
+  xhr.onerror = function(e){                  //Error
+    alert(Blockly.Msg.TXT_ONERROR);
+    document.getElementById(elem).innerHTML = "❌";
+    setTimeout(function() {
+      document.getElementById(elem).innerHTML = prevText1;
+    }, 3000); //3 sec ❌ laten zien
+  };
+
+  setTimeout(function() { //ESP32 moet de kans gehad hebben om de request van runProgram() te ontvangen
+    xhr.open("GET", "/stopfeedback", true); 
+    xhr.timeout = 1000; //ms
+    xhr.send();
+  }, 100);
+}

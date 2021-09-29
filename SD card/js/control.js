@@ -444,12 +444,12 @@ function onSaveFileLoaded()
 function stopProgram()
 {
 	myUpdateFunction();
-    let xmlHttp = new XMLHttpRequest();
+    let xmlHttp1 = new XMLHttpRequest();
     //xmlHttp.onreadystatechange = httpPostProcessRequest;
-    let formData = new FormData();
-    formData.append("hexFile", new Blob([hexFile], { type: "text/plain"}), "empty.hex");
-    xmlHttp.open("POST", "/edit");
-    xmlHttp.send(formData);
+    let formData1 = new FormData();
+    formData1.append("hexFile", new Blob([hexFile], { type: "text/plain"}), "empty.hex");
+    xmlHttp1.open("POST", "/edit");
+    xmlHttp1.send(formData1);
 }
 
 function runProgram()
