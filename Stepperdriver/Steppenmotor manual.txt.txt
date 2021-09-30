@@ -1,0 +1,307 @@
+--------------------------------------------------------------------------------
+
+ Programmers Manual
+ ==================
+  - gebruik een usb serieel naar rs485 interface voor communicatie tussen stappen
+    motor interface en aanstuur applicatie
+
+  - USB-Interface-RS485-A verbinden met PCB-RS485-P = connector J1/J2 pin 8
+
+  - USB-Interface-RS485-B verbinden met PCB-RS485-N = connector J1/J2 pin 4
+
+  - vóóraanzicht stappenmotor controller connectoren J1 en J2 
+
+   +-----------+-----------+-----------+-----------+
+   |     8     |     7     |     6     |     5     |
+   +-----------+-----------+-----------+-----------+
+   |           |           |           |           |
+   |  RS485_P  |   RESET   |    GND    |    GND    | Rechts-boven
+   |           |           |           |           |
+   +-----------+-----------+-----------+-----------+
+   |     4     |     3     |     2     |     1     |
+   +-----------+-----------+-----------+-----------+
+   |           |           |           |           |
+   |  RS485_N  | Ongebruikt|   +5V_IN  |  +12V_IN  | Rechts-onder
+   |           |           |  voor uC  | voor motor|
+   +-----------+-----------+-----------+-----------+
+    Vóóraanzicht connectoren J1/J2.
+
+
+
+
+
+           Bovenaanzicht connectorzijde van PCB (Motor connector J3)
+          -------------------------------------
+         /      +-----+-----+-----+-----+      \
+        /       |     |     |     |     |       \ <--- PCB rand
+       /    pin |  1  |  2  |  3  |  4  |        \
+      |         |     |     |     |     |         |
+      |         +-----+-----+-----+-----+         |
+      |         |coil |coil |coil |coil |         |
+      |         | A1  | A2  | B1  | B2  |         |
+      |         |     |     |     |     |         |
+      |         +-----+-----+-----+-----+         |
+      |                                           |
+      |                                           |
+      |                                           |
+      |                                           |
+
+
+
+
+
+      Toegevoegd: 201904192138
+
+      Bovenaanzicht componentzijde van PCB RS-485 bus connector (connector J1 en J2)
+
+      |         +-----+-----+-----+-----+         |
+      |         |     |     |     |     |         |
+      |     pin |  5  |  6  |  7  |  8  |         |
+      |         | GND | GND |Reset|485-P|         | P = A+
+      |         +-----+-----+-----+-----+         |
+      |         |     |     |     |     |         |
+      |     pin |  1  |  2  |  3  |  4  |         |
+      |         | +12V| +5V |  -  |485-N|         | N = B-
+      |         +-----+-----+-----+-----+         |
+       \                                         /
+        \                                       / <--- PCB rand
+         \                                     / 
+          -------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      1. Grote 'vierkante' stappenmotor
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    +----------+-----+-----+-----+-----+-----+-----+----------+
+    |          |     |     |     |     |     |     |          |
+    | Spoel    | A1  |  .  | A2  | B1  |  .  | B2  |          |
+    |          |     |     |     |     |     |     |          |
+    +----------+-----+-----+-----+-----+-----+-----+----------+
+    | overeenk.|     |     |     |     |     |     |          |
+    |   PCB    |  1  |  .  |  2  |  3  |  .  |  4  |          |
+    |   pin    |     |     |     |     |     |     |          |
+    +----------+-----+-----+-----+-----+-----+-----+----------+
+    |               Onder/achterzijde van motor               |
+    +---------------------------------------------------------+
+     - overeenkomstige PCB aansluiting op stappen motor
+     - Vóóraanzicht
+     - grote 'vierkante' stappenmotor
+
+
+
+
+      2. Kleine 'vierkante' stappenmotor
+
+
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    |                                                         |
+    +----------+-----+-----+-----+-----+-----+-----+----------+
+    |          |     |     |     |     |     |     |          |
+    | Draad    |Zwart|  .  |Rood |Groen|  .  |Blauw|          |
+    | kleur    |     |     |     |     |     |     |          |
+    +----------+-----+-----+-----+-----+-----+-----+----------+
+    |          |     |     |     |     |     |     |          |
+    | Spoel    | A1  |  .  | B2  | A2  |  .  | B1  |          |
+    |          |     |     |     |     |     |     |          |
+    +----------+-----+-----+-----+-----+-----+-----+----------+
+    | overeenk.|     |     |     |     |     |     |          |
+    |   PCB    |  1  |  .  |  4  |  2  |  .  |  3  |          |
+    |   pin    |     |     |     |     |     |     |          |
+    +----------+-----+-----+-----+-----+-----+-----+----------+
+    |               Onder/achterzijde van motor               |
+    +---------------------------------------------------------+
+     - overeenkomstige PCB aansluiting op stappen motor
+     - Vóóraanzicht
+     - kleine 'vierkante' stappenmotor
+     - let op andere aansluitingen!
+     - spoel A1 = zwart, A2 = groen, B1 = blauw en B2 = rood
+     - op deze wijze aangesloteen draait de kleine motor in identieke richting als de grote motor
+
+
+
+
+
+
+
+
+  - de onboard knop zit aan uC pin 12 is PB0 i.p.v. aanpin 11 is PD7
+
+
+
+
+
+
+
+  debug connector
+  ---------------
+
+   - de debug connector is niet aanwezig, wel de betreffende signaal pads
+   - de debug connector aansluitingen
+
+   +-----------+-----------+-----------+
+   |   5 (6)   |   3 (5)   |   1 (4)   |
+   +-----------+-----------+-----------+
+   |   groen   |   oranje  |   bruin   | draadkleuren aangesoldeerde debugWire interface
+   |   RESET   |   SCK     |   MISO    |
+   |           |           |   TDO     | TDO is Atmel-ICE interface benaming
+   +-----------+-----------+-----------+
+   |   blauw   |   geel    |   rood    | draadkleuren aangesoldeerde debugWire interface
+   |    GND    |   MOSI    |   +5VDC   |
+   |           |   TDI     |           | TDI is Atmel-ICE interface benaming
+   +-----------+-----------+-----------+
+   |   6 (3)   |   4 (2)   |   2 (1)   |
+   +-----------+-----------+-----------+
+    Vóóraanzicht serial wire interface aansluiting J4 kijkend naar de RS485 connector.
+
+  - de rechtsboven pin 1 nummering is zoals meestal wordt gebruikt
+  - de rechtsonder pin (1) nummering is zoals in het stappenmotor schema is weergegeven
+
+
+  Atmel-ICE pin nummers en namen
+  ------------------------------
+   +-----------+-----+---+-------+
+   | Atmel-ICE | --> |Pin|       |
+   +---+-------+-----+---+-------+
+   | 1 | SCK   | --> | 3 | SCK   |
+   +---+-------+-----+---+-------+
+   | 2 | GND   | --> | 6 | GND   |
+   +---+-------+-----+---+-------+
+   | 3 | TDO   | --> | 1 | MISO  |
+   +---+-------+-----+---+-------+
+   | 4 | VCC   | --> | 2 | +5V   |
+   +---+-------+-----+---+-------+
+   | 6 | !SRST | --> | 5 | Reset |
+   +---+-------+-----+---+-------+
+   | 9 | TDI   | --> | 4 | MOSI  |
+   +---+-------+-----+---+-------+
+    Atmel-ICE toegepaste aansluitingen t.v.b. DebugWire.
+
+
+ StappenMotor stroomverbruik
+ ===========================
+
+  +------------------+---------+---------+---------+-----------------------------+
+  |                  | Minimum | Medium  | Maximum |                             |
+  +------------------+---------+---------+---------+-----------------------------+
+  | Klein vierkant   |   30mA  |   79mA  |  163mA  | in rust                     |
+  +------------------+---------+---------+---------+-----------------------------+
+  | Klein langwerpig |   39mA  |  115mA  |  233mA  | in rust                     |
+  +------------------+---------+---------+---------+-----------------------------+
+  | Groot vierkant   | 31/24mA | 78/60mA |122/108mA| onbelast draaien / in rust  |
+  +------------------+---------+---------+---------+-----------------------------+
+
+
+
+
+
+
+ Actuele Status 2019.01.05
+ =========================
+  - de windows applicatie zend een bericht naar de embedded applicatie
+  - de embedded applicatie decodeerd het bericht en voert bijbehorende actie uit
+  - een retour bericht vanaf de embedded applicatie naar de windows applicatie toe is nog niet geimplementeerd
+  - in het bericht bevindt zich het doel register nummer en één of meerdere databytes
+  - de embedded applicatie schrijft de ontvangen data weg naar de opeenvolgende registers te beginnen bij het registernummer uit het ontvangen bericht
+  - de door johan voorgestelde register nummers (0 t/m 9) zijn voorlopig even genegeerd i.v.m. onduidelijkheid over de principiele werking
+  - de door firma dynamix (waarvan door johan afgeleid) toegepaste register indeling (0 t/m 65) is in principe het uiteindelijke uitgangspunt indien haalbaar
+  - de nu toegepaste registernummers beginnen ná dynamix op nummer 70 om geen ingewikkelde trucs te behoeven uithalen en eventueel om te kunnen schakelen naar de dynamix indeling
+  - registernummer wijzigingen laat zich in de toekomst eenvoudig uitvoeren
+
+  Register indeling
+  -----------------
+
+   +---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+
+   |      70       |      71       |      72       |      73       |      74       |      75       |      76       |      77       |      78       | Register nummer
+   +---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+
+   | het aantal    | het aantal    | het           | het           | motor         | motor power   | motor aan/uit | led 1         | led 2         |
+   | motor stappen | motor stappen | totaal aantal | totaal aantal | draairichting |               |               |               |               |
+   | per seconde   | per seconde   | motor stappen | motor stappen |0=tegen klok in| 0 = minimum   | 0 = uit       | 0 = uit       | 0 = uit       | Bijbehorende parameters
+   | 200 = 1x rond | 200 = 1x rond |               |               |1=met klok mee | 1 = medium    | 1 = aan       | 1 = aan       | 1 = aan       |
+   |               |               |               |               | bij motor     | 2 = maximum   |               |               |               |
+   | hoog byte     | laag byte     | hoog byte     | laag byte     | vóóraanzicht  |               |               |               |               |
+   +---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+---------------+
+    Figuur 1. Register indeling.
+
+  - nogmaals: in principe ontvangt de embedded applicatie alleen een START registernummer plus een aantal databytes
+  - een klik op de motor-aan knop doet de applicatie b.v. alle ingevulde gegevens (7 bytes) op de juiste volgorde naar register 70 e.v. sturen
+    - hierbij worden deze 7 bytes in de registers 70 t/m 76 weggeschreven met de waarde van register 76 op 1 (motor aan)
+  - een klik op de motor-uit knop doet de applicatie alleen maar één byte met waarde 0 naar register 76 (motor aan/uit) sturen
+  - telkens als de embedded applicatie een bericht ontvangt schrijft het de databytes in de registers weg en triggerd het een ander register uitlees/verwerk proces
+
+  Windows applicatie
+  ------------------
+   - de windows applicatie kan voorlopig 6 afzonderlijke stappen motoren aansturen
+   - de labels met de tekst "- N -" worden gebruikt om de betreffende motor aansturing te identificeren
+   - het veld 'slave adres' kan handmatig gewijzigd worden
+
+  Embedded applicatie
+  -------------------
+   Slave adres tonen of instellen
+   ------------------------------
+    - houd de drukknop vast tijdens powerup
+    - na loslaten toont led1 via het aantal langzame knipperingen het slave adres (5 knipperingen betekend slave adres 5)
+    - eventueel binnen 4 seconden een aantal malen op de knop drukken en dan loslaten en even wachten
+      - led 1 knippert nu net snel zovaak als het aantal malen dat de knop was ingedrukt
+      - het nieuwe slave adres is nu gelijk aan het aantal knopdrukken
+    - houd de drukknop vast tijdens powerup
+    - na loslaten en losgelaten houden toont led1 het slave adres via het aantal langzame knipperingen en circa 4 seconden later nog eens via snelle knipperingen
+    - het slave adres wordt opgeslagen in de eeprom van de microcontroller op adres 0
+
+  Development achtergrond info
+  ----------------------------
+  - de windows applicatie is geschreven in C# (sharp)
+    - de oorzaak is dat hiermee ooit al eens een grote applicatie met compoort communicatie was ontwikkeld (EasyAsuro)
+    - vermoedelijk werkt visual C++ iets gemakkelijker want C# gaat nogal omslachtig om met arrays en structures e.d. daarentegen werken GUI functies weer veel gemakkelijker
+  - de embedded applicatie is geschreven in atmel visual studio 7
+    - er wordt gebruik gemaakt van FreeRTOS
+    - het lukte niet direct FreeRTOS met C++ te combineren daarom is deze applicatie in C geschreven
+      - er is hier volgens mij geen duidelijk voordeel te behalen voor C++ t.o.v. C
+
+
+ Berichten structuur (overgenomen van Johan Ras en firma Dynamix)
+ ================================================================
+  Een bericht bestaat uit minimaal 8 bytes of karakters.
+   1. packet header byte1 = 0xff
+   2. packet header byte2 = 0xff
+   3. netwerk slave adres
+   4. het aantal na dit byte nog te verzenden of te ontvangen bytes
+   5. instructie type (nog ongebruikt, gaat wel worden toegepast b.v. bij synchronisatie van alle motoren)
+   6. doel register nummer
+   7. register inhoud eerste data byte
+   8. checksum (de som van alle checksum bytes plus de checksum zelf dient 0xff te zijn)
+
+  +-----------+-----------+-----------+-----------+-----------+-----------+-----------/-----------+-----------+
+  |     1     |      2    |      3    |      4    |      5    |      6    |      7    |6+Regdata+0|6+Regdata+1|
+  +-----------+-----------+-----------+-----------+-----------+-----------+-----------/-----------+-----------+
+  | Pack.Hdr1 | Pack.Hdr2 | slave addr| lengte    | Instructie| Reg. Num. | Reg. Data / Reg. Data | Checksum  |
+  +-----------+-----------+-----------+-----------+-----------+-----------+-----------/-----------+-----------+
+  |           |                                    |<-------------------------------lengte------------------->|
+  +-----------+-----------+-----------+-----------+-----------+-----------+-----------/-----------+-----------+
+  |           |           |<--------------------- checksum data --------------------------------->|dta+csm=ff |
+  +-----------+-----------+-----------+-----------+-----------+-----------+-----------/-----------+-----------+
+   Figuur 2. Berichten opbouw.
+ 
+ Met vriendelijke groet,
+ Henk van Winkoop
