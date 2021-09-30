@@ -49,7 +49,7 @@ bool IO_ReadWrite(bool value, uint8_t io_port)
 		return (PORTK_IN &(1<<PIN5_bp));
 		break;
 		
-		case 4: //lift interrupt schakelaars
+		case 4: //Lift limit switches
 		if (value == true)
 		{
 			PORTK_OUTSET = (1<<PIN4_bp);

@@ -18,11 +18,13 @@ Communication\UART.cpp
 
 Communication\USB_Functions.cpp
 
+FactoryControl\Elevator.cpp
+
+FactoryControl\IO_mappings.cpp
+
 FactoryControl\Kleursensor.cpp
 
 FactoryControl\pulseIn.cpp
-
-FactoryControl\Elevator.cpp
 
 FactoryControl\SorterArm.cpp
 

@@ -2,70 +2,49 @@
  * OptocouplerI.h
  *
  * Created: 2-12-2020 15:29:21
- *  Author: Wout
+ *  Author: Wout & Sjors
  */ 
 
 
 #ifndef OPTOCOUPLERI_H_
 #define OPTOCOUPLERI_H_
 
-#define OPTO_PD //defined --> pulldown on pins
 
+//Optocoupler pin bitmasks:
+#define OPTO0 PIN0_bm
+#define OPTO1 PIN1_bm
+#define OPTO2 PIN2_bm
+#define OPTO3 PIN3_bm
+#define OPTO4 PIN4_bm
+#define OPTO5 PIN5_bm
+
+#define OPTOS_bm OPTO0 | OPTO1 | OPTO2 | OPTO3 | OPTO4| OPTO5 
+
+#define OPTO_DIRCLR PORTJ_DIRCLR
+#define OPTO_IN		PORTJ_IN
+
+/**
+ * \brief - Set all optocouplers to input
+ */
+void initOptocouplers(){
+	OPTO_DIRCLR = OPTOS_bm;
+}
+
+/**
+ * \brief - Read the level of an optocoupler
+ */
 bool I_OptocouplerRead(uint8_t io_port)
 {
 	switch(io_port)
 	{
-		case 0: //sorterarm interrupt schakelaars
-		PORTJ_DIR &= ~(PIN0_bm);	//set pin as input
-		#ifdef OPTO_PD
-		PORTJ_PIN0CTRL |= PORT_OPC_PULLDOWN_gc;
-		#endif
-		return (PORTJ_IN &(1<<PIN0_bp));
-		break;
-		
-		case 1:
-		PORTJ_DIR &= ~(PIN1_bm);	//set pin as input
-		#ifdef OPTO_PD
-		PORTJ_PIN1CTRL |= PORT_OPC_PULLDOWN_gc;
-		#endif
-		return (PORTJ_IN &(1<<PIN1_bp));
-		break;
-		
-		case 2:
-		PORTJ_DIR &= ~(PIN2_bm);	//set pin as input
-		#ifdef OPTO_PD
-		PORTJ_PIN2CTRL |= PORT_OPC_PULLDOWN_gc;
-		#endif
-		return (PORTJ_IN &(1<<PIN2_bp));
-		break;
-		
-		case 3:
-		PORTJ_DIR &= ~(PIN3_bm);	//set pin as input
-		#ifdef OPTO_PD
-		PORTJ_PIN3CTRL |= PORT_OPC_PULLDOWN_gc;
-		#endif
-		return (PORTJ_IN &(1<<PIN3_bp));
-		break;
-		
-		case 4:
-		PORTJ_DIR &= ~(PIN4_bm);	//set pin as input
-		#ifdef OPTO_PD
-		PORTJ_PIN4CTRL |= PORT_OPC_PULLDOWN_gc;
-		#endif
-		return (PORTJ_IN &(1<<PIN4_bp));
-		break;
-		
-		case 5:
-		PORTJ_DIR &= ~(PIN5_bm);	//set pin as input
-		#ifdef OPTO_PD
-		PORTJ_PIN5CTRL |= PORT_OPC_PULLDOWN_gc;
-		#endif
-		return (PORTJ_IN &(1<<PIN5_bp));
-		break;
-		
-		//pin 6 & 7 niet verbonden met optocouplers
+		case 0: return OPTO_IN & OPTO0;
+		case 1: return OPTO_IN & OPTO1;
+		case 2: return OPTO_IN & OPTO2;
+		case 3: return OPTO_IN & OPTO3;
+		case 4: return OPTO_IN & OPTO4;
+		case 5: return OPTO_IN & OPTO5;
+		default: return 0;
 	}
-	return 0;
 }
 
 

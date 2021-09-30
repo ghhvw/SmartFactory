@@ -3,7 +3,7 @@
  *
  * Created: 19-3-2020 12:42:57
  *  Author: Nick & Wout
- */ 
+ */
 
 /*
  * ATmega is slave
@@ -53,72 +53,90 @@ void TWI_init(TWI_struct &TWI) //als slave
 {
 	TWI.SLAVE.CTRLA = (1<<TWI_SLAVE_APIEN_bp)|(1<<TWI_SLAVE_ENABLE_bp)|(1<<TWI_SLAVE_PIEN_bp)|(1<<TWI_SLAVE_PMEN_bp);
 	TWI.SLAVE.CTRLA |= (1<<TWI_SLAVE_DIEN_bp);
-	
+
 	//toegevoegd voor TWI_Write(), clear deze bits om het springen naar ISRs uit te schakelen
 	TWI.SLAVE.CTRLA |= TWI_MASTER_INTLVL0_bm | TWI_MASTER_INTLVL1_bm; //enable port interrupt high level
 }
 
 
 bool TWI_RecievedAddress(TWI_struct &TWI)
-{	
+{
 	//valid address received and write operation
 	return ((TWI.SLAVE.STATUS &(1<<TWI_SLAVE_APIF_bp)) && !(TWI.SLAVE.STATUS &(1<<TWI_SLAVE_DIR_bp)));
 }
 
-
-bool TWI_ReceivePacket(TWI_struct &TWI, uint8_t* buffer, uint8_t bufferLength) //als slave
-{
-	//wait for address received interrupt
-	while(!(TWI.SLAVE.STATUS &(1<< TWI_SLAVE_APIF_bp)));
-	
-	//check if write operation
-	if((TWI.SLAVE.STATUS &(1<<TWI_SLAVE_DIR_bp)))
-		return false;
-	
-	//acknowledge and wait for next package
-	TWI.SLAVE.CTRLB |= (1<<TWI_SLAVE_CMD0_bp)|(1<<TWI_SLAVE_CMD1_bp);
-	
-	for (uint8_t i = 0;i<bufferLength;i++)
-	{	
-		USART_TransmitString(USARTD0, "\n\r7\n\r");
-		//wait for received interrupt
-		while(!(TWI.SLAVE.STATUS &(1<< TWI_SLAVE_DIF_bp)||TWI.SLAVE.STATUS &(1<< TWI_SLAVE_APIF_bp)));
-
-		//stop if stop interrupt flag
-		if(TWI.SLAVE.STATUS &(1<< TWI_SLAVE_APIF_bp))
+//============================================================
+//	RECEIVE PACKET : HVWI VERSIE
+//============================================================
+bool TWI_ReceivePacket(TWI_struct &TWI, uint8_t* buffer, uint8_t bufferLength) {
+	//variabelen
+	volatile static bool bResult;
+	volatile static int i;
+	//begin bij de eerste ontvangst databuffer index
+	i=0;
+	//uitgangspunt: het correct ontvangen van data door de slave vanaf de master is niet gelukt
+	bResult = false;
+	//----------------------------------------------------------------------------------------------------
+	// Bij functie binnenkomst is er door de slave een geldig slave-adres vanaf de master ontvangen.
+	// Echter om de master data te laten verzenden dient de slave eerst een adres-ACK naar de master te
+	// verzenden. Dit geschiedt door de adres interrupt vlag bit APIF te wissen.
+	// Het wissen van deze vlag kan door:
+	//   TWI.SLAVE.STATUS=TWI_SLAVE_APIF_bm; //hier wordt een '1' weggeschreven in het APIF bit waardoor
+	//                                       //dit bit wordt gewist(!), zie datasheet. Alle overige 0-bits
+	//                                       //hebben geen invloed op de overige register bits inhoud(!)
+	//----------------------------------------------------------------------------------------------------
+	//genereer een ack op het ontvangen adres, de master zal nu een eerste databyte zenden
+	TWI.SLAVE.STATUS=TWI_SLAVE_APIF_bm;
+	//voor altijd doe
+	while ( true ) {
+		//er is een door de master gegenereerde stop conditie gedetecteerd (want TWI_SLAVE_PIEN_bm in CTRLA is gezet)
+		if ( TWI.SLAVE.STATUS & TWI_SLAVE_APIF_bm ) {
+			//meld een pass
+			bResult = true ;
+			//verlaat de lus
 			break;
-			
-		//receive data and acknowledge		
-		buffer[i] = TWI.SLAVE.DATA;
-		TWI.SLAVE.CTRLB |= (1<<TWI_SLAVE_CMD0_bp)|(1<<TWI_SLAVE_CMD1_bp);
-		USART_Transmit(USARTD0, buffer[i]);
-	}
-	_delay_us(1);
-	TWI.SLAVE.STATUS |= (1<<TWI_SLAVE_DIF_bp)|(1<<TWI_SLAVE_APIF_bp); //clear interrupts
-	return true;
-}
+		}//if
+		//er is een databyte ontvangen
+		if ( TWI.SLAVE.STATUS & TWI_SLAVE_DIF_bm ) {
+			//er is nog ruimte in de ontvangst buffer
+			if ( i <= bufferLength ) {
+				//noteer het ontvangen databyte
+				buffer[i++] = TWI.SLAVE.DATA;
+			}//if
+			//er is geen ruimte meer in de ontvangst buffer
+			else {
+				//verlaat de lus (met foutstatus)
+				break;
+			}//else
+			//genereer een ack op het ontvangen databyte, de master zal nu eventueel een volgende databyte zenden
+			TWI.SLAVE.STATUS=TWI_SLAVE_DIF_bm;
+		}//if
+	}//while
+	//rapporteer het resultaat
+	return bResult ;
+} //TWI_ReceivePacket
 
 
 bool TWI_Write(TWI_struct &TWI, uint8_t byte) //als slave
 {
 	//wait for address received interrupt
 	while(!(TWI.SLAVE.STATUS &(1<< TWI_SLAVE_APIF_bp)));
-	
+
 	//check if master read operation
 	if( !(TWI.SLAVE.STATUS &(1<<TWI_SLAVE_DIR_bp)) ) {
 		return false; //master write operation
 	}
-	
+
 	while(1) {
 		TWI.SLAVE.STATUS |= (1<<TWI_SLAVE_DIF_bp)|(1<<TWI_SLAVE_APIF_bp); //clear interrupts
-		
+
 		TWI.SLAVE.DATA = byte;
-		
+
 		//acknowledge and send byte
 		TWI.SLAVE.CTRLB &= ~(TWI_SLAVE_ACKACT_bm); //ACK
 //		TWI.SLAVE.CTRLB |= (1<<TWI_SLAVE_CMD0_bp)|(1<<TWI_SLAVE_CMD1_bp); //RESPONSE, er komen meer bytes	//<<< gebruik deze voor een toekomstige TWI_SendPacket functie
 		TWI.SLAVE.CTRLB |= (1<<TWI_SLAVE_CMD1_bp); //COMPLETE, enige byte wordt verzonden
-		
+
 		//wait for transmission completed
 		while(TWI.SLAVE.STATUS &(1<<TWI_SLAVE_DIF_bp)) {
 			//check for collisions or bus errors
@@ -128,9 +146,9 @@ bool TWI_Write(TWI_struct &TWI, uint8_t byte) //als slave
 				return false;
 			}
 		}
-		
+
 		_delay_us(10);
-		
+
 //		if (TWI.SLAVE.STATUS &(1<<TWI_SLAVE_RXACK_bp)) {	//<<< op een of andere manier komt de NACK flag voorafgaand van de STOP conditie nooit aan bod
 			//NACK, expect STOP or repeated START condition
 			if ((TWI.SLAVE.STATUS &(1<<TWI_SLAVE_APIF_bp)) && !(TWI.SLAVE.STATUS &(1<<TWI_SLAVE_AP_bp))) {

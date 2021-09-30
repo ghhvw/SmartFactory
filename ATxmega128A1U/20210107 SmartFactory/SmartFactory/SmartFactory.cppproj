@@ -98,14 +98,14 @@
         <documentation help="http://asf.atmel.com/docs/3.35.1/common.applications.user_application.user_board.xmegaau/html/index.html" />
         <offline-documentation help="" />
         <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.39.0" />
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.28.1" />
         </dependencies>
         <project id="common.applications.user_application.user_board.xmegaau" value="Add" config="" content-id="Atmel.ASF" />
         <board id="board.user_board.xmegaau" value="Add" config="" content-id="Atmel.ASF" />
       </framework-data>
     </AsfFrameworkConfig>
     <avrtool>com.atmel.avrdbg.tool.atmelice</avrtool>
-    <avrtoolserialnumber>J41800108595</avrtoolserialnumber>
+    <avrtoolserialnumber>J41800109630</avrtoolserialnumber>
     <avrdeviceexpectedsignature>0x1E974C</avrdeviceexpectedsignature>
     <com_atmel_avrdbg_tool_atmelice>
       <ToolOptions>
@@ -115,7 +115,7 @@
         <InterfaceName>PDI</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.atmelice</ToolType>
-      <ToolNumber>J41800108595</ToolNumber>
+      <ToolNumber>J41800109630</ToolNumber>
       <ToolName>Atmel-ICE</ToolName>
     </com_atmel_avrdbg_tool_atmelice>
     <avrtoolinterface>PDI</avrtoolinterface>
@@ -407,6 +407,15 @@
     <Compile Include="FactoryControl\DigitalIO.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="FactoryControl\Elevator.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FactoryControl\IO_mappings.cpp">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="FactoryControl\IO_mappings.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="FactoryControl\Kleursensor.cpp">
       <SubType>compile</SubType>
     </Compile>
@@ -417,9 +426,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="FactoryControl\pulseIn.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="FactoryControl\Elevator.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="FactoryControl\Elevator.h">

@@ -1,43 +1,80 @@
-/*
- * Elevator.h
- *
- * Created: 27-11-2020 12:37:02
- *  Author: Wout
- */ 
-
+//
+// Elevator.H
+//
+// Created by Jon_n on 17-3-2021.
+// Edited by Sjors
+//
 
 #ifndef ELEVATOR_H_
 #define ELEVATOR_H_
 
+#include <avr/io.h>
 #include "Stepperdriver.h"
+#include "IO_mappings.h"
+#include "UART.h"
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define EV_SWITCH_PIN PIN4_bm //uit PORTK, elevator switches
-#define KB_SWITCH_PIN PIN0_bm //uit PORTK, sorterarm switches
-//kijk voor MOTOR_ID defines in Stepperdriver.h
+	//Elevator pin defines
+	#define EV_SWITCH_PIN_UP DIO2 // Limit Switch for Elevator UP
+	#define EV_SWITCH_PIN_DOWN DIO3 // Limit Switch for Elevator DOWN
 
 
-void MoveElevator(bool direction);
-void StopElevator();
-bool ElevatorReady();
-void MoveKabelbaan(bool direction);
-void StopKabelbaan();
-bool KabelbaanReady();
-void MoveLift(bool direction, uint8_t motor_id, uint8_t switch_pin);
-void StopLift(uint8_t motor_id, uint8_t switch_pin);
-bool LiftReady(uint8_t switch_pin);
-bool ConfLift(bool direction, uint8_t switch_pin);
-void ResetLift(uint8_t switch_pin);
-void LiftISR(uint8_t motor_id, uint8_t switch_pin);
-void EVSetPullUp(uint8_t switch_pin);
-void EVSetInterrupt(uint8_t switch_pin);
 
+	/**
+	 * \brief - Move the Elevator up or down
+	 * 
+	 * \param richting - the direction (true for up, false for down
+	 */
+	void MoveElevator(bool direction);
+
+
+	/**
+	 * \brief send a Stop command to the Elevator StepperDriver
+	 */
+	void StopElevator();
+
+
+	/**
+	 * \brief - Stop the elevator if the desired position is reached
+	 * DEPRECATED: Stopping is automatically handled by ISR
+	 * 
+	 * \return bool
+	 */
+	bool ElevatorIsReady();
+
+
+    bool ConfigElevator(bool richting);
+
+
+    /**
+     * \brief - 
+     * 
+     * \param UPdown - True for up-switch, false for down switch
+     * 
+     * \return void
+     */
+    void ElevatorButtonInISR(bool UPdown);
+
+	//No implementation exists. What is this function intended for?
+    void ElevatorButtonOutISR();
+
+
+    void resetElevator();
+
+
+	void ElevatorInit();
+
+
+	void ElevatorInterruptSetup();
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ELEVATOR_H_ */
+
+
+#endif // ELEVATOR_H

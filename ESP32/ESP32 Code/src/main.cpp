@@ -1,14 +1,18 @@
 #include <main.h>
 #include <Constants.h>
 
-const char *host = "Arexx";
+const char* ssid = "Smart-Factory-AP";
+const char* password = "0123456789";
+
 const uint32_t spi_speed = 8000000;
 const uint8_t max_files = 20; //vergroot dit wanneer je "VFSFileImpl(): fopen(/...) failed" errors krijgt en de webpage slecht laadt
+
 
 SPIClass spiSD(HSPI);
 
 AsyncWebServer server(80);
-DNSServer dns;
+
+// DNSServer dns;
 
 void setup()
 {
@@ -23,9 +27,11 @@ void setup()
     DBG_OUT.setDebugOutput(true);
 
     // Wifi manager
+    //Serial.println("AP IP address: ");
     AsyncWiFiManager wifiManager(&server, &dns);
+    //WiFi.softAP(ssid, password);
     wifiManager.autoConnect();
-
+    
     // Custom DNS settings
     if (MDNS.begin(host))
     {
@@ -36,8 +42,8 @@ void setup()
         DBG_OUT.println(".local");
     }
 
-
-    //verzend status naar browser (connected/disconnected)
+    //server.begin();
+    // verzend status naar browser (connected/disconnected)
     server.on("/status", HTTP_GET, [] (AsyncWebServerRequest *request) {
         request->send(200, "text/plain", String(1).c_str()); //1: ESP32 is nog verbonden (en ATmega bereikbaar?)
         /* als de browser bovenstaande reactie niet ontvangt plaatst het "disconnected" op de pagina */

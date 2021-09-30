@@ -1,168 +1,181 @@
-/*
- * Elevator.cpp
- *
- * Created: 10/12/2020 21:28:24
- *  Author: Wout
- */ 
-
-/*
- * TODO wanneer een nieuw blockly programma wordt geuploaded en de schakelaar is ingedrukt, 
- * dan start de lift niet totdat de stepper handmatig van de switch af is gedraaid. Dit kan 
- * ongewenst zijn voor de gebruiker. 
- */
+//
+// Elevator.cpp
+//
+// Created by Jon_n on 17-3-2021.
+//	Edited by Sjors
+//
 
 #include "Elevator.h"
 
-uint8_t elevator_ready = 0xFF, ev_direction = 0;
-
-
-
-/* 
- * Bij meer dan 1 elevators zouden de Elevator blocklys & de functies met "blockly functie" 
- * erboven aangepast moeten worden om een ID te vragen. Of dan kunnen er extra blocklys en 
- * functies toegevoegd worden die met een ander motor ID en switch pin werken, zoals de 
- * kabelbaan functies. Pas ook de ISR in main.cpp aan. 
- */
+bool elevatorDirection;							// Richting van de lift
+volatile bool elevatorIsUp, elevatorIsDown;	// Boleans om de stand van de lift bij te houden
 
 /* blockly functie */
-void MoveElevator(bool direction) { MoveLift(direction, ELEVATOR_MOTOR_ID, EV_SWITCH_PIN); }
-
-
-/* blockly functie */
-void StopElevator() { StopLift(ELEVATOR_MOTOR_ID, EV_SWITCH_PIN); }
-
-
-/* blockly functie */
-bool ElevatorReady() { return LiftReady(EV_SWITCH_PIN); }
-	
-
-/* blockly functie */											//block nog niet geïmplementeerd in blockly 
-void MoveKabelbaan(bool direction) { MoveLift(direction, KABELBAAN_MOTOR_ID, KB_SWITCH_PIN); }
-
-
-/* blockly functie */											//block nog niet geïmplementeerd in blockly 
-void StopKabelbaan() { StopLift(KABELBAAN_MOTOR_ID, KB_SWITCH_PIN); }
-
-
-/* blockly functie */											//block nog niet geïmplementeerd in blockly 
-bool KabelbaanReady() { return LiftReady(KB_SWITCH_PIN); }
-
-
-void MoveLift(bool direction, uint8_t motor_id, uint8_t switch_pin)
-{
-	if (ConfLift(direction, switch_pin)) {
-		//TODO wanneer de INT0 interrupt hier optreedt kan de stepper de verkeerde richting opgaan
+void MoveElevator(bool direction) {
+	elevatorDirection = direction;
+	if (ConfigElevator(direction) == true) {
 		
-		char directiondata[]={direction};
-		stepperWriteRegister(DIRECTION_REG,directiondata,sizeof(directiondata)/sizeof(*directiondata),motor_id, USARTE1);
-		char data[]={0x03,0x66,0xFF,0xFF,direction,MOTOR_PWR_MIN,MOTOR_ON};
-		stepperWriteRegister(STEPS_PS_HREG,data,sizeof(data)/sizeof(*data),motor_id,USARTE1);
+		uint16_t motor_id = ELEVATOR_MOTOR_ID; // Motor ID van lift
+		bool Direction = !direction;
+
+		char directiondata[] = { Direction };
+		stepperWriteRegister(DIRECTION_REG, directiondata, sizeof(directiondata) / sizeof(*directiondata), motor_id, USARTE1);
+		char data[] = { 0x03,0x66,0xFF,0xFF,Direction,MOTOR_STEP_HALF,MOTOR_ON };
+		stepperWriteRegister(STEPS_PS_HREG, data, sizeof(data) / sizeof(*data), motor_id, USARTE1);
 	}
 }
 
 
-void StopLift(uint8_t motor_id, uint8_t switch_pin)
-{
-	char data[]={MOTOR_OFF};
-	stepperWriteRegister(MOTOR_ENABLE_REG, data, sizeof(data)/sizeof(*data),motor_id,USARTE1);
-	ResetLift(switch_pin);
+/* blockly functie */
+void StopElevator() {
+	USART_TransmitString(USARTD0, "\n\r -----STOPPING ELEVATOR------ \n\r");
+	uint16_t motor_id = ELEVATOR_MOTOR_ID;
+	char data[] = { MOTOR_OFF };
+	stepperWriteRegister(MOTOR_ENABLE_REG, data, sizeof(data) / sizeof(*data), motor_id, USARTE1); // Stopt lift motor
 }
 
 
-bool LiftReady(uint8_t switch_pin)
-{
-	return (elevator_ready & switch_pin);
-}
-
-
-/* set variables & interrupts, return 1 als de stepper mag starten */
-bool ConfLift(bool direction, uint8_t switch_pin)
-{
-	//switches mogen niet ingedrukt zijn (NC switches, ingedruk wanneer signaal hoog)
-	EVSetPullUp(switch_pin);
-	_delay_ms(30);									//storing op pin weg laten gaan
-	if (PORTK_IN & switch_pin) { return 0; }		//stepper mag niet starten, er is een schakelaar ingedrukt of kabelbreuk, stop
-	/* 
-	 * TODO wanneer de schakelaar nog niet is losgelaten en de lift 
-	 * al naar de andere positie mag gaan (en dit wordt 1x aangeroepen 
-	 * in blockly), dan wordt dit niet uitgevoerd
-	 */
+/* blockly functie */
+bool ElevatorIsReady() {
 	
-	//richting opslaan voor ISR
-	if (direction) {
-		ev_direction |= switch_pin; //set bit
-	} else {
-		ev_direction &= ~(switch_pin); //clear bit
+	if ((elevatorDirection == 1) && (elevatorIsUp == true)) {
+		StopElevator();
+		return 1; // Lift is boven aangekomen
 	}
-	elevator_ready &= ~(switch_pin); //clear ready bit
-	
-	//set interrupts
-	EVSetInterrupt(switch_pin);
-
-	return 1; //stepper mag starten
-}
-
-
-/* set variables & clear interrupts */
-void ResetLift(uint8_t switch_pin)
-{
-	elevator_ready |= switch_pin; //set ready bit
-
-	//disable listen interrupt on pin
-	PORTK_INT0MASK &= ~(switch_pin);
-}
-
-
-/* ISR */
-void LiftISR(uint8_t motor_id, uint8_t switch_pin)
-{
-//	if (elevator_ready & switch_pin) { return; }						//lift was niet actief, ISR stopt
-	
-	/* switch is ingedrukt (NC, hoog wanneer ingedrukt) */
-	if (PORTK_IN & switch_pin) {
-		ChangeDirectionStepper(!(ev_direction & switch_pin), motor_id);	//teruggaan totdat switch weer is losgelaten
-		
-	/* switch is losgelaten (closed circuit) */
-	} else {
-		StopLift(motor_id, switch_pin);								//lift stopzetten en interrupts uitzetten
+	else if ((elevatorDirection == 0) && (elevatorIsDown == true)) {
+		StopElevator();
+		return 1; // Lift is beneden aangekomen
 	}
-	return;
+	else {
+		return 0; // Lift is nog bezig
+	}
 }
 
 
-void EVSetPullUp(uint8_t switch_pin)
-{
-	switch(switch_pin)				//pullup
+
+bool ConfigElevator(bool direction) {
+	ElevatorInit(); // Liftpinnen worden als input ingesteld
+	_delay_ms(30); // Debounce tijd
+
+	bool start = 0;
+
+	if (!(PORTK_IN & EV_SWITCH_PIN_UP) && (direction == 1)) {
+		elevatorIsUp = true;
+		start = 0; // Lift mag niet starten, want wil naar boven en is al boven
+	}
+	else if (!(PORTK_IN & EV_SWITCH_PIN_DOWN) && (direction == 0)) {
+		elevatorIsDown = true;
+		start = 0; // Lift mag niet starten, want wil naar beneden en is al beneden
+	}
+	else if ((elevatorIsUp == true) && (elevatorIsDown == true)) {
+		start = 0; // Lift mag niet starten, want is boven en beneden, ERROR!!!
+	}
+	else if (!(PORTK_IN & EV_SWITCH_PIN_UP) && (direction == 0)) {
+		elevatorIsUp = true;
+		start = 1; // Lift mag starten, want is boven en wil naar beneden
+	}
+	else if (!(PORTK_IN & EV_SWITCH_PIN_DOWN) && (direction == 1)) {
+		elevatorIsDown = true;
+		start = 1; // Lift mag starten, want wil naar boven en is beneden
+	}
+	else if ((PORTK_IN & EV_SWITCH_PIN_UP) && (PORTK_IN & EV_SWITCH_PIN_DOWN)) {
+		elevatorIsUp = false;
+		elevatorIsDown = false;
+		start = 1; // Lift mag starten want is niet boven of beneden
+	}
+
+	
+
+	if (start == 1) {
+		ElevatorInterruptSetup(); // Pinnen worden ingesteld om interrupts te kunnen genereren 
+		return 1; // Lift mag starten
+	}
+	else {
+		return 0; // Lift mag niet starten
+	}
+}
+
+
+// ISR, switch is ingedrukt
+void ElevatorButtonInISR(bool UPdown) {
+	if (UPdown == elevatorDirection) { //Elevator stops moving if it reaches switch opposite to moving direction (ev_richting 1 = up, 0 = down)
+		elevatorIsUp = true;
+		elevatorIsDown = false;
+		StopElevator(); 
+	}
+	if (UPdown == elevatorDirection) { //Elevator stops moving if it reaches switch opposite to moving direction (ev_richting 1 = up, 0 = down)
+		elevatorIsUp = false;
+		elevatorIsDown = true;
+		StopElevator(); 
+	}
+}
+
+
+
+// Reset de liftknoppen
+void resetElevator() {
+	uint8_t resetValue= 0xFF;
+	// REVIEW: What the fuck does this function do?
+	// |= the switch bitmask into a value that is already 0xFF? What?!
+	resetValue |= EV_SWITCH_PIN_UP;
+	resetValue |= EV_SWITCH_PIN_DOWN;
+
+	// PORTK_INT0MASK &= ~(LF_SWITCH_PINN_UPP);
+	// PORTK_INT0MASK &= ~(LF_SWITCH_PINN_DOWN);
+}
+
+
+// Inputs voor de lift worden op Input-Pullup gezet
+void ElevatorInit() {
+	PORTK_DIR &= ~(EV_SWITCH_PIN_UP); // Set pin as input
+	PORTK_DIR &= ~(EV_SWITCH_PIN_DOWN);
+
+
+
+	//Set the PINnCTRL of the down switch to PULLUP and falling edge
+	switch (EV_SWITCH_PIN_DOWN)
 	{
-		case PIN0_bm: PORTK_PIN0CTRL |= PORT_OPC_PULLUP_gc; break;
-		case PIN1_bm: PORTK_PIN1CTRL |= PORT_OPC_PULLUP_gc; break;
-		case PIN2_bm: PORTK_PIN2CTRL |= PORT_OPC_PULLUP_gc; break;
-		case PIN3_bm: PORTK_PIN3CTRL |= PORT_OPC_PULLUP_gc; break;
-		case PIN4_bm: PORTK_PIN4CTRL |= PORT_OPC_PULLUP_gc; break;
-		case PIN5_bm: PORTK_PIN5CTRL |= PORT_OPC_PULLUP_gc; break;
-		case PIN6_bm: PORTK_PIN6CTRL |= PORT_OPC_PULLUP_gc; break;
-		case PIN7_bm: PORTK_PIN7CTRL |= PORT_OPC_PULLUP_gc; break;
+		case PIN0_bm: PORTK_PIN0CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN0CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN0CTRL for DOWN\n\r"); break;
+		case PIN1_bm: PORTK_PIN1CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN1CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN1CTRL for DOWN\n\r"); break;
+		case PIN2_bm: PORTK_PIN2CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN2CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN2CTRL for DOWN\n\r"); break;
+		case PIN3_bm: PORTK_PIN3CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN3CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN3CTRL for DOWN\n\r"); break;
+		case PIN4_bm: PORTK_PIN4CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN4CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN4CTRL for DOWN\n\r"); break;
+		case PIN5_bm: PORTK_PIN5CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN5CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN5CTRL for DOWN\n\r"); break;
+		case PIN6_bm: PORTK_PIN6CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN6CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN6CTRL for DOWN\n\r"); break;
+		case PIN7_bm: PORTK_PIN7CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN7CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN7CTRL for DOWN\n\r"); break;
+		default: break;
 	}
-//	PORTK_OUT |= switch_pin;		//totem-pole set pin high
-	PORTK_DIR &= ~(switch_pin);		//pin set as input
+
+	//Set the PINnCTRL of the UP switch to PULLUP and falling edge
+	switch(EV_SWITCH_PIN_UP){
+		case PIN0_bm: PORTK_PIN0CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN0CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN0CTRL for UP\n\r"); break;
+		case PIN1_bm: PORTK_PIN1CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN1CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN1CTRL for UP\n\r"); break;
+		case PIN2_bm: PORTK_PIN2CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN2CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN2CTRL for UP\n\r"); break;
+		case PIN3_bm: PORTK_PIN3CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN3CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN3CTRL for UP\n\r"); break;
+		case PIN4_bm: PORTK_PIN4CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN4CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN4CTRL for UP\n\r"); break;
+		case PIN5_bm: PORTK_PIN5CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN5CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN5CTRL for UP\n\r"); break;
+		case PIN6_bm: PORTK_PIN6CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN6CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN6CTRL for UP\n\r"); break;
+		case PIN7_bm: PORTK_PIN7CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN7CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN7CTRL for UP\n\r"); break;
+		default: break;
+	}
+
+	PORTK_INT0MASK |= EV_SWITCH_PIN_UP; // Stel pin in interrupt opwekkende pin, in het K register
+	PORTK_INT0MASK |= EV_SWITCH_PIN_DOWN;
+
+
+	PORTK_INTCTRL |= PORT_INT0LVL0_bm; // Enable PORTK INT0 as a Low-Level interrupt
 }
 
 
-void EVSetInterrupt(uint8_t switch_pin)
-{
-	PORTK_INT0MASK |= switch_pin;		//pin listen interrupt
-	switch(switch_pin)					//sense both edges
-	{
-		case PIN0_bm: PORTK_PIN0CTRL |= PORT_ISC_BOTHEDGES_gc; break;
-		case PIN1_bm: PORTK_PIN1CTRL |= PORT_ISC_BOTHEDGES_gc; break;
-		case PIN2_bm: PORTK_PIN2CTRL |= PORT_ISC_BOTHEDGES_gc; break;
-		case PIN3_bm: PORTK_PIN3CTRL |= PORT_ISC_BOTHEDGES_gc; break;
-		case PIN4_bm: PORTK_PIN4CTRL |= PORT_ISC_BOTHEDGES_gc; break;
-		case PIN5_bm: PORTK_PIN5CTRL |= PORT_ISC_BOTHEDGES_gc; break;
-		case PIN6_bm: PORTK_PIN6CTRL |= PORT_ISC_BOTHEDGES_gc; break;
-		case PIN7_bm: PORTK_PIN7CTRL |= PORT_ISC_BOTHEDGES_gc; break;
-	}
-	PORTK_INTCTRL |= PORT_INT0LVL0_bm;	//enable interrupt at low level
-	
-	//gebruik vector PORTK_INT0_vect in main.cpp en roep ElevatorISR() aan
+// Deprecated. Functionality moved to ElevatorInit()
+void ElevatorInterruptSetup() {
+	PORTK_INT0MASK |= EV_SWITCH_PIN_UP; // Stel pin in interreupt opwekkende pin, in het K register
+	PORTK_INT0MASK |= EV_SWITCH_PIN_DOWN;
+
+	PORTK_PIN4CTRL |= PORT_ISC_FALLING_gc; // Interupts op beide flanken
+	PORTK_PIN5CTRL |= PORT_ISC_FALLING_gc;
+	// 31-03-2021, Falling edges om gedrag daarvan te bestuderen
+
+
+	PORTK_INTCTRL |= PORT_INT0LVL0_bm; // Enable PORTK INT0 as a Low-Level interrupt
 }

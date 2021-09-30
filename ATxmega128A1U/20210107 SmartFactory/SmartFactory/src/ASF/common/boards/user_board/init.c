@@ -30,11 +30,9 @@ void board_init(void)
 	PORTQ_DIR = (1<<0)|(1<<1)|(1<<2)|(1<<3); //set relays to output
 	PORTR_DIR = (1<<0)|(1<<1); //set relays to output
 	
+
 	PORTA_PIN0CTRL = (1<<PORT_OPC0_bp )|(1<<PORT_OPC1_bp);
 	
-	PORTK_PIN7CTRL = PORT_OPC_PULLDOWN_gc;
-	PORTK_PIN6CTRL = PORT_OPC_PULLDOWN_gc;
-	PORTK_PIN5CTRL = PORT_OPC_PULLDOWN_gc;
 	
 	//Init UARTS
 	
