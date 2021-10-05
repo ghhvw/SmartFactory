@@ -60,10 +60,10 @@ void programATmega(uint8_t *data, size_t length)
         //delay(20);
         Wire.endTransmission(true);
         transmissionRunning = false;
-        DBG_OUT.print("twi complete");
+        DBG_OUT.println("twi complete");
     }
 
-    DBG_OUT.print("Writing complete");
+    DBG_OUT.println("Writing complete");
 }
 
 

@@ -13,7 +13,7 @@ volatile bool elevatorIsUp, elevatorIsDown;	// Boleans om de stand van de lift b
 /* blockly functie */
 void MoveElevator(bool direction) {
 	elevatorDirection = direction;
-	if (ConfigElevator(direction) == true) {
+	if (ConfigElevator(direction)) {
 		
 		uint16_t motor_id = ELEVATOR_MOTOR_ID; // Motor ID van lift
 		bool Direction = !direction;
