@@ -1,26 +1,19 @@
 #include <main.h>
 #include <Constants.h>
 
-<<<<<<< Updated upstream
-const char *host = "Arexx";
-=======
 const bool STA_mode = false; //true voor STA mode false voor AP mode
+
+const char *host = "Arexx";
 
 const char* ssid = "Smart-Factory-AP";
 const char* password = "0123456789";
 
->>>>>>> Stashed changes
 const uint32_t spi_speed = 8000000;
 const uint8_t max_files = 20; //vergroot dit wanneer je "VFSFileImpl(): fopen(/...) failed" errors krijgt en de webpage slecht laadt
 
 SPIClass spiSD(HSPI);
 
 AsyncWebServer server(80);
-<<<<<<< Updated upstream
-=======
-
-const char *host = "arexx";
->>>>>>> Stashed changes
 DNSServer dns;
 
 void setup()
@@ -36,10 +29,6 @@ void setup()
     DBG_OUT.setDebugOutput(true);
 
     // Wifi manager
-<<<<<<< Updated upstream
-    AsyncWiFiManager wifiManager(&server, &dns);
-    wifiManager.autoConnect();
-=======
     
     #if STA_mode /*STA mode*/
     AsyncWiFiManager wifiManager(&server, &dns);
@@ -54,7 +43,6 @@ void setup()
     DBG_OUT.print("AP IP address: ");
     DBG_OUT.println(IP);
     #endif
->>>>>>> Stashed changes
 
     // Custom DNS settings
     if (MDNS.begin(host))
