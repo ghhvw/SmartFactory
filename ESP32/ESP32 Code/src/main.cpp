@@ -1,23 +1,36 @@
 #include <main.h>
 #include <Constants.h>
 
-const bool STA_mode = false; //true voor STA mode false voor AP mode
-
-const char *host = "Arexx";
-
-const char* ssid = "Smart-Factory-AP";
-const char* password = "0123456789";
-
-const uint32_t spi_speed = 8000000;
-const uint8_t max_files = 20; //vergroot dit wanneer je "VFSFileImpl(): fopen(/...) failed" errors krijgt en de webpage slecht laadt
-
-SPIClass spiSD(HSPI);
-
-AsyncWebServer server(80);
-DNSServer dns;
-
 void setup()
 {
+    initCommunication();
+    initWifi();
+    initHTML();
+    initSDCard();
+}
+
+void loop(void)
+{
+    DBG_OUT.printf("RSSI = %d dbm\n\r", WiFi.RSSI());
+    DBG_OUT.printf("Heap Size: %d bytes\n\r", esp_get_free_heap_size());
+    delay(1000);
+
+    #if 1
+    if (!getATmegaStatus() && !getTransmissionRunning()) {
+        setATmegaStatus(true);
+        //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
+    }
+    #else
+    if (!getATmegaStatus()) {
+        while(getTransmissionRunning());
+        delay(500); //voorkom vastlopen i2c bus na upload
+        requestATmegaStatus();
+        //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
+    }
+    #endif
+}
+
+void initCommunication(void){
     // Enable I2C
     pinMode(RESET_PIN, OUTPUT);
     digitalWrite(RESET_PIN, HIGH);
@@ -27,9 +40,9 @@ void setup()
     esp_log_level_set("*", ESP_LOG_DEBUG);
     DBG_OUT.begin(BAUD_RATE);
     DBG_OUT.setDebugOutput(true);
+}
 
-    // Wifi manager
-    
+void initWifi(void){
     #if STA_mode /*STA mode*/
     AsyncWiFiManager wifiManager(&server, &dns);
     wifiManager.autoConnect();
@@ -37,13 +50,15 @@ void setup()
     //AsyncWiFiManager wifiManager(&server, &dns);
     //wifiManager.autoConnect(ssid, password);
 
-    //??????wifiManager.startConfigPortal(ssid, password);
+    //wifiManager.startConfigPortal(ssid, password); //part of AsyncWiFimanager
     WiFi.softAP(ssid, password);
     IPAddress IP = WiFi.softAPIP();
     DBG_OUT.print("AP IP address: ");
     DBG_OUT.println(IP);
     #endif
+}
 
+void initHTML(void){
     // Custom DNS settings
     if (MDNS.begin(host))
     {
@@ -54,7 +69,28 @@ void setup()
         DBG_OUT.println(".local");
     }
 
+    debugHTML(); //debug functies om te checken of de HTML goed uitgelezen is
 
+    server.on("/edit", HTTP_POST, returnOK, HandleSDUpload);
+    server.onNotFound(HandleDefault);
+
+    server.begin();
+    DBG_OUT.println("HTTP server started");
+}
+
+void initSDCard(void){
+    spiSD.begin(14,2,15,SDCard_CS_PIN);
+
+    // SD initializer
+    while (!SD.begin(SDCard_CS_PIN, spiSD, spi_speed, "/sd", max_files))
+    {//begin(ssPin, &spi, frequency, *mountpoint, max_files)
+        DBG_OUT.println("SD initiatization failed. Retrying.");
+        delay(250);
+    }
+    DBG_OUT.println("SD Initialized.");
+}
+
+void debugHTML(void){
     //verzend status naar browser (connected/disconnected)
     server.on("/status", HTTP_GET, [] (AsyncWebServerRequest *request) {
         request->send(200, "text/plain", String(1).c_str()); //1: ESP32 is nog verbonden (en ATmega bereikbaar?)
@@ -103,43 +139,4 @@ void setup()
         }
         request->send(200, "text/plain", String(reply).c_str());
     });
-
-
-    // TODO: add more handlers?
-    server.on("/edit", HTTP_POST, returnOK, HandleSDUpload);
-    server.onNotFound(HandleDefault);
-
-    server.begin();
-    DBG_OUT.println("HTTP server started");
-
-    spiSD.begin(14,2,15,13);
-
-    // SD initializer
-    while (!SD.begin(SDCard_CS_PIN, spiSD, spi_speed, "/sd", max_files))
-    {
-        DBG_OUT.println("SD initiatization failed. Retrying.");
-        delay(250);
-    }
-    DBG_OUT.println("SD Initialized.");
-}
-
-void loop(void)
-{
-    DBG_OUT.printf("RSSI = %d dbm\n\r", WiFi.RSSI());
-    DBG_OUT.printf("Heap Size: %d bytes\n\r", esp_get_free_heap_size());
-    delay(1000);
-
-    #if 1
-    if (!getATmegaStatus() && !getTransmissionRunning()) {
-        setATmegaStatus(true);
-        //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
-    }
-    #else
-    if (!getATmegaStatus()) {
-        while(getTransmissionRunning());
-        delay(500); //voorkom vastlopen i2c bus na upload
-        requestATmegaStatus();
-        //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
-    }
-    #endif
 }
