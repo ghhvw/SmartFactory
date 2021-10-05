@@ -1,0 +1,2772 @@
+
+Bootloader test.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .BOOT         00000014  00020000  00020000  0000106e  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .jmp_table    00000044  00007e00  00007e00  0000102a  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .text         00000e56  00000000  00000000  000000b4  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  3 .data         00000120  00802000  00000e56  00000f0a  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  4 .comment      00000030  00000000  00000000  00001082  2**0
+                  CONTENTS, READONLY
+  5 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  000010b4  2**2
+                  CONTENTS, READONLY
+  6 .debug_aranges 00000180  00000000  00000000  000010f8  2**3
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_info   000054a3  00000000  00000000  00001278  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_abbrev 000040f9  00000000  00000000  0000671b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_line   000011c6  00000000  00000000  0000a814  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_frame  000003ac  00000000  00000000  0000b9dc  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_str    00003238  00000000  00000000  0000bd88  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_loc    0000146e  00000000  00000000  0000efc0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_ranges 00000188  00000000  00000000  00010430  2**3
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .BOOT:
+
+00020000 <SP_CommonSPM>:
+; ---
+
+.section .BOOT, "ax"
+
+SP_CommonSPM:
+	movw	ZL, r24          ; Load R25:R24 into Z.
+   20000:	fc 01       	movw	r30, r24
+	sts	NVM_CMD, r20     ; Load prepared command into NVM Command register.
+   20002:	40 93 ca 01 	sts	0x01CA, r20	; 0x8001ca <__TEXT_REGION_LENGTH__+0x7001ca>
+	ldi	r18, CCP_SPM_gc  ; Prepare Protect SPM signature in R18
+   20006:	2d e9       	ldi	r18, 0x9D	; 157
+	sts	CCP, r18         ; Enable SPM operation (this disables interrupts for 4 cycles).
+   20008:	20 93 34 00 	sts	0x0034, r18	; 0x800034 <__TEXT_REGION_LENGTH__+0x700034>
+	spm                      ; Self-program.
+   2000c:	e8 95       	spm
+	clr	r1               ; Clear R1 for GCC _zero_reg_ to function properly.
+   2000e:	11 24       	eor	r1, r1
+	out	RAMPZ, r19       ; Restore RAMPZ register.
+   20010:	3b bf       	out	0x3b, r19	; 59
+	ret
+   20012:	08 95       	ret
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 20 01 	jmp	0x240	; 0x240 <__ctors_end>
+   4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+   8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+   c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  10:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  14:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  18:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  1c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  20:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  24:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  28:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  2c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  30:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  34:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  38:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  3c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  40:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  44:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  48:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  4c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  50:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  54:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  58:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  5c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  60:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  64:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  68:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  6c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  70:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  74:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  78:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  7c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  80:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  84:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  88:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  8c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  90:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  94:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  98:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  9c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  a0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  a4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  a8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  ac:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  b0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  b4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  b8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  bc:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  c0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  c4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  c8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  cc:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  d0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  d4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  d8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  dc:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  e0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  e4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  e8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  ec:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  f0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  f4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  f8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+  fc:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 100:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 104:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 108:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 10c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 110:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 114:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 118:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 11c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 120:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 124:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 128:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 12c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 130:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 134:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 138:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 13c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 140:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 144:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 148:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 14c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 150:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 154:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 158:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 15c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 160:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 164:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 168:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 16c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 170:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 174:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 178:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 17c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 180:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 184:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 188:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 18c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 190:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 194:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 198:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 19c:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1a0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1a4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1a8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1ac:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1b0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1b4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1b8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1bc:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1c0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1c4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1c8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1cc:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1d0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1d4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1d8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1dc:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1e0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1e4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1e8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1ec:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1f0:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1f4:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+ 1f8:	0c 94 3e 01 	jmp	0x27c	; 0x27c <__bad_interrupt>
+
+000001fc <__trampolines_start>:
+ 1fc:	0c 94 63 02 	jmp	0x4c6	; 0x4c6 <_Z9logic_andbb>
+ 200:	0c 94 56 02 	jmp	0x4ac	; 0x4ac <_Z16isSmallerOrEqualii>
+ 204:	0c 94 48 02 	jmp	0x490	; 0x490 <_Z9isSmallerii>
+ 208:	0c 94 3a 02 	jmp	0x474	; 0x474 <_Z7isEqualii>
+ 20c:	0c 94 1d 02 	jmp	0x43a	; 0x43a <_Z8multiplyii>
+ 210:	0c 94 88 02 	jmp	0x510	; 0x510 <_Z11printNumberj>
+ 214:	0c 94 36 02 	jmp	0x46c	; 0x46c <_Z6divideii>
+ 218:	0c 94 5d 02 	jmp	0x4ba	; 0x4ba <_Z8logic_orbb>
+ 21c:	0c 94 c4 01 	jmp	0x388	; 0x388 <_Z6invertj>
+ 220:	0c 94 78 02 	jmp	0x4f0	; 0x4f0 <_Z8delay_msj>
+ 224:	0c 94 41 02 	jmp	0x482	; 0x482 <_Z8isBiggerii>
+ 228:	0c 94 c8 01 	jmp	0x390	; 0x390 <_Z3addii>
+ 22c:	0c 94 66 02 	jmp	0x4cc	; 0x4cc <_Z9logic_xorbb>
+ 230:	0c 94 6e 02 	jmp	0x4dc	; 0x4dc <_Z9delay1secv>
+ 234:	0c 94 4f 02 	jmp	0x49e	; 0x49e <_Z15isBiggerOrEqualii>
+ 238:	0c 94 f2 01 	jmp	0x3e4	; 0x3e4 <_Z8subtractii>
+ 23c:	0c 94 68 02 	jmp	0x4d0	; 0x4d0 <_Z9ToggleLEDv>
+
+00000240 <__ctors_end>:
+ 240:	11 24       	eor	r1, r1
+ 242:	1f be       	out	0x3f, r1	; 63
+ 244:	cf ef       	ldi	r28, 0xFF	; 255
+ 246:	cd bf       	out	0x3d, r28	; 61
+ 248:	df e3       	ldi	r29, 0x3F	; 63
+ 24a:	de bf       	out	0x3e, r29	; 62
+ 24c:	00 e0       	ldi	r16, 0x00	; 0
+ 24e:	0c bf       	out	0x3c, r16	; 60
+ 250:	18 be       	out	0x38, r1	; 56
+ 252:	19 be       	out	0x39, r1	; 57
+ 254:	1a be       	out	0x3a, r1	; 58
+ 256:	1b be       	out	0x3b, r1	; 59
+
+00000258 <__do_copy_data>:
+ 258:	11 e2       	ldi	r17, 0x21	; 33
+ 25a:	a0 e0       	ldi	r26, 0x00	; 0
+ 25c:	b0 e2       	ldi	r27, 0x20	; 32
+ 25e:	e6 e5       	ldi	r30, 0x56	; 86
+ 260:	fe e0       	ldi	r31, 0x0E	; 14
+ 262:	00 e0       	ldi	r16, 0x00	; 0
+ 264:	0b bf       	out	0x3b, r16	; 59
+ 266:	02 c0       	rjmp	.+4      	; 0x26c <__do_copy_data+0x14>
+ 268:	07 90       	elpm	r0, Z+
+ 26a:	0d 92       	st	X+, r0
+ 26c:	a0 32       	cpi	r26, 0x20	; 32
+ 26e:	b1 07       	cpc	r27, r17
+ 270:	d9 f7       	brne	.-10     	; 0x268 <__do_copy_data+0x10>
+ 272:	1b be       	out	0x3b, r1	; 59
+ 274:	0e 94 40 04 	call	0x880	; 0x880 <main>
+ 278:	0c 94 29 07 	jmp	0xe52	; 0xe52 <_exit>
+
+0000027c <__bad_interrupt>:
+ 27c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000280 <SP_ReadByte>:
+
+.section .text
+.global SP_ReadByte
+
+SP_ReadByte:
+	in	r19, RAMPZ      ; Save RAMPZ.
+ 280:	3b b7       	in	r19, 0x3b	; 59
+	out	RAMPZ, r24      ; Load RAMPZ with the MSB of the address.
+ 282:	8b bf       	out	0x3b, r24	; 59
+	movw	ZL, r22         ; Move the low bytes to the Z pointer
+ 284:	fb 01       	movw	r30, r22
+	elpm	r24, Z          ; Extended load byte from address pointed to by Z.
+ 286:	86 91       	elpm	r24, Z
+	out	RAMPZ, r19      ; Restore RAMPZ register.
+ 288:	3b bf       	out	0x3b, r19	; 59
+	ret
+ 28a:	08 95       	ret
+
+0000028c <SP_ReadWord>:
+
+.section .text
+.global SP_ReadWord
+
+SP_ReadWord:
+	in	r19, RAMPZ      ; Save RAMPZ.
+ 28c:	3b b7       	in	r19, 0x3b	; 59
+	out	RAMPZ, r24      ; Load RAMPZ with the MSB of the address.
+ 28e:	8b bf       	out	0x3b, r24	; 59
+	movw	ZL, r22         ; Move the low bytes to the Z pointer
+ 290:	fb 01       	movw	r30, r22
+	elpm	r24, Z+         ; Extended load byte from address pointed to by Z.
+ 292:	87 91       	elpm	r24, Z+
+	elpm	r25, Z          ; Extended load byte from address pointed to by Z.
+ 294:	96 91       	elpm	r25, Z
+	out	RAMPZ, r19      ; Restore RAMPZ register.
+ 296:	3b bf       	out	0x3b, r19	; 59
+	ret
+ 298:	08 95       	ret
+
+0000029a <SP_ReadCalibrationByte>:
+
+.section .text
+.global SP_ReadCalibrationByte	
+
+SP_ReadCalibrationByte:
+	ldi	r20, NVM_CMD_READ_CALIB_ROW_gc    ; Prepare NVM command in R20.
+ 29a:	42 e0       	ldi	r20, 0x02	; 2
+	rjmp	SP_CommonLPM                      ; Jump to common LPM code.
+ 29c:	70 c0       	rjmp	.+224    	; 0x37e <SP_CommonLPM>
+
+0000029e <SP_ReadUserSignatureByte>:
+
+.section .text	
+.global SP_ReadUserSignatureByte
+
+SP_ReadUserSignatureByte:
+	ldi	r20, NVM_CMD_READ_USER_SIG_ROW_gc  ; Prepare NVM command in R20.
+ 29e:	41 e0       	ldi	r20, 0x01	; 1
+	rjmp	SP_CommonLPM                       ; Jump to common LPM code.
+ 2a0:	6e c0       	rjmp	.+220    	; 0x37e <SP_CommonLPM>
+
+000002a2 <SP_ReadFuseByte>:
+
+.section .text	
+.global SP_ReadFuseByte
+
+SP_ReadFuseByte:
+	sts	NVM_ADDR0, r24              ; Load fuse byte index into NVM Address Register 0.
+ 2a2:	80 93 c0 01 	sts	0x01C0, r24	; 0x8001c0 <__TEXT_REGION_LENGTH__+0x7001c0>
+	clr	r24                         ; Prepare a zero.
+ 2a6:	88 27       	eor	r24, r24
+	sts	NVM_ADDR1, r24              ; Load zero into NVM Address Register 1.
+ 2a8:	80 93 c1 01 	sts	0x01C1, r24	; 0x8001c1 <__TEXT_REGION_LENGTH__+0x7001c1>
+	sts	NVM_ADDR2, r24              ; Load zero into NVM Address Register 2.
+ 2ac:	80 93 c2 01 	sts	0x01C2, r24	; 0x8001c2 <__TEXT_REGION_LENGTH__+0x7001c2>
+	ldi	r20, NVM_CMD_READ_FUSES_gc  ; Prepare NVM command in R20.
+ 2b0:	47 e0       	ldi	r20, 0x07	; 7
+	rcall	SP_CommonCMD                ; Jump to common NVM Action code.
+ 2b2:	55 d0       	rcall	.+170    	; 0x35e <SP_CommonCMD>
+	movw	r24, r22                    ; Move low byte to 1 byte return address.
+ 2b4:	cb 01       	movw	r24, r22
+	ret
+ 2b6:	08 95       	ret
+
+000002b8 <SP_WriteLockBits>:
+
+.section .text	
+.global SP_WriteLockBits
+
+SP_WriteLockBits:
+	sts	NVM_DATA0, r24                  ; Load lock bits into NVM Data Register 0.
+ 2b8:	80 93 c4 01 	sts	0x01C4, r24	; 0x8001c4 <__TEXT_REGION_LENGTH__+0x7001c4>
+	ldi	r20, NVM_CMD_WRITE_LOCK_BITS_gc ; Prepare NVM command in R20.
+ 2bc:	48 e0       	ldi	r20, 0x08	; 8
+	rjmp	SP_CommonCMD                    ; Jump to common NVM Action code.
+ 2be:	4f c0       	rjmp	.+158    	; 0x35e <SP_CommonCMD>
+
+000002c0 <SP_ReadLockBits>:
+
+.section .text		
+.global SP_ReadLockBits
+
+SP_ReadLockBits:
+	lds	r24, NVM_LOCKBITS       ; Read IO-mapped lock bits.
+ 2c0:	80 91 d0 01 	lds	r24, 0x01D0	; 0x8001d0 <__TEXT_REGION_LENGTH__+0x7001d0>
+	ret
+ 2c4:	08 95       	ret
+
+000002c6 <SP_EraseUserSignatureRow>:
+
+.section .text
+.global SP_EraseUserSignatureRow
+
+SP_EraseUserSignatureRow:
+	in	r19, RAMPZ                         ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 2c6:	3b b7       	in	r19, 0x3b	; 59
+	ldi	r20, NVM_CMD_ERASE_USER_SIG_ROW_gc ; Prepare NVM command in R20.
+ 2c8:	48 e1       	ldi	r20, 0x18	; 24
+	jmp 	SP_CommonSPM                       ; Jump to common SPM code.
+ 2ca:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+000002ce <SP_WriteUserSignatureRow>:
+
+.section .text
+.global SP_WriteUserSignatureRow
+
+SP_WriteUserSignatureRow:
+	in	r19, RAMPZ                          ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 2ce:	3b b7       	in	r19, 0x3b	; 59
+	ldi	r20, NVM_CMD_WRITE_USER_SIG_ROW_gc  ; Prepare NVM command in R20.
+ 2d0:	4a e1       	ldi	r20, 0x1A	; 26
+	jmp	SP_CommonSPM                        ; Jump to common SPM code.
+ 2d2:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+000002d6 <SP_EraseApplicationSection>:
+
+.section .text
+.global SP_EraseApplicationSection
+
+SP_EraseApplicationSection:
+	in	r19, RAMPZ                 ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 2d6:	3b b7       	in	r19, 0x3b	; 59
+	ldi	r20, NVM_CMD_ERASE_APP_gc  ; Prepare NVM command in R20.
+ 2d8:	40 e2       	ldi	r20, 0x20	; 32
+	jmp	SP_CommonSPM               ; Jump to common SPM code.
+ 2da:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+000002de <SP_EraseApplicationPage>:
+
+.section .text	
+.global SP_EraseApplicationPage
+
+SP_EraseApplicationPage:
+	in	r19, RAMPZ                      ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 2de:	3b b7       	in	r19, 0x3b	; 59
+	out	RAMPZ, r24                      ; Load RAMPZ with the MSB of the address.
+ 2e0:	8b bf       	out	0x3b, r24	; 59
+	movw    r24, r22                        ; Move low bytes for ZH:ZL to R25:R24
+ 2e2:	cb 01       	movw	r24, r22
+	ldi	r20, NVM_CMD_ERASE_APP_PAGE_gc  ; Prepare NVM command in R20.
+ 2e4:	42 e2       	ldi	r20, 0x22	; 34
+	jmp	SP_CommonSPM                    ; Jump to common SPM code.
+ 2e6:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+000002ea <SP_LoadFlashWord>:
+
+.section .text
+.global SP_LoadFlashWord
+
+SP_LoadFlashWord:
+	in	r19, RAMPZ                         ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 2ea:	3b b7       	in	r19, 0x3b	; 59
+	movw	r0, r22                            ; Prepare flash word in R1:R0.
+ 2ec:	0b 01       	movw	r0, r22
+	ldi	r20, NVM_CMD_LOAD_FLASH_BUFFER_gc  ; Prepare NVM command in R20.
+ 2ee:	43 e2       	ldi	r20, 0x23	; 35
+	jmp	SP_CommonSPM                       ; Jump to common SPM code.
+ 2f0:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+000002f4 <SP_WriteApplicationPage>:
+
+.section .text		
+.global SP_WriteApplicationPage
+
+SP_WriteApplicationPage:
+	in	r19, RAMPZ                       ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 2f4:	3b b7       	in	r19, 0x3b	; 59
+	out	RAMPZ, r24                       ; Load RAMPZ with the MSB of the address.
+ 2f6:	8b bf       	out	0x3b, r24	; 59
+	movw	r24, r22                         ; Move low bytes of address to ZH:ZL from R23:R22
+ 2f8:	cb 01       	movw	r24, r22
+	ldi	r20, NVM_CMD_WRITE_APP_PAGE_gc   ; Prepare NVM command in R20.
+ 2fa:	44 e2       	ldi	r20, 0x24	; 36
+	jmp	SP_CommonSPM                     ; Jump to common SPM code.
+ 2fc:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+00000300 <SP_EraseWriteApplicationPage>:
+
+.section .text
+.global SP_EraseWriteApplicationPage
+
+SP_EraseWriteApplicationPage:
+	in	r19, RAMPZ                            ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 300:	3b b7       	in	r19, 0x3b	; 59
+	out	RAMPZ, r24                            ; Load RAMPZ with the MSB of the address.
+ 302:	8b bf       	out	0x3b, r24	; 59
+	movw	r24, r22                              ; Move low bytes of address to ZH:ZL from R23:R22
+ 304:	cb 01       	movw	r24, r22
+	ldi	r20, NVM_CMD_ERASE_WRITE_APP_PAGE_gc  ; Prepare NVM command in R20.
+ 306:	45 e2       	ldi	r20, 0x25	; 37
+	jmp	SP_CommonSPM                          ; Jump to common SPM code.
+ 308:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+0000030c <SP_EraseFlashBuffer>:
+
+.section .text		
+.global SP_EraseFlashBuffer
+
+SP_EraseFlashBuffer:
+	in	r19, RAMPZ                          ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 30c:	3b b7       	in	r19, 0x3b	; 59
+	ldi	r20, NVM_CMD_ERASE_FLASH_BUFFER_gc  ; Prepare NVM command in R20.
+ 30e:	46 e2       	ldi	r20, 0x26	; 38
+	jmp	SP_CommonSPM                        ; Jump to common SPM code.
+ 310:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+00000314 <SP_EraseBootPage>:
+
+.section .text		
+.global SP_EraseBootPage
+
+SP_EraseBootPage:
+	in	r19, RAMPZ                         ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 314:	3b b7       	in	r19, 0x3b	; 59
+	out	RAMPZ, r24                         ; Load RAMPZ with the MSB of the address.
+ 316:	8b bf       	out	0x3b, r24	; 59
+	movw	r24, r22                           ; Move low bytes of address to ZH:ZL from R23:R22
+ 318:	cb 01       	movw	r24, r22
+	ldi	r20, NVM_CMD_ERASE_BOOT_PAGE_gc    ; Prepare NVM command in R20.
+ 31a:	4a e2       	ldi	r20, 0x2A	; 42
+	jmp	SP_CommonSPM                       ; Jump to common SPM code.
+ 31c:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+00000320 <SP_WriteBootPage>:
+
+.section .text		
+.global SP_WriteBootPage
+
+SP_WriteBootPage:
+	in	r19, RAMPZ                       ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 320:	3b b7       	in	r19, 0x3b	; 59
+	out	RAMPZ, r24                       ; Load RAMPZ with the MSB of the address.
+ 322:	8b bf       	out	0x3b, r24	; 59
+	movw	r24, r22                         ; Move low bytes of address to ZH:ZL from R23:R22
+ 324:	cb 01       	movw	r24, r22
+	ldi	r20, NVM_CMD_WRITE_BOOT_PAGE_gc  ; Prepare NVM command in R20.
+ 326:	4c e2       	ldi	r20, 0x2C	; 44
+	jmp	SP_CommonSPM                     ; Jump to common SPM code.
+ 328:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+0000032c <SP_EraseWriteBootPage>:
+
+.section .text		
+.global SP_EraseWriteBootPage
+
+SP_EraseWriteBootPage:
+	in	r19, RAMPZ                             ; Save RAMPZ, which is restored in SP_CommonSPM.
+ 32c:	3b b7       	in	r19, 0x3b	; 59
+	out	RAMPZ, r24                             ; Load RAMPZ with the MSB of the address.
+ 32e:	8b bf       	out	0x3b, r24	; 59
+	movw	r24, r22                               ; Move low bytes of address to ZH:ZL from R23:R22
+ 330:	cb 01       	movw	r24, r22
+	ldi	r20, NVM_CMD_ERASE_WRITE_BOOT_PAGE_gc  ; Prepare NVM command in R20.
+ 332:	4d e2       	ldi	r20, 0x2D	; 45
+	jmp	SP_CommonSPM                           ; Jump to common SPM code.
+ 334:	0d 94 00 00 	jmp	0x20000	; 0x20000 <SP_CommonSPM>
+
+00000338 <SP_ApplicationCRC>:
+
+.section .text	
+.global SP_ApplicationCRC
+
+SP_ApplicationCRC:
+	ldi	r20, NVM_CMD_APP_CRC_gc    ; Prepare NVM command in R20.
+ 338:	48 e3       	ldi	r20, 0x38	; 56
+	rjmp	SP_CommonCMD               ; Jump to common NVM Action code.
+ 33a:	11 c0       	rjmp	.+34     	; 0x35e <SP_CommonCMD>
+
+0000033c <SP_BootCRC>:
+
+.section .text
+.global SP_BootCRC
+
+SP_BootCRC:
+	ldi	r20, NVM_CMD_BOOT_CRC_gc   ; Prepare NVM command in R20.
+ 33c:	49 e3       	ldi	r20, 0x39	; 57
+	rjmp	SP_CommonCMD               ; Jump to common NVM Action code.
+ 33e:	0f c0       	rjmp	.+30     	; 0x35e <SP_CommonCMD>
+
+00000340 <SP_LockSPM>:
+
+.section .text
+.global SP_LockSPM
+
+SP_LockSPM:
+	ldi	r18, CCP_IOREG_gc     ; Prepare Protect IO-register signature in R18.
+ 340:	28 ed       	ldi	r18, 0xD8	; 216
+	sts	CCP, r18              ; Enable IO-register operation (this disables interrupts for 4 cycles).
+ 342:	20 93 34 00 	sts	0x0034, r18	; 0x800034 <__TEXT_REGION_LENGTH__+0x700034>
+	ldi	r18, NVM_SPMLOCK_bm   ; Prepare bitmask for locking SPM into R18.
+ 346:	21 e0       	ldi	r18, 0x01	; 1
+	sts	NVM_CTRLB, r18        ; Load bitmask into NVM Control Register B, which locks SPM.
+ 348:	20 93 cc 01 	sts	0x01CC, r18	; 0x8001cc <__TEXT_REGION_LENGTH__+0x7001cc>
+	ret
+ 34c:	08 95       	ret
+
+0000034e <SP_WaitForSPM>:
+
+.section .text
+.global SP_WaitForSPM		
+
+SP_WaitForSPM:
+	lds	r18, NVM_STATUS     ; Load the NVM Status register.
+ 34e:	20 91 cf 01 	lds	r18, 0x01CF	; 0x8001cf <__TEXT_REGION_LENGTH__+0x7001cf>
+	sbrc	r18, NVM_NVMBUSY_bp ; Check if bit is cleared.
+ 352:	27 fd       	sbrc	r18, 7
+	rjmp	SP_WaitForSPM       ; Repeat check if bit is not cleared.
+ 354:	fc cf       	rjmp	.-8      	; 0x34e <SP_WaitForSPM>
+	clr	r18
+ 356:	22 27       	eor	r18, r18
+	sts	NVM_CMD, r18        ; Clear up command register to NO_OPERATION.
+ 358:	20 93 ca 01 	sts	0x01CA, r18	; 0x8001ca <__TEXT_REGION_LENGTH__+0x7001ca>
+	ret
+ 35c:	08 95       	ret
+
+0000035e <SP_CommonCMD>:
+; ---
+
+.section .text		
+
+SP_CommonCMD:
+	sts	NVM_CMD, r20        ; Load command into NVM Command register.
+ 35e:	40 93 ca 01 	sts	0x01CA, r20	; 0x8001ca <__TEXT_REGION_LENGTH__+0x7001ca>
+	ldi	r18, CCP_IOREG_gc   ; Prepare Protect IO-register signature in R18.
+ 362:	28 ed       	ldi	r18, 0xD8	; 216
+	ldi	r19, NVM_CMDEX_bm   ; Prepare bitmask for setting NVM Command Execute bit into R19.
+ 364:	31 e0       	ldi	r19, 0x01	; 1
+	sts	CCP, r18            ; Enable IO-register operation (this disables interrupts for 4 cycles).
+ 366:	20 93 34 00 	sts	0x0034, r18	; 0x800034 <__TEXT_REGION_LENGTH__+0x700034>
+	sts	NVM_CTRLA, r19      ; Load bitmask into NVM Control Register A, which executes the command.
+ 36a:	30 93 cb 01 	sts	0x01CB, r19	; 0x8001cb <__TEXT_REGION_LENGTH__+0x7001cb>
+	lds	r22, NVM_DATA0      ; Load NVM Data Register 0 into R22.
+ 36e:	60 91 c4 01 	lds	r22, 0x01C4	; 0x8001c4 <__TEXT_REGION_LENGTH__+0x7001c4>
+	lds	r23, NVM_DATA1      ; Load NVM Data Register 1 into R23.
+ 372:	70 91 c5 01 	lds	r23, 0x01C5	; 0x8001c5 <__TEXT_REGION_LENGTH__+0x7001c5>
+	lds	r24, NVM_DATA2      ; Load NVM Data Register 2 into R24.
+ 376:	80 91 c6 01 	lds	r24, 0x01C6	; 0x8001c6 <__TEXT_REGION_LENGTH__+0x7001c6>
+	clr	r25                 ; Clear R25 in order to return a clean 32-bit value.
+ 37a:	99 27       	eor	r25, r25
+	ret
+ 37c:	08 95       	ret
+
+0000037e <SP_CommonLPM>:
+; ---
+
+.section .text		
+
+SP_CommonLPM:
+	movw	ZL, r24             ; Load index into Z.
+ 37e:	fc 01       	movw	r30, r24
+	sts	NVM_CMD, r20        ; Load prepared command into NVM Command register.
+ 380:	40 93 ca 01 	sts	0x01CA, r20	; 0x8001ca <__TEXT_REGION_LENGTH__+0x7001ca>
+	lpm	r24,Z
+ 384:	84 91       	lpm	r24, Z
+	ret
+ 386:	08 95       	ret
+
+00000388 <_Z6invertj>:
+
+
+uint16_t invert(uint16_t num)
+{
+	return -num;
+}
+ 388:	91 95       	neg	r25
+ 38a:	81 95       	neg	r24
+ 38c:	91 09       	sbc	r25, r1
+ 38e:	08 95       	ret
+
+00000390 <_Z3addii>:
+
+
+
+int16_t add(int16_t A, int16_t B)
+{
+ 390:	cf 92       	push	r12
+ 392:	df 92       	push	r13
+ 394:	ef 92       	push	r14
+ 396:	ff 92       	push	r15
+ 398:	9b 01       	movw	r18, r22
+	long res = (long)A + B;
+ 39a:	6c 01       	movw	r12, r24
+ 39c:	09 2e       	mov	r0, r25
+ 39e:	00 0c       	add	r0, r0
+ 3a0:	ee 08       	sbc	r14, r14
+ 3a2:	ff 08       	sbc	r15, r15
+ 3a4:	ab 01       	movw	r20, r22
+ 3a6:	77 0f       	add	r23, r23
+ 3a8:	66 0b       	sbc	r22, r22
+ 3aa:	77 0b       	sbc	r23, r23
+ 3ac:	4c 0d       	add	r20, r12
+ 3ae:	5d 1d       	adc	r21, r13
+ 3b0:	6e 1d       	adc	r22, r14
+ 3b2:	7f 1d       	adc	r23, r15
+
+	if(res > 32767)
+ 3b4:	41 15       	cp	r20, r1
+ 3b6:	e0 e8       	ldi	r30, 0x80	; 128
+ 3b8:	5e 07       	cpc	r21, r30
+ 3ba:	61 05       	cpc	r22, r1
+ 3bc:	71 05       	cpc	r23, r1
+ 3be:	44 f4       	brge	.+16     	; 0x3d0 <_Z3addii+0x40>
+	return 32767;
+	if(res < -32768)
+ 3c0:	41 15       	cp	r20, r1
+ 3c2:	50 48       	sbci	r21, 0x80	; 128
+ 3c4:	6f 4f       	sbci	r22, 0xFF	; 255
+ 3c6:	7f 4f       	sbci	r23, 0xFF	; 255
+ 3c8:	34 f0       	brlt	.+12     	; 0x3d6 <_Z3addii+0x46>
+	return -32767;
+
+	return (int16_t)res;
+ 3ca:	82 0f       	add	r24, r18
+ 3cc:	93 1f       	adc	r25, r19
+ 3ce:	05 c0       	rjmp	.+10     	; 0x3da <_Z3addii+0x4a>
+int16_t add(int16_t A, int16_t B)
+{
+	long res = (long)A + B;
+
+	if(res > 32767)
+	return 32767;
+ 3d0:	8f ef       	ldi	r24, 0xFF	; 255
+ 3d2:	9f e7       	ldi	r25, 0x7F	; 127
+ 3d4:	02 c0       	rjmp	.+4      	; 0x3da <_Z3addii+0x4a>
+	if(res < -32768)
+	return -32767;
+ 3d6:	81 e0       	ldi	r24, 0x01	; 1
+ 3d8:	90 e8       	ldi	r25, 0x80	; 128
+
+	return (int16_t)res;
+}
+ 3da:	ff 90       	pop	r15
+ 3dc:	ef 90       	pop	r14
+ 3de:	df 90       	pop	r13
+ 3e0:	cf 90       	pop	r12
+ 3e2:	08 95       	ret
+
+000003e4 <_Z8subtractii>:
+
+
+int16_t subtract(int16_t A, int16_t B)
+{
+ 3e4:	cf 92       	push	r12
+ 3e6:	df 92       	push	r13
+ 3e8:	ef 92       	push	r14
+ 3ea:	ff 92       	push	r15
+ 3ec:	9b 01       	movw	r18, r22
+	long res = (long)A - B;
+ 3ee:	ac 01       	movw	r20, r24
+ 3f0:	09 2e       	mov	r0, r25
+ 3f2:	00 0c       	add	r0, r0
+ 3f4:	66 0b       	sbc	r22, r22
+ 3f6:	77 0b       	sbc	r23, r23
+ 3f8:	69 01       	movw	r12, r18
+ 3fa:	03 2e       	mov	r0, r19
+ 3fc:	00 0c       	add	r0, r0
+ 3fe:	ee 08       	sbc	r14, r14
+ 400:	ff 08       	sbc	r15, r15
+ 402:	4c 19       	sub	r20, r12
+ 404:	5d 09       	sbc	r21, r13
+ 406:	6e 09       	sbc	r22, r14
+ 408:	7f 09       	sbc	r23, r15
+
+	if(res > 32767)
+ 40a:	41 15       	cp	r20, r1
+ 40c:	e0 e8       	ldi	r30, 0x80	; 128
+ 40e:	5e 07       	cpc	r21, r30
+ 410:	61 05       	cpc	r22, r1
+ 412:	71 05       	cpc	r23, r1
+ 414:	44 f4       	brge	.+16     	; 0x426 <__LOCK_REGION_LENGTH__+0x26>
+	return 32767;
+	if(res < -32768)
+ 416:	41 15       	cp	r20, r1
+ 418:	50 48       	sbci	r21, 0x80	; 128
+ 41a:	6f 4f       	sbci	r22, 0xFF	; 255
+ 41c:	7f 4f       	sbci	r23, 0xFF	; 255
+ 41e:	34 f0       	brlt	.+12     	; 0x42c <__LOCK_REGION_LENGTH__+0x2c>
+	return -32767;
+
+	return (int16_t)res;
+ 420:	82 1b       	sub	r24, r18
+ 422:	93 0b       	sbc	r25, r19
+ 424:	05 c0       	rjmp	.+10     	; 0x430 <__LOCK_REGION_LENGTH__+0x30>
+int16_t subtract(int16_t A, int16_t B)
+{
+	long res = (long)A - B;
+
+	if(res > 32767)
+	return 32767;
+ 426:	8f ef       	ldi	r24, 0xFF	; 255
+ 428:	9f e7       	ldi	r25, 0x7F	; 127
+ 42a:	02 c0       	rjmp	.+4      	; 0x430 <__LOCK_REGION_LENGTH__+0x30>
+	if(res < -32768)
+	return -32767;
+ 42c:	81 e0       	ldi	r24, 0x01	; 1
+ 42e:	90 e8       	ldi	r25, 0x80	; 128
+
+	return (int16_t)res;
+}
+ 430:	ff 90       	pop	r15
+ 432:	ef 90       	pop	r14
+ 434:	df 90       	pop	r13
+ 436:	cf 90       	pop	r12
+ 438:	08 95       	ret
+
+0000043a <_Z8multiplyii>:
+
+
+int16_t multiply(int16_t A, int16_t B)
+{
+	long res = (long)A * B;
+ 43a:	9c 01       	movw	r18, r24
+ 43c:	db 01       	movw	r26, r22
+ 43e:	0e 94 f7 06 	call	0xdee	; 0xdee <__mulhisi3>
+
+	if(res > 32767)
+ 442:	61 15       	cp	r22, r1
+ 444:	20 e8       	ldi	r18, 0x80	; 128
+ 446:	72 07       	cpc	r23, r18
+ 448:	81 05       	cpc	r24, r1
+ 44a:	91 05       	cpc	r25, r1
+ 44c:	4c f4       	brge	.+18     	; 0x460 <_Z8multiplyii+0x26>
+	return 32767;
+	if(res < -32768)
+ 44e:	61 15       	cp	r22, r1
+ 450:	20 e8       	ldi	r18, 0x80	; 128
+ 452:	72 07       	cpc	r23, r18
+ 454:	2f ef       	ldi	r18, 0xFF	; 255
+ 456:	82 07       	cpc	r24, r18
+ 458:	92 07       	cpc	r25, r18
+ 45a:	2c f0       	brlt	.+10     	; 0x466 <_Z8multiplyii+0x2c>
+	return -32767;
+
+	return (int16_t)res;
+ 45c:	cb 01       	movw	r24, r22
+ 45e:	08 95       	ret
+int16_t multiply(int16_t A, int16_t B)
+{
+	long res = (long)A * B;
+
+	if(res > 32767)
+	return 32767;
+ 460:	8f ef       	ldi	r24, 0xFF	; 255
+ 462:	9f e7       	ldi	r25, 0x7F	; 127
+ 464:	08 95       	ret
+	if(res < -32768)
+	return -32767;
+ 466:	81 e0       	ldi	r24, 0x01	; 1
+ 468:	90 e8       	ldi	r25, 0x80	; 128
+
+	return (int16_t)res;
+}
+ 46a:	08 95       	ret
+
+0000046c <_Z6divideii>:
+
+
+int16_t divide(int16_t A, int16_t B)
+{
+	return A / B;
+ 46c:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+ 470:	cb 01       	movw	r24, r22
+}
+ 472:	08 95       	ret
+
+00000474 <_Z7isEqualii>:
+
+
+bool isEqual(int16_t A, int16_t B)			{return A == B; }
+ 474:	21 e0       	ldi	r18, 0x01	; 1
+ 476:	86 17       	cp	r24, r22
+ 478:	97 07       	cpc	r25, r23
+ 47a:	09 f0       	breq	.+2      	; 0x47e <_Z7isEqualii+0xa>
+ 47c:	20 e0       	ldi	r18, 0x00	; 0
+ 47e:	82 2f       	mov	r24, r18
+ 480:	08 95       	ret
+
+00000482 <_Z8isBiggerii>:
+bool isBigger(int16_t A, int16_t B)			{return A > B;	}
+ 482:	21 e0       	ldi	r18, 0x01	; 1
+ 484:	68 17       	cp	r22, r24
+ 486:	79 07       	cpc	r23, r25
+ 488:	0c f0       	brlt	.+2      	; 0x48c <_Z8isBiggerii+0xa>
+ 48a:	20 e0       	ldi	r18, 0x00	; 0
+ 48c:	82 2f       	mov	r24, r18
+ 48e:	08 95       	ret
+
+00000490 <_Z9isSmallerii>:
+bool isSmaller(int16_t A, int16_t B)		{return A < B;	}
+ 490:	21 e0       	ldi	r18, 0x01	; 1
+ 492:	86 17       	cp	r24, r22
+ 494:	97 07       	cpc	r25, r23
+ 496:	0c f0       	brlt	.+2      	; 0x49a <_Z9isSmallerii+0xa>
+ 498:	20 e0       	ldi	r18, 0x00	; 0
+ 49a:	82 2f       	mov	r24, r18
+ 49c:	08 95       	ret
+
+0000049e <_Z15isBiggerOrEqualii>:
+bool isBiggerOrEqual(int16_t A, int16_t B)	{return A >= B;	}
+ 49e:	21 e0       	ldi	r18, 0x01	; 1
+ 4a0:	86 17       	cp	r24, r22
+ 4a2:	97 07       	cpc	r25, r23
+ 4a4:	0c f4       	brge	.+2      	; 0x4a8 <_Z15isBiggerOrEqualii+0xa>
+ 4a6:	20 e0       	ldi	r18, 0x00	; 0
+ 4a8:	82 2f       	mov	r24, r18
+ 4aa:	08 95       	ret
+
+000004ac <_Z16isSmallerOrEqualii>:
+bool isSmallerOrEqual(int16_t A, int16_t B)	{return A <= B; }
+ 4ac:	21 e0       	ldi	r18, 0x01	; 1
+ 4ae:	68 17       	cp	r22, r24
+ 4b0:	79 07       	cpc	r23, r25
+ 4b2:	0c f4       	brge	.+2      	; 0x4b6 <_Z16isSmallerOrEqualii+0xa>
+ 4b4:	20 e0       	ldi	r18, 0x00	; 0
+ 4b6:	82 2f       	mov	r24, r18
+ 4b8:	08 95       	ret
+
+000004ba <_Z8logic_orbb>:
+
+bool logic_or(bool A, bool B)	{return A || B; }
+ 4ba:	81 11       	cpse	r24, r1
+ 4bc:	02 c0       	rjmp	.+4      	; 0x4c2 <_Z8logic_orbb+0x8>
+ 4be:	86 2f       	mov	r24, r22
+ 4c0:	08 95       	ret
+ 4c2:	81 e0       	ldi	r24, 0x01	; 1
+ 4c4:	08 95       	ret
+
+000004c6 <_Z9logic_andbb>:
+bool logic_and(bool A, bool B)	{return A && B; }
+ 4c6:	81 11       	cpse	r24, r1
+ 4c8:	86 2f       	mov	r24, r22
+ 4ca:	08 95       	ret
+
+000004cc <_Z9logic_xorbb>:
+bool logic_xor(bool A, bool B)	{return A ^ B;  }
+ 4cc:	86 27       	eor	r24, r22
+ 4ce:	08 95       	ret
+
+000004d0 <_Z9ToggleLEDv>:
+
+
+void ToggleLED()
+{
+	PORTQ_OUTTGL |= (1 << 3);
+ 4d0:	e7 ec       	ldi	r30, 0xC7	; 199
+ 4d2:	f7 e0       	ldi	r31, 0x07	; 7
+ 4d4:	80 81       	ld	r24, Z
+ 4d6:	88 60       	ori	r24, 0x08	; 8
+ 4d8:	80 83       	st	Z, r24
+ 4da:	08 95       	ret
+
+000004dc <_Z9delay1secv>:
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 4dc:	2f ef       	ldi	r18, 0xFF	; 255
+ 4de:	87 ea       	ldi	r24, 0xA7	; 167
+ 4e0:	91 e6       	ldi	r25, 0x61	; 97
+ 4e2:	21 50       	subi	r18, 0x01	; 1
+ 4e4:	80 40       	sbci	r24, 0x00	; 0
+ 4e6:	90 40       	sbci	r25, 0x00	; 0
+ 4e8:	e1 f7       	brne	.-8      	; 0x4e2 <_Z9delay1secv+0x6>
+ 4ea:	00 c0       	rjmp	.+0      	; 0x4ec <_Z9delay1secv+0x10>
+ 4ec:	00 00       	nop
+ 4ee:	08 95       	ret
+
+000004f0 <_Z8delay_msj>:
+}
+
+
+void delay_ms(uint16_t ms)
+{
+	for(uint16_t i = 0; i < ms; i++)
+ 4f0:	00 97       	sbiw	r24, 0x00	; 0
+ 4f2:	69 f0       	breq	.+26     	; 0x50e <_Z8delay_msj+0x1e>
+ 4f4:	20 e0       	ldi	r18, 0x00	; 0
+ 4f6:	30 e0       	ldi	r19, 0x00	; 0
+ 4f8:	ef e3       	ldi	r30, 0x3F	; 63
+ 4fa:	ff e1       	ldi	r31, 0x1F	; 31
+ 4fc:	31 97       	sbiw	r30, 0x01	; 1
+ 4fe:	f1 f7       	brne	.-4      	; 0x4fc <_Z8delay_msj+0xc>
+ 500:	00 c0       	rjmp	.+0      	; 0x502 <_Z8delay_msj+0x12>
+ 502:	00 00       	nop
+ 504:	2f 5f       	subi	r18, 0xFF	; 255
+ 506:	3f 4f       	sbci	r19, 0xFF	; 255
+ 508:	82 17       	cp	r24, r18
+ 50a:	93 07       	cpc	r25, r19
+ 50c:	a9 f7       	brne	.-22     	; 0x4f8 <_Z8delay_msj+0x8>
+ 50e:	08 95       	ret
+
+00000510 <_Z11printNumberj>:
+
+
+
+void printNumber(uint16_t num)
+{
+	USART0_Transmit_Number(num);
+ 510:	0e 94 35 05 	call	0xa6a	; 0xa6a <_Z22USART0_Transmit_Numberi>
+	USART0_TransmitString("\n\r");
+ 514:	88 ed       	ldi	r24, 0xD8	; 216
+ 516:	90 e2       	ldi	r25, 0x20	; 32
+ 518:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+ 51c:	08 95       	ret
+
+0000051e <_Z11hexToNibblec>:
+#ifndef CONVERT_H_
+#define CONVERT_H_
+
+uint8_t hexToNibble(char hex)
+{
+	if(hex >= '0' && hex <= '9')
+ 51e:	90 ed       	ldi	r25, 0xD0	; 208
+ 520:	98 0f       	add	r25, r24
+ 522:	9a 30       	cpi	r25, 0x0A	; 10
+ 524:	60 f0       	brcs	.+24     	; 0x53e <_Z11hexToNibblec+0x20>
+	{
+		return hex-'0';
+	}
+	else if(hex >= 'A' && hex <= 'F')
+ 526:	9f eb       	ldi	r25, 0xBF	; 191
+ 528:	98 0f       	add	r25, r24
+ 52a:	96 30       	cpi	r25, 0x06	; 6
+ 52c:	10 f4       	brcc	.+4      	; 0x532 <_Z11hexToNibblec+0x14>
+	{
+		return hex-'A'+10;
+ 52e:	87 53       	subi	r24, 0x37	; 55
+ 530:	08 95       	ret
+	}
+	else if(hex >= 'a' && hex <= 'f')
+ 532:	9f e9       	ldi	r25, 0x9F	; 159
+ 534:	98 0f       	add	r25, r24
+ 536:	96 30       	cpi	r25, 0x06	; 6
+ 538:	20 f4       	brcc	.+8      	; 0x542 <_Z11hexToNibblec+0x24>
+	{
+		return hex-'a'+10;
+ 53a:	87 55       	subi	r24, 0x57	; 87
+ 53c:	08 95       	ret
+
+uint8_t hexToNibble(char hex)
+{
+	if(hex >= '0' && hex <= '9')
+	{
+		return hex-'0';
+ 53e:	89 2f       	mov	r24, r25
+ 540:	08 95       	ret
+	}
+	else if(hex >= 'a' && hex <= 'f')
+	{
+		return hex-'a'+10;
+	}
+	return 0xff;
+ 542:	8f ef       	ldi	r24, 0xFF	; 255
+}
+ 544:	08 95       	ret
+
+00000546 <_Z9hexToBytecc>:
+
+
+
+uint8_t hexToByte(char h, char l)
+{
+ 546:	cf 93       	push	r28
+ 548:	df 93       	push	r29
+ 54a:	d6 2f       	mov	r29, r22
+	return (hexToNibble(h) << 4) | hexToNibble(l);
+ 54c:	0e 94 8f 02 	call	0x51e	; 0x51e <_Z11hexToNibblec>
+ 550:	c8 2f       	mov	r28, r24
+ 552:	8d 2f       	mov	r24, r29
+ 554:	0e 94 8f 02 	call	0x51e	; 0x51e <_Z11hexToNibblec>
+ 558:	90 e1       	ldi	r25, 0x10	; 16
+ 55a:	c9 9f       	mul	r28, r25
+ 55c:	90 01       	movw	r18, r0
+ 55e:	11 24       	eor	r1, r1
+}
+ 560:	82 2b       	or	r24, r18
+ 562:	df 91       	pop	r29
+ 564:	cf 91       	pop	r28
+ 566:	08 95       	ret
+
+00000568 <_Z11resetDevicev>:
+
+
+void resetDevice()
+{
+	//disable interrupts
+	asm("cli");
+ 568:	f8 94       	cli
+	// enable watchdog timer
+	CCP = 0xD8;
+ 56a:	88 ed       	ldi	r24, 0xD8	; 216
+ 56c:	84 bf       	out	0x34, r24	; 52
+	WDT.CTRL = (1<< WDT_ENABLE_bp)| (1<<WDT_CEN_bp);
+ 56e:	83 e0       	ldi	r24, 0x03	; 3
+ 570:	80 93 80 00 	sts	0x0080, r24	; 0x800080 <__TEXT_REGION_LENGTH__+0x700080>
+ 574:	ff cf       	rjmp	.-2      	; 0x574 <_Z11resetDevicev+0xc>
+
+00000576 <_Z12programFlashhjhPh>:
+	programFlash(byteCount, ((uint16_t)(address_H << 8)) | address_L, recordType, data);
+}
+
+
+void programFlash(uint8_t byteCount, uint16_t address, uint8_t recordType, uint8_t* data)
+{
+ 576:	ef 92       	push	r14
+ 578:	ff 92       	push	r15
+ 57a:	0f 93       	push	r16
+ 57c:	1f 93       	push	r17
+ 57e:	cf 93       	push	r28
+ 580:	df 93       	push	r29
+ 582:	e8 2e       	mov	r14, r24
+ 584:	eb 01       	movw	r28, r22
+ 586:	89 01       	movw	r16, r18
+	static uint16_t previousAddress = 0xFFFF;
+	static bool firstByte = true;
+
+	if(recordType == EOF_RECORD)
+ 588:	41 30       	cpi	r20, 0x01	; 1
+ 58a:	69 f5       	brne	.+90     	; 0x5e6 <_Z12programFlashhjhPh+0x70>
+	{
+		// if the first byte has already been sent
+		if(!firstByte)
+ 58c:	80 91 02 20 	lds	r24, 0x2002	; 0x802002 <_ZZ12programFlashhjhPhE9firstByte>
+ 590:	81 11       	cpse	r24, r1
+ 592:	27 c0       	rjmp	.+78     	; 0x5e2 <_Z12programFlashhjhPh+0x6c>
+		{
+			// check if the address is within the blockly range
+			if(previousAddress < LOWER_ADDRESS_LIMIT || previousAddress > UPPER_ADDRESS_LIMIT)
+ 594:	80 91 00 20 	lds	r24, 0x2000	; 0x802000 <__DATA_REGION_ORIGIN__>
+ 598:	90 91 01 20 	lds	r25, 0x2001	; 0x802001 <__DATA_REGION_ORIGIN__+0x1>
+ 59c:	90 58       	subi	r25, 0x80	; 128
+ 59e:	8f 3f       	cpi	r24, 0xFF	; 255
+ 5a0:	9f 47       	sbci	r25, 0x7F	; 127
+ 5a2:	80 f0       	brcs	.+32     	; 0x5c4 <_Z12programFlashhjhPh+0x4e>
+			{
+				USART0_TransmitString("\n\rFlash address:");
+ 5a4:	83 e0       	ldi	r24, 0x03	; 3
+ 5a6:	90 e2       	ldi	r25, 0x20	; 32
+ 5a8:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+				USART0_Transmit_Number(previousAddress);
+ 5ac:	80 91 00 20 	lds	r24, 0x2000	; 0x802000 <__DATA_REGION_ORIGIN__>
+ 5b0:	90 91 01 20 	lds	r25, 0x2001	; 0x802001 <__DATA_REGION_ORIGIN__+0x1>
+ 5b4:	0e 94 35 05 	call	0xa6a	; 0xa6a <_Z22USART0_Transmit_Numberi>
+				USART0_TransmitString(" out of range\n\rResetting");
+ 5b8:	84 e1       	ldi	r24, 0x14	; 20
+ 5ba:	90 e2       	ldi	r25, 0x20	; 32
+ 5bc:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+				resetDevice();
+ 5c0:	0e 94 b4 02 	call	0x568	; 0x568 <_Z11resetDevicev>
+			}
+			
+			SP_WaitForSPM();
+ 5c4:	0e 94 a7 01 	call	0x34e	; 0x34e <SP_WaitForSPM>
+			SP_EraseWriteApplicationPage(previousAddress);
+ 5c8:	60 91 00 20 	lds	r22, 0x2000	; 0x802000 <__DATA_REGION_ORIGIN__>
+ 5cc:	70 91 01 20 	lds	r23, 0x2001	; 0x802001 <__DATA_REGION_ORIGIN__+0x1>
+ 5d0:	80 e0       	ldi	r24, 0x00	; 0
+ 5d2:	90 e0       	ldi	r25, 0x00	; 0
+ 5d4:	0e 94 80 01 	call	0x300	; 0x300 <SP_EraseWriteApplicationPage>
+			// erase the last page
+			//boot_page_erase_safe(previousAddress);
+			// write the last page to flash
+			//boot_page_write_safe(previousAddress);
+			
+			USART0_Transmit_Hex(pgm_read_byte(0x8000));
+ 5d8:	e0 e0       	ldi	r30, 0x00	; 0
+ 5da:	f0 e8       	ldi	r31, 0x80	; 128
+ 5dc:	84 91       	lpm	r24, Z
+ 5de:	0e 94 21 05 	call	0xa42	; 0xa42 <_Z19USART0_Transmit_Hexc>
+			//{
+			//	USART0_Transmit_Number(pgm_read_byte(previousAddress-i));
+			//}
+		}
+		// reset device
+		resetDevice();
+ 5e2:	0e 94 b4 02 	call	0x568	; 0x568 <_Z11resetDevicev>
+	}
+	else if(recordType == DATA_RECORD)
+ 5e6:	41 11       	cpse	r20, r1
+ 5e8:	50 c0       	rjmp	.+160    	; 0x68a <_Z12programFlashhjhPh+0x114>
+	{
+		// loop through bytes
+		for(uint8_t i = 0; i < byteCount; i+=2)
+ 5ea:	88 23       	and	r24, r24
+ 5ec:	09 f4       	brne	.+2      	; 0x5f0 <_Z12programFlashhjhPh+0x7a>
+ 5ee:	4d c0       	rjmp	.+154    	; 0x68a <_Z12programFlashhjhPh+0x114>
+ 5f0:	f1 2c       	mov	r15, r1
+		{
+			// if address is in the another page than the last
+			if(previousAddress/SPM_PAGESIZE != address/SPM_PAGESIZE)
+ 5f2:	80 91 00 20 	lds	r24, 0x2000	; 0x802000 <__DATA_REGION_ORIGIN__>
+ 5f6:	90 91 01 20 	lds	r25, 0x2001	; 0x802001 <__DATA_REGION_ORIGIN__+0x1>
+ 5fa:	ac 01       	movw	r20, r24
+ 5fc:	45 2f       	mov	r20, r21
+ 5fe:	55 27       	eor	r21, r21
+ 600:	46 95       	lsr	r20
+ 602:	9e 01       	movw	r18, r28
+ 604:	23 2f       	mov	r18, r19
+ 606:	33 27       	eor	r19, r19
+ 608:	26 95       	lsr	r18
+ 60a:	42 17       	cp	r20, r18
+ 60c:	53 07       	cpc	r21, r19
+ 60e:	11 f1       	breq	.+68     	; 0x654 <_Z12programFlashhjhPh+0xde>
+			{
+				// if this isn't the first byte
+				if(!firstByte)
+ 610:	20 91 02 20 	lds	r18, 0x2002	; 0x802002 <_ZZ12programFlashhjhPhE9firstByte>
+ 614:	21 11       	cpse	r18, r1
+ 616:	1e c0       	rjmp	.+60     	; 0x654 <_Z12programFlashhjhPh+0xde>
+				{
+					if(previousAddress < LOWER_ADDRESS_LIMIT || previousAddress > UPPER_ADDRESS_LIMIT)
+ 618:	90 58       	subi	r25, 0x80	; 128
+ 61a:	8f 3f       	cpi	r24, 0xFF	; 255
+ 61c:	9f 47       	sbci	r25, 0x7F	; 127
+ 61e:	80 f0       	brcs	.+32     	; 0x640 <_Z12programFlashhjhPh+0xca>
+					{
+						USART0_TransmitString("\n\rFlash address:");
+ 620:	83 e0       	ldi	r24, 0x03	; 3
+ 622:	90 e2       	ldi	r25, 0x20	; 32
+ 624:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+						USART0_Transmit_Number(previousAddress);
+ 628:	80 91 00 20 	lds	r24, 0x2000	; 0x802000 <__DATA_REGION_ORIGIN__>
+ 62c:	90 91 01 20 	lds	r25, 0x2001	; 0x802001 <__DATA_REGION_ORIGIN__+0x1>
+ 630:	0e 94 35 05 	call	0xa6a	; 0xa6a <_Z22USART0_Transmit_Numberi>
+						USART0_TransmitString(" out of range\n\rResetting");
+ 634:	84 e1       	ldi	r24, 0x14	; 20
+ 636:	90 e2       	ldi	r25, 0x20	; 32
+ 638:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+						resetDevice();
+ 63c:	0e 94 b4 02 	call	0x568	; 0x568 <_Z11resetDevicev>
+					}
+					
+					SP_WaitForSPM();
+ 640:	0e 94 a7 01 	call	0x34e	; 0x34e <SP_WaitForSPM>
+					SP_EraseWriteApplicationPage(previousAddress);
+ 644:	60 91 00 20 	lds	r22, 0x2000	; 0x802000 <__DATA_REGION_ORIGIN__>
+ 648:	70 91 01 20 	lds	r23, 0x2001	; 0x802001 <__DATA_REGION_ORIGIN__+0x1>
+ 64c:	80 e0       	ldi	r24, 0x00	; 0
+ 64e:	90 e0       	ldi	r25, 0x00	; 0
+ 650:	0e 94 80 01 	call	0x300	; 0x300 <SP_EraseWriteApplicationPage>
+					//boot_page_write_safe(previousAddress);
+				}
+			}
+			
+			
+			SP_WaitForSPM();
+ 654:	0e 94 a7 01 	call	0x34e	; 0x34e <SP_WaitForSPM>
+			SP_LoadFlashWord(address%SPM_PAGESIZE, ((uint16_t)data[i+1] << 8 | data[i]));
+ 658:	f8 01       	movw	r30, r16
+ 65a:	ef 0d       	add	r30, r15
+ 65c:	f1 1d       	adc	r31, r1
+ 65e:	61 81       	ldd	r22, Z+1	; 0x01
+ 660:	70 e0       	ldi	r23, 0x00	; 0
+ 662:	76 2f       	mov	r23, r22
+ 664:	66 27       	eor	r22, r22
+ 666:	80 81       	ld	r24, Z
+ 668:	68 2b       	or	r22, r24
+ 66a:	ce 01       	movw	r24, r28
+ 66c:	91 70       	andi	r25, 0x01	; 1
+ 66e:	0e 94 75 01 	call	0x2ea	; 0x2ea <SP_LoadFlashWord>
+						
+			// put byte in temporary buffer
+			//boot_page_fill_safe(address%SPM_PAGESIZE, ((uint16_t)data[i+1] << 8 | data[i]));
+			
+			// track the programming state
+			firstByte = false;
+ 672:	10 92 02 20 	sts	0x2002, r1	; 0x802002 <_ZZ12programFlashhjhPhE9firstByte>
+			previousAddress = address;
+ 676:	c0 93 00 20 	sts	0x2000, r28	; 0x802000 <__DATA_REGION_ORIGIN__>
+ 67a:	d0 93 01 20 	sts	0x2001, r29	; 0x802001 <__DATA_REGION_ORIGIN__+0x1>
+			address+=2;
+ 67e:	22 96       	adiw	r28, 0x02	; 2
+		resetDevice();
+	}
+	else if(recordType == DATA_RECORD)
+	{
+		// loop through bytes
+		for(uint8_t i = 0; i < byteCount; i+=2)
+ 680:	f3 94       	inc	r15
+ 682:	f3 94       	inc	r15
+ 684:	fe 14       	cp	r15, r14
+ 686:	08 f4       	brcc	.+2      	; 0x68a <_Z12programFlashhjhPh+0x114>
+ 688:	b4 cf       	rjmp	.-152    	; 0x5f2 <_Z12programFlashhjhPh+0x7c>
+			previousAddress = address;
+			address+=2;
+		}
+	}
+
+}
+ 68a:	df 91       	pop	r29
+ 68c:	cf 91       	pop	r28
+ 68e:	1f 91       	pop	r17
+ 690:	0f 91       	pop	r16
+ 692:	ff 90       	pop	r15
+ 694:	ef 90       	pop	r14
+ 696:	08 95       	ret
+
+00000698 <_Z14programHexLinePc>:
+		programHexLine(buff);
+	}
+}
+
+void programHexLine(char* line)
+{
+ 698:	5f 92       	push	r5
+ 69a:	6f 92       	push	r6
+ 69c:	7f 92       	push	r7
+ 69e:	8f 92       	push	r8
+ 6a0:	9f 92       	push	r9
+ 6a2:	af 92       	push	r10
+ 6a4:	bf 92       	push	r11
+ 6a6:	cf 92       	push	r12
+ 6a8:	df 92       	push	r13
+ 6aa:	ef 92       	push	r14
+ 6ac:	ff 92       	push	r15
+ 6ae:	0f 93       	push	r16
+ 6b0:	1f 93       	push	r17
+ 6b2:	cf 93       	push	r28
+ 6b4:	df 93       	push	r29
+ 6b6:	cd b7       	in	r28, 0x3d	; 61
+ 6b8:	de b7       	in	r29, 0x3e	; 62
+ 6ba:	60 97       	sbiw	r28, 0x10	; 16
+ 6bc:	cd bf       	out	0x3d, r28	; 61
+ 6be:	de bf       	out	0x3e, r29	; 62
+ 6c0:	5c 01       	movw	r10, r24
+	cli();
+ 6c2:	f8 94       	cli
+	// parse the line
+	uint8_t byteCount	= hexToByte(line[1], line[2]);
+ 6c4:	fc 01       	movw	r30, r24
+ 6c6:	62 81       	ldd	r22, Z+2	; 0x02
+ 6c8:	81 81       	ldd	r24, Z+1	; 0x01
+ 6ca:	0e 94 a3 02 	call	0x546	; 0x546 <_Z9hexToBytecc>
+ 6ce:	78 2e       	mov	r7, r24
+	uint8_t address_H	= hexToByte(line[3], line[4]);
+ 6d0:	f5 01       	movw	r30, r10
+ 6d2:	64 81       	ldd	r22, Z+4	; 0x04
+ 6d4:	83 81       	ldd	r24, Z+3	; 0x03
+ 6d6:	0e 94 a3 02 	call	0x546	; 0x546 <_Z9hexToBytecc>
+ 6da:	68 2e       	mov	r6, r24
+	uint8_t address_L	= hexToByte(line[5], line[6]);
+ 6dc:	f5 01       	movw	r30, r10
+ 6de:	66 81       	ldd	r22, Z+6	; 0x06
+ 6e0:	85 81       	ldd	r24, Z+5	; 0x05
+ 6e2:	0e 94 a3 02 	call	0x546	; 0x546 <_Z9hexToBytecc>
+ 6e6:	c8 2e       	mov	r12, r24
+	uint8_t recordType	= hexToByte(line[7], line[8]);
+ 6e8:	f5 01       	movw	r30, r10
+ 6ea:	60 85       	ldd	r22, Z+8	; 0x08
+ 6ec:	87 81       	ldd	r24, Z+7	; 0x07
+ 6ee:	0e 94 a3 02 	call	0x546	; 0x546 <_Z9hexToBytecc>
+ 6f2:	58 2e       	mov	r5, r24
+
+	uint8_t checksum = byteCount + address_H + address_L + recordType;
+ 6f4:	d7 2c       	mov	r13, r7
+ 6f6:	d6 0c       	add	r13, r6
+ 6f8:	dc 0c       	add	r13, r12
+ 6fa:	d8 0e       	add	r13, r24
+	uint8_t data[16];
+
+	// loop through data bytes
+	for(uint8_t i = 0; i < byteCount; i++)
+ 6fc:	77 20       	and	r7, r7
+ 6fe:	e9 f0       	breq	.+58     	; 0x73a <_Z14programHexLinePc+0xa2>
+ 700:	85 01       	movw	r16, r10
+ 702:	07 5f       	subi	r16, 0xF7	; 247
+ 704:	1f 4f       	sbci	r17, 0xFF	; 255
+ 706:	ce 01       	movw	r24, r28
+ 708:	01 96       	adiw	r24, 0x01	; 1
+ 70a:	7c 01       	movw	r14, r24
+ 70c:	88 24       	eor	r8, r8
+ 70e:	8a 94       	dec	r8
+ 710:	87 0c       	add	r8, r7
+ 712:	91 2c       	mov	r9, r1
+ 714:	9f ef       	ldi	r25, 0xFF	; 255
+ 716:	89 1a       	sub	r8, r25
+ 718:	99 0a       	sbc	r9, r25
+ 71a:	8e 0c       	add	r8, r14
+ 71c:	9f 1c       	adc	r9, r15
+	{
+		uint8_t charOffset = 9+2*i;
+		uint8_t byte = hexToByte(line[charOffset], line[charOffset+1]);
+ 71e:	f8 01       	movw	r30, r16
+ 720:	61 81       	ldd	r22, Z+1	; 0x01
+ 722:	80 81       	ld	r24, Z
+ 724:	0e 94 a3 02 	call	0x546	; 0x546 <_Z9hexToBytecc>
+		checksum += byte;
+ 728:	d8 0e       	add	r13, r24
+		data[i] = byte;
+ 72a:	f7 01       	movw	r30, r14
+ 72c:	81 93       	st	Z+, r24
+ 72e:	7f 01       	movw	r14, r30
+ 730:	0e 5f       	subi	r16, 0xFE	; 254
+ 732:	1f 4f       	sbci	r17, 0xFF	; 255
+
+	uint8_t checksum = byteCount + address_H + address_L + recordType;
+	uint8_t data[16];
+
+	// loop through data bytes
+	for(uint8_t i = 0; i < byteCount; i++)
+ 734:	e8 15       	cp	r30, r8
+ 736:	f9 05       	cpc	r31, r9
+ 738:	91 f7       	brne	.-28     	; 0x71e <_Z14programHexLinePc+0x86>
+		uint8_t byte = hexToByte(line[charOffset], line[charOffset+1]);
+		checksum += byte;
+		data[i] = byte;
+	}
+
+	checksum += hexToByte(line[9+2*byteCount],line[10+2*byteCount]);
+ 73a:	e7 2d       	mov	r30, r7
+ 73c:	f0 e0       	ldi	r31, 0x00	; 0
+ 73e:	35 96       	adiw	r30, 0x05	; 5
+ 740:	ee 0f       	add	r30, r30
+ 742:	ff 1f       	adc	r31, r31
+ 744:	ea 0d       	add	r30, r10
+ 746:	fb 1d       	adc	r31, r11
+ 748:	df 01       	movw	r26, r30
+ 74a:	11 97       	sbiw	r26, 0x01	; 1
+ 74c:	60 81       	ld	r22, Z
+ 74e:	8c 91       	ld	r24, X
+ 750:	0e 94 a3 02 	call	0x546	; 0x546 <_Z9hexToBytecc>
+	
+	if(checksum != 0)
+ 754:	8d 0d       	add	r24, r13
+ 756:	31 f0       	breq	.+12     	; 0x764 <_Z14programHexLinePc+0xcc>
+	{
+		USART0_TransmitString("\n\rChecksum error while receiving program\n\rResetting");
+ 758:	8d e2       	ldi	r24, 0x2D	; 45
+ 75a:	90 e2       	ldi	r25, 0x20	; 32
+ 75c:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+		resetDevice();
+ 760:	0e 94 b4 02 	call	0x568	; 0x568 <_Z11resetDevicev>
+		return;
+	}
+	
+	USART0_TransmitString("\r\nReceived: ");
+ 764:	81 e6       	ldi	r24, 0x61	; 97
+ 766:	90 e2       	ldi	r25, 0x20	; 32
+ 768:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+	USART0_Transmit(line, 11+2*byteCount);
+ 76c:	67 2d       	mov	r22, r7
+ 76e:	66 0f       	add	r22, r22
+ 770:	65 5f       	subi	r22, 0xF5	; 245
+ 772:	c5 01       	movw	r24, r10
+ 774:	0e 94 02 05 	call	0xa04	; 0xa04 <_Z15USART0_TransmitPKch>
+	USART0_TransmitString("\r\n");
+ 778:	8e e6       	ldi	r24, 0x6E	; 110
+ 77a:	90 e2       	ldi	r25, 0x20	; 32
+ 77c:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+	USART0_Transmit_Hex(address_H);
+ 780:	86 2d       	mov	r24, r6
+ 782:	0e 94 21 05 	call	0xa42	; 0xa42 <_Z19USART0_Transmit_Hexc>
+	USART0_Transmit_Hex(address_L);
+ 786:	8c 2d       	mov	r24, r12
+ 788:	0e 94 21 05 	call	0xa42	; 0xa42 <_Z19USART0_Transmit_Hexc>
+	USART0_TransmitString("\r\n");
+ 78c:	8e e6       	ldi	r24, 0x6E	; 110
+ 78e:	90 e2       	ldi	r25, 0x20	; 32
+ 790:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+	//USART0_Transmit(data);
+	programFlash(byteCount, ((uint16_t)(address_H << 8)) | address_L, recordType, data);
+ 794:	6c 2d       	mov	r22, r12
+ 796:	70 e0       	ldi	r23, 0x00	; 0
+ 798:	76 29       	or	r23, r6
+ 79a:	9e 01       	movw	r18, r28
+ 79c:	2f 5f       	subi	r18, 0xFF	; 255
+ 79e:	3f 4f       	sbci	r19, 0xFF	; 255
+ 7a0:	45 2d       	mov	r20, r5
+ 7a2:	87 2d       	mov	r24, r7
+ 7a4:	0e 94 bb 02 	call	0x576	; 0x576 <_Z12programFlashhjhPh>
+}
+ 7a8:	60 96       	adiw	r28, 0x10	; 16
+ 7aa:	cd bf       	out	0x3d, r28	; 61
+ 7ac:	de bf       	out	0x3e, r29	; 62
+ 7ae:	df 91       	pop	r29
+ 7b0:	cf 91       	pop	r28
+ 7b2:	1f 91       	pop	r17
+ 7b4:	0f 91       	pop	r16
+ 7b6:	ff 90       	pop	r15
+ 7b8:	ef 90       	pop	r14
+ 7ba:	df 90       	pop	r13
+ 7bc:	cf 90       	pop	r12
+ 7be:	bf 90       	pop	r11
+ 7c0:	af 90       	pop	r10
+ 7c2:	9f 90       	pop	r9
+ 7c4:	8f 90       	pop	r8
+ 7c6:	7f 90       	pop	r7
+ 7c8:	6f 90       	pop	r6
+ 7ca:	5f 90       	pop	r5
+ 7cc:	08 95       	ret
+
+000007ce <_Z17receiveHexFileUSBv>:
+		break;
+	}
+}
+
+void receiveHexFileUSB()
+{
+ 7ce:	cf 93       	push	r28
+ 7d0:	df 93       	push	r29
+ 7d2:	cd b7       	in	r28, 0x3d	; 61
+ 7d4:	de b7       	in	r29, 0x3e	; 62
+ 7d6:	e2 97       	sbiw	r28, 0x32	; 50
+ 7d8:	cd bf       	out	0x3d, r28	; 61
+ 7da:	de bf       	out	0x3e, r29	; 62
+ 7dc:	ce 01       	movw	r24, r28
+ 7de:	01 96       	adiw	r24, 0x01	; 1
+ 7e0:	7c 01       	movw	r14, r24
+ 7e2:	6e 01       	movw	r12, r28
+ 7e4:	93 e3       	ldi	r25, 0x33	; 51
+ 7e6:	c9 0e       	add	r12, r25
+ 7e8:	d1 1c       	adc	r13, r1
+ 7ea:	87 01       	movw	r16, r14
+	while(true)
+	{
+		// receive a line of the hex file
+		for(uint8_t i = 0; i < 50; i++)
+		{
+			char c = USART0_Receive();
+ 7ec:	0e 94 c4 04 	call	0x988	; 0x988 <_Z14USART0_Receivev>
+ 7f0:	98 01       	movw	r18, r16
+ 7f2:	2e 19       	sub	r18, r14
+ 7f4:	3f 09       	sbc	r19, r15
+			buff[i] = c;
+ 7f6:	f8 01       	movw	r30, r16
+ 7f8:	81 93       	st	Z+, r24
+ 7fa:	8f 01       	movw	r16, r30
+			if(c == '\n')
+ 7fc:	8a 30       	cpi	r24, 0x0A	; 10
+ 7fe:	41 f4       	brne	.+16     	; 0x810 <_Z17receiveHexFileUSBv+0x42>
+			{
+				buff[i+1] = '\0';
+ 800:	e2 e0       	ldi	r30, 0x02	; 2
+ 802:	f0 e0       	ldi	r31, 0x00	; 0
+ 804:	ec 0f       	add	r30, r28
+ 806:	fd 1f       	adc	r31, r29
+ 808:	e2 0f       	add	r30, r18
+ 80a:	f3 1f       	adc	r31, r19
+ 80c:	10 82       	st	Z, r1
+				break;
+ 80e:	03 c0       	rjmp	.+6      	; 0x816 <_Z17receiveHexFileUSBv+0x48>
+	char buff[50];
+
+	while(true)
+	{
+		// receive a line of the hex file
+		for(uint8_t i = 0; i < 50; i++)
+ 810:	ec 15       	cp	r30, r12
+ 812:	fd 05       	cpc	r31, r13
+ 814:	59 f7       	brne	.-42     	; 0x7ec <_Z17receiveHexFileUSBv+0x1e>
+				buff[i+1] = '\0';
+				break;
+			}
+		}
+
+		USART0_TransmitString(buff);
+ 816:	c7 01       	movw	r24, r14
+ 818:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+		programHexLine(buff);
+ 81c:	c7 01       	movw	r24, r14
+ 81e:	0e 94 4c 03 	call	0x698	; 0x698 <_Z14programHexLinePc>
+
+void receiveHexFileUSB()
+{
+	char buff[50];
+
+	while(true)
+ 822:	e3 cf       	rjmp	.-58     	; 0x7ea <_Z17receiveHexFileUSBv+0x1c>
+
+00000824 <_Z10getUsbBootv>:
+		}
+    }
+}
+
+void getUsbBoot()
+{
+ 824:	0f 93       	push	r16
+ 826:	1f 93       	push	r17
+ 828:	cf 93       	push	r28
+ 82a:	df 93       	push	r29
+ 82c:	c0 e1       	ldi	r28, 0x10	; 16
+ 82e:	d7 e2       	ldi	r29, 0x27	; 39
+	bool timeout = true;
+	char* check = "ABCD";
+
+	for(uint16_t t = 0; t < 10000; t++)
+	{
+		if(USART0_Available())
+ 830:	0e 94 b6 04 	call	0x96c	; 0x96c <_Z16USART0_Availablev>
+ 834:	81 11       	cpse	r24, r1
+ 836:	09 c0       	rjmp	.+18     	; 0x84a <_Z10getUsbBootv+0x26>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 838:	8f e1       	ldi	r24, 0x1F	; 31
+ 83a:	93 e0       	ldi	r25, 0x03	; 3
+ 83c:	01 97       	sbiw	r24, 0x01	; 1
+ 83e:	f1 f7       	brne	.-4      	; 0x83c <_Z10getUsbBootv+0x18>
+ 840:	00 c0       	rjmp	.+0      	; 0x842 <_Z10getUsbBootv+0x1e>
+ 842:	00 00       	nop
+ 844:	21 97       	sbiw	r28, 0x01	; 1
+void getUsbBoot()
+{
+	bool timeout = true;
+	char* check = "ABCD";
+
+	for(uint16_t t = 0; t < 10000; t++)
+ 846:	a1 f7       	brne	.-24     	; 0x830 <_Z10getUsbBootv+0xc>
+ 848:	16 c0       	rjmp	.+44     	; 0x876 <_Z10getUsbBootv+0x52>
+ 84a:	c1 e7       	ldi	r28, 0x71	; 113
+ 84c:	d0 e2       	ldi	r29, 0x20	; 32
+ 84e:	05 e7       	ldi	r16, 0x75	; 117
+ 850:	10 e2       	ldi	r17, 0x20	; 32
+	if(timeout)
+	return;
+
+	for(uint8_t i = 0; i < 4; i++)
+	{
+		char c = USART0_Receive();
+ 852:	0e 94 c4 04 	call	0x988	; 0x988 <_Z14USART0_Receivev>
+		//USART0_Transmit(c);
+		if(c != check[i])
+ 856:	99 91       	ld	r25, Y+
+ 858:	89 13       	cpse	r24, r25
+ 85a:	0d c0       	rjmp	.+26     	; 0x876 <_Z10getUsbBootv+0x52>
+	}
+
+	if(timeout)
+	return;
+
+	for(uint8_t i = 0; i < 4; i++)
+ 85c:	c0 17       	cp	r28, r16
+ 85e:	d1 07       	cpc	r29, r17
+ 860:	c1 f7       	brne	.-16     	; 0x852 <_Z10getUsbBootv+0x2e>
+		if(c != check[i])
+		return;
+	}
+
+
+	switch(USART0_Receive())
+ 862:	0e 94 c4 04 	call	0x988	; 0x988 <_Z14USART0_Receivev>
+ 866:	85 35       	cpi	r24, 0x55	; 85
+ 868:	31 f4       	brne	.+12     	; 0x876 <_Z10getUsbBootv+0x52>
+	{
+		case 'U':
+		// upload hex file via usb
+		USART0_TransmitString("Receiving program via USB\n\r");
+ 86a:	86 e7       	ldi	r24, 0x76	; 118
+ 86c:	90 e2       	ldi	r25, 0x20	; 32
+ 86e:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+		receiveHexFileUSB();
+ 872:	0e 94 e7 03 	call	0x7ce	; 0x7ce <_Z17receiveHexFileUSBv>
+		break;
+		default:
+		break;
+	}
+}
+ 876:	df 91       	pop	r29
+ 878:	cf 91       	pop	r28
+ 87a:	1f 91       	pop	r17
+ 87c:	0f 91       	pop	r16
+ 87e:	08 95       	ret
+
+00000880 <main>:
+bool logic_xor(bool A, bool B);
+
+
+int main(void)
+{
+	OSC_CTRL |= OSC_RC32MEN_bm; //Setup 32Mhz crystal
+ 880:	e0 e5       	ldi	r30, 0x50	; 80
+ 882:	f0 e0       	ldi	r31, 0x00	; 0
+ 884:	80 81       	ld	r24, Z
+ 886:	82 60       	ori	r24, 0x02	; 2
+ 888:	80 83       	st	Z, r24
+	
+	while(!(OSC_STATUS & OSC_RC32MRDY_bm));
+ 88a:	e1 e5       	ldi	r30, 0x51	; 81
+ 88c:	f0 e0       	ldi	r31, 0x00	; 0
+ 88e:	80 81       	ld	r24, Z
+ 890:	81 ff       	sbrs	r24, 1
+ 892:	fd cf       	rjmp	.-6      	; 0x88e <main+0xe>
+	
+	CCP = CCP_IOREG_gc; //Trigger protection mechanism
+ 894:	88 ed       	ldi	r24, 0xD8	; 216
+ 896:	84 bf       	out	0x34, r24	; 52
+	CLK_CTRL = CLK_SCLKSEL_RC32M_gc; //Enable internal  32Mhz crystal
+ 898:	81 e0       	ldi	r24, 0x01	; 1
+ 89a:	80 93 40 00 	sts	0x0040, r24	; 0x800040 <__TEXT_REGION_LENGTH__+0x700040>
+	
+	PORTA_PIN0CTRL = (1<<PORT_OPC0_bp )|(1<<PORT_OPC1_bp);
+ 89e:	88 e1       	ldi	r24, 0x18	; 24
+ 8a0:	80 93 10 06 	sts	0x0610, r24	; 0x800610 <__TEXT_REGION_LENGTH__+0x700610>
+	//PORTA_INTCTRL = 0b00000011;
+	//PORTA_INT0MASK |= (1<<0);
+	
+	PORTQ_DIR |= (1 << 3);
+ 8a4:	e0 ec       	ldi	r30, 0xC0	; 192
+ 8a6:	f7 e0       	ldi	r31, 0x07	; 7
+ 8a8:	80 81       	ld	r24, Z
+ 8aa:	88 60       	ori	r24, 0x08	; 8
+ 8ac:	80 83       	st	Z, r24
+	//PORTQ_PIN3CTRL |= (1<<PORT_ISC1_bp);
+	
+	
+	USART0_Init(115200, 32000000, false);
+ 8ae:	00 e0       	ldi	r16, 0x00	; 0
+ 8b0:	20 e0       	ldi	r18, 0x00	; 0
+ 8b2:	38 e4       	ldi	r19, 0x48	; 72
+ 8b4:	48 ee       	ldi	r20, 0xE8	; 232
+ 8b6:	51 e0       	ldi	r21, 0x01	; 1
+ 8b8:	60 e0       	ldi	r22, 0x00	; 0
+ 8ba:	72 ec       	ldi	r23, 0xC2	; 194
+ 8bc:	81 e0       	ldi	r24, 0x01	; 1
+ 8be:	90 e0       	ldi	r25, 0x00	; 0
+ 8c0:	0e 94 aa 06 	call	0xd54	; 0xd54 <_Z11USART0_Initmmb>
+	USART0_TransmitString("\n\r------------------------------------------------------------\n\rReset\n\n\r");
+ 8c4:	82 e9       	ldi	r24, 0x92	; 146
+ 8c6:	90 e2       	ldi	r25, 0x20	; 32
+ 8c8:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+    /* Replace with your application code */
+	
+	getUsbBoot();
+ 8cc:	0e 94 12 04 	call	0x824	; 0x824 <_Z10getUsbBootv>
+	
+	// check if the blockly code area is empty
+	USART0_TransmitString("Checking for program\n\r");
+ 8d0:	8b ed       	ldi	r24, 0xDB	; 219
+ 8d2:	90 e2       	ldi	r25, 0x20	; 32
+ 8d4:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+	
+	if(pgm_read_byte(0x8000) == 0xFF)
+ 8d8:	e0 e0       	ldi	r30, 0x00	; 0
+ 8da:	f0 e8       	ldi	r31, 0x80	; 128
+ 8dc:	e4 91       	lpm	r30, Z
+ 8de:	ef 3f       	cpi	r30, 0xFF	; 255
+ 8e0:	59 f4       	brne	.+22     	; 0x8f8 <main+0x78>
+	{
+		USART0_TransmitString("No program found\n\r");
+ 8e2:	82 ef       	ldi	r24, 0xF2	; 242
+ 8e4:	90 e2       	ldi	r25, 0x20	; 32
+ 8e6:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+		
+		while(true){
+			if (!PORTA_IN &(1<<0))
+ 8ea:	e8 e0       	ldi	r30, 0x08	; 8
+ 8ec:	f6 e0       	ldi	r31, 0x06	; 6
+ 8ee:	80 81       	ld	r24, Z
+ 8f0:	81 11       	cpse	r24, r1
+ 8f2:	fd cf       	rjmp	.-6      	; 0x8ee <main+0x6e>
+			{
+				resetDevice();
+ 8f4:	0e 94 b4 02 	call	0x568	; 0x568 <_Z11resetDevicev>
+	}
+
+	
+
+	// run the blockly
+	USART0_TransmitString("Starting your program\n\r");
+ 8f8:	85 e0       	ldi	r24, 0x05	; 5
+ 8fa:	91 e2       	ldi	r25, 0x21	; 33
+ 8fc:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+	asm("jmp 0x8000");
+ 900:	0c 94 00 40 	jmp	0x8000	; 0x8000 <jump_table+0x200>
+		}
+		USART0_TransmitString("\n\r");
+		//USART0_Transmit_Hex(pgm_read_byte(0x4000));
+		for (uint8_t i = 0;i<100;i++)
+		{
+			if (!PORTA_IN &(1<<0))
+ 904:	08 e0       	ldi	r16, 0x08	; 8
+ 906:	16 e0       	ldi	r17, 0x06	; 6
+bool logic_and(bool A, bool B);
+bool logic_xor(bool A, bool B);
+
+
+int main(void)
+{
+ 908:	c0 e0       	ldi	r28, 0x00	; 0
+ 90a:	d0 e4       	ldi	r29, 0x40	; 64
+		}
+		//SP_WaitForSPM();
+		//SP_EraseWriteApplicationPage(0x4000);
+		for (uint8_t i = 0; i<10;i++)
+		{
+			USART0_Transmit_Hex(pgm_read_byte(0x4000+i));
+ 90c:	fe 01       	movw	r30, r28
+ 90e:	84 91       	lpm	r24, Z
+ 910:	0e 94 21 05 	call	0xa42	; 0xa42 <_Z19USART0_Transmit_Hexc>
+ 914:	21 96       	adiw	r28, 0x01	; 1
+			//SP_WaitForSPM();
+			//SP_LoadFlashWord(0x0000+i*2,0x8765+i);
+		}
+		//SP_WaitForSPM();
+		//SP_EraseWriteApplicationPage(0x4000);
+		for (uint8_t i = 0; i<10;i++)
+ 916:	ca 30       	cpi	r28, 0x0A	; 10
+ 918:	f0 e4       	ldi	r31, 0x40	; 64
+ 91a:	df 07       	cpc	r29, r31
+ 91c:	b9 f7       	brne	.-18     	; 0x90c <main+0x8c>
+		{
+			USART0_Transmit_Hex(pgm_read_byte(0x4000+i));
+		}
+		USART0_TransmitString("\n\r");
+ 91e:	88 ed       	ldi	r24, 0xD8	; 216
+ 920:	90 e2       	ldi	r25, 0x20	; 32
+ 922:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+		//USART0_Transmit_Hex(pgm_read_byte(0x4000));
+		for (uint8_t i = 0;i<100;i++)
+		{
+			if (!PORTA_IN &(1<<0))
+ 926:	f8 01       	movw	r30, r16
+ 928:	80 81       	ld	r24, Z
+ 92a:	81 11       	cpse	r24, r1
+ 92c:	10 c0       	rjmp	.+32     	; 0x94e <main+0xce>
+ 92e:	04 c0       	rjmp	.+8      	; 0x938 <main+0xb8>
+ 930:	f8 01       	movw	r30, r16
+ 932:	90 81       	ld	r25, Z
+ 934:	91 11       	cpse	r25, r1
+ 936:	02 c0       	rjmp	.+4      	; 0x93c <main+0xbc>
+			{
+				resetDevice();
+ 938:	0e 94 b4 02 	call	0x568	; 0x568 <_Z11resetDevicev>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 93c:	ef e3       	ldi	r30, 0x3F	; 63
+ 93e:	ff e1       	ldi	r31, 0x1F	; 31
+ 940:	31 97       	sbiw	r30, 0x01	; 1
+ 942:	f1 f7       	brne	.-4      	; 0x940 <main+0xc0>
+ 944:	00 c0       	rjmp	.+0      	; 0x946 <main+0xc6>
+ 946:	00 00       	nop
+ 948:	81 50       	subi	r24, 0x01	; 1
+		{
+			USART0_Transmit_Hex(pgm_read_byte(0x4000+i));
+		}
+		USART0_TransmitString("\n\r");
+		//USART0_Transmit_Hex(pgm_read_byte(0x4000));
+		for (uint8_t i = 0;i<100;i++)
+ 94a:	91 f7       	brne	.-28     	; 0x930 <main+0xb0>
+ 94c:	dd cf       	rjmp	.-70     	; 0x908 <main+0x88>
+ 94e:	8f e3       	ldi	r24, 0x3F	; 63
+ 950:	9f e1       	ldi	r25, 0x1F	; 31
+ 952:	01 97       	sbiw	r24, 0x01	; 1
+ 954:	f1 f7       	brne	.-4      	; 0x952 <main+0xd2>
+ 956:	00 c0       	rjmp	.+0      	; 0x958 <main+0xd8>
+ 958:	00 00       	nop
+ 95a:	83 e6       	ldi	r24, 0x63	; 99
+ 95c:	e9 cf       	rjmp	.-46     	; 0x930 <main+0xb0>
+
+0000095e <_Z10HexToASCIIh>:
+#include <util/delay.h>
+#include "UART.h"
+
+char HexToASCII(uint8_t i)
+  {
+	  i &= 0x0f;
+ 95e:	8f 70       	andi	r24, 0x0F	; 15
+	  if(i > 9)
+ 960:	8a 30       	cpi	r24, 0x0A	; 10
+ 962:	10 f0       	brcs	.+4      	; 0x968 <_Z10HexToASCIIh+0xa>
+	  return i+'A'-10;
+ 964:	89 5c       	subi	r24, 0xC9	; 201
+ 966:	08 95       	ret
+	  else
+	  return i+'0';
+ 968:	80 5d       	subi	r24, 0xD0	; 208
+  }
+ 96a:	08 95       	ret
+
+0000096c <_Z16USART0_Availablev>:
+ }
+
+
+ bool USART0_Available()
+ {
+	 return (USARTC0_STATUS & (1<<USART_RXCIF_bp));
+ 96c:	80 91 a1 08 	lds	r24, 0x08A1	; 0x8008a1 <__TEXT_REGION_LENGTH__+0x7008a1>
+ }
+ 970:	88 1f       	adc	r24, r24
+ 972:	88 27       	eor	r24, r24
+ 974:	88 1f       	adc	r24, r24
+ 976:	08 95       	ret
+
+00000978 <_Z15USART0_Transmitc>:
+
+void USART0_Transmit( const char data )
+ {
+	 /* Wait for empty transmit buffer */
+	 while ( !( USARTC0_STATUS & (1<<USART_DREIF_bp)) );
+ 978:	e1 ea       	ldi	r30, 0xA1	; 161
+ 97a:	f8 e0       	ldi	r31, 0x08	; 8
+ 97c:	90 81       	ld	r25, Z
+ 97e:	95 ff       	sbrs	r25, 5
+ 980:	fd cf       	rjmp	.-6      	; 0x97c <_Z15USART0_Transmitc+0x4>
+	 /* Put data into buffer, sends the data */
+	 USARTC0_DATA = data;
+ 982:	80 93 a0 08 	sts	0x08A0, r24	; 0x8008a0 <__TEXT_REGION_LENGTH__+0x7008a0>
+ 986:	08 95       	ret
+
+00000988 <_Z14USART0_Receivev>:
+
+
+ char USART0_Receive( void )
+ {
+	 /* Wait for data to be received */
+	 while ( !(USARTC0_STATUS & (1<<USART_RXCIF_bp)));
+ 988:	e1 ea       	ldi	r30, 0xA1	; 161
+ 98a:	f8 e0       	ldi	r31, 0x08	; 8
+ 98c:	80 81       	ld	r24, Z
+ 98e:	88 23       	and	r24, r24
+ 990:	ec f7       	brge	.-6      	; 0x98c <_Z14USART0_Receivev+0x4>
+	 /* Get and return received data from buffer */
+	 //USART0_Transmit_Hex(USARTC0_STATUS);
+	 return USARTC0_DATA;
+ 992:	80 91 a0 08 	lds	r24, 0x08A0	; 0x8008a0 <__TEXT_REGION_LENGTH__+0x7008a0>
+ }
+ 996:	08 95       	ret
+
+00000998 <_Z14USART0_ReceivejRb>:
+
+ char USART0_Receive( uint16_t timeout, bool& isTimedOut )
+ {
+ 998:	ac 01       	movw	r20, r24
+	 /* Wait for data to be received */
+	 for(uint16_t i = 0; i < timeout; i++)
+ 99a:	89 2b       	or	r24, r25
+ 99c:	c1 f0       	breq	.+48     	; 0x9ce <_Z14USART0_ReceivejRb+0x36>
+	 {
+		 if(USARTC0_STATUS & (1<<USART_RXCIF_bp))
+ 99e:	80 91 a1 08 	lds	r24, 0x08A1	; 0x8008a1 <__TEXT_REGION_LENGTH__+0x7008a1>
+ 9a2:	88 23       	and	r24, r24
+ 9a4:	44 f0       	brlt	.+16     	; 0x9b6 <_Z14USART0_ReceivejRb+0x1e>
+ 9a6:	20 e0       	ldi	r18, 0x00	; 0
+ 9a8:	30 e0       	ldi	r19, 0x00	; 0
+ 9aa:	e1 ea       	ldi	r30, 0xA1	; 161
+ 9ac:	f8 e0       	ldi	r31, 0x08	; 8
+ 9ae:	06 c0       	rjmp	.+12     	; 0x9bc <_Z14USART0_ReceivejRb+0x24>
+ 9b0:	90 81       	ld	r25, Z
+ 9b2:	99 23       	and	r25, r25
+ 9b4:	1c f4       	brge	.+6      	; 0x9bc <_Z14USART0_ReceivejRb+0x24>
+		 {
+			 /* Get and return received data from buffer */
+			 return USARTC0_DATA;
+ 9b6:	80 91 a0 08 	lds	r24, 0x08A0	; 0x8008a0 <__TEXT_REGION_LENGTH__+0x7008a0>
+ 9ba:	08 95       	ret
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 9bc:	8a e0       	ldi	r24, 0x0A	; 10
+ 9be:	8a 95       	dec	r24
+ 9c0:	f1 f7       	brne	.-4      	; 0x9be <_Z14USART0_ReceivejRb+0x26>
+ 9c2:	00 c0       	rjmp	.+0      	; 0x9c4 <_Z14USART0_ReceivejRb+0x2c>
+ }
+
+ char USART0_Receive( uint16_t timeout, bool& isTimedOut )
+ {
+	 /* Wait for data to be received */
+	 for(uint16_t i = 0; i < timeout; i++)
+ 9c4:	2f 5f       	subi	r18, 0xFF	; 255
+ 9c6:	3f 4f       	sbci	r19, 0xFF	; 255
+ 9c8:	42 17       	cp	r20, r18
+ 9ca:	53 07       	cpc	r21, r19
+ 9cc:	89 f7       	brne	.-30     	; 0x9b0 <_Z14USART0_ReceivejRb+0x18>
+		 }
+
+		 _delay_us(1);
+	 }
+	 
+	 isTimedOut = true;
+ 9ce:	81 e0       	ldi	r24, 0x01	; 1
+ 9d0:	fb 01       	movw	r30, r22
+ 9d2:	80 83       	st	Z, r24
+	 return 0;
+ 9d4:	80 e0       	ldi	r24, 0x00	; 0
+ }
+ 9d6:	08 95       	ret
+
+000009d8 <_Z21USART0_TransmitStringPKc>:
+
+
+ void USART0_TransmitString(const char* str)
+ {
+ 9d8:	0f 93       	push	r16
+ 9da:	1f 93       	push	r17
+ 9dc:	cf 93       	push	r28
+ 9de:	fc 01       	movw	r30, r24
+	 for(uint8_t i = 0; str[i]; i++)
+ 9e0:	80 81       	ld	r24, Z
+ 9e2:	88 23       	and	r24, r24
+ 9e4:	59 f0       	breq	.+22     	; 0x9fc <_Z21USART0_TransmitStringPKc+0x24>
+ 9e6:	8f 01       	movw	r16, r30
+ 9e8:	c0 e0       	ldi	r28, 0x00	; 0
+	 USART0_Transmit(str[i]);
+ 9ea:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+ }
+
+
+ void USART0_TransmitString(const char* str)
+ {
+	 for(uint8_t i = 0; str[i]; i++)
+ 9ee:	cf 5f       	subi	r28, 0xFF	; 255
+ 9f0:	f8 01       	movw	r30, r16
+ 9f2:	ec 0f       	add	r30, r28
+ 9f4:	f1 1d       	adc	r31, r1
+ 9f6:	80 81       	ld	r24, Z
+ 9f8:	81 11       	cpse	r24, r1
+ 9fa:	f7 cf       	rjmp	.-18     	; 0x9ea <_Z21USART0_TransmitStringPKc+0x12>
+	 USART0_Transmit(str[i]);
+ }
+ 9fc:	cf 91       	pop	r28
+ 9fe:	1f 91       	pop	r17
+ a00:	0f 91       	pop	r16
+ a02:	08 95       	ret
+
+00000a04 <_Z15USART0_TransmitPKch>:
+
+
+
+ void USART0_Transmit( const char* buff, uint8_t length)
+ {
+ a04:	0f 93       	push	r16
+ a06:	1f 93       	push	r17
+ a08:	cf 93       	push	r28
+ a0a:	df 93       	push	r29
+	 for(uint8_t i = 0; i < length; i++)
+ a0c:	66 23       	and	r22, r22
+ a0e:	71 f0       	breq	.+28     	; 0xa2c <_Z15USART0_TransmitPKch+0x28>
+ a10:	ec 01       	movw	r28, r24
+ a12:	61 50       	subi	r22, 0x01	; 1
+ a14:	06 2f       	mov	r16, r22
+ a16:	10 e0       	ldi	r17, 0x00	; 0
+ a18:	0f 5f       	subi	r16, 0xFF	; 255
+ a1a:	1f 4f       	sbci	r17, 0xFF	; 255
+ a1c:	08 0f       	add	r16, r24
+ a1e:	19 1f       	adc	r17, r25
+	 USART0_Transmit(buff[i]);
+ a20:	89 91       	ld	r24, Y+
+ a22:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+
+
+
+ void USART0_Transmit( const char* buff, uint8_t length)
+ {
+	 for(uint8_t i = 0; i < length; i++)
+ a26:	c0 17       	cp	r28, r16
+ a28:	d1 07       	cpc	r29, r17
+ a2a:	d1 f7       	brne	.-12     	; 0xa20 <_Z15USART0_TransmitPKch+0x1c>
+	 USART0_Transmit(buff[i]);
+ }
+ a2c:	df 91       	pop	r29
+ a2e:	cf 91       	pop	r28
+ a30:	1f 91       	pop	r17
+ a32:	0f 91       	pop	r16
+ a34:	08 95       	ret
+
+00000a36 <_Z19USART0_TransmitDonev>:
+
+ bool USART0_TransmitDone()
+ {
+	 return USARTC0_STATUS & (1<<USART_DREIF_bp);
+ a36:	80 91 a1 08 	lds	r24, 0x08A1	; 0x8008a1 <__TEXT_REGION_LENGTH__+0x7008a1>
+ }
+ a3a:	85 fb       	bst	r24, 5
+ a3c:	88 27       	eor	r24, r24
+ a3e:	80 f9       	bld	r24, 0
+ a40:	08 95       	ret
+
+00000a42 <_Z19USART0_Transmit_Hexc>:
+ 
+ void USART0_Transmit_Hex( const char data )
+ {
+ a42:	cf 93       	push	r28
+ a44:	c8 2f       	mov	r28, r24
+	 USART0_TransmitString("0x");
+ a46:	8d e1       	ldi	r24, 0x1D	; 29
+ a48:	91 e2       	ldi	r25, 0x21	; 33
+ a4a:	0e 94 ec 04 	call	0x9d8	; 0x9d8 <_Z21USART0_TransmitStringPKc>
+	 USART0_Transmit(HexToASCII(data>>4));
+ a4e:	8c 2f       	mov	r24, r28
+ a50:	82 95       	swap	r24
+ a52:	8f 70       	andi	r24, 0x0F	; 15
+ a54:	0e 94 af 04 	call	0x95e	; 0x95e <_Z10HexToASCIIh>
+ a58:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+	 USART0_Transmit(HexToASCII(data));
+ a5c:	8c 2f       	mov	r24, r28
+ a5e:	0e 94 af 04 	call	0x95e	; 0x95e <_Z10HexToASCIIh>
+ a62:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+ }
+ a66:	cf 91       	pop	r28
+ a68:	08 95       	ret
+
+00000a6a <_Z22USART0_Transmit_Numberi>:
+
+
+ void USART0_Transmit_Number(int16_t num)
+ {
+ a6a:	cf 93       	push	r28
+ a6c:	df 93       	push	r29
+ a6e:	ec 01       	movw	r28, r24
+	 if(num < 0)
+ a70:	99 23       	and	r25, r25
+ a72:	34 f4       	brge	.+12     	; 0xa80 <_Z22USART0_Transmit_Numberi+0x16>
+	 {
+		 num = -num;
+ a74:	d1 95       	neg	r29
+ a76:	c1 95       	neg	r28
+ a78:	d1 09       	sbc	r29, r1
+		 USART0_Transmit('-');
+ a7a:	8d e2       	ldi	r24, 0x2D	; 45
+ a7c:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+	 }
+
+	 bool started = false;
+	 uint8_t ten_thousands	= (num/10000);
+ a80:	ce 01       	movw	r24, r28
+ a82:	60 e1       	ldi	r22, 0x10	; 16
+ a84:	77 e2       	ldi	r23, 0x27	; 39
+ a86:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+	 if(ten_thousands > 0)
+ a8a:	66 23       	and	r22, r22
+ a8c:	31 f0       	breq	.+12     	; 0xa9a <_Z22USART0_Transmit_Numberi+0x30>
+	 {
+		 USART0_Transmit('0'+ten_thousands);
+ a8e:	80 e3       	ldi	r24, 0x30	; 48
+ a90:	86 0f       	add	r24, r22
+ a92:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+		 started = true;
+ a96:	21 e0       	ldi	r18, 0x01	; 1
+ a98:	01 c0       	rjmp	.+2      	; 0xa9c <_Z22USART0_Transmit_Numberi+0x32>
+	 {
+		 num = -num;
+		 USART0_Transmit('-');
+	 }
+
+	 bool started = false;
+ a9a:	20 e0       	ldi	r18, 0x00	; 0
+	 {
+		 USART0_Transmit('0'+ten_thousands);
+		 started = true;
+	 }
+
+	 uint8_t thousands	= (num/1000)%10;
+ a9c:	ce 01       	movw	r24, r28
+ a9e:	68 ee       	ldi	r22, 0xE8	; 232
+ aa0:	73 e0       	ldi	r23, 0x03	; 3
+ aa2:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+ aa6:	cb 01       	movw	r24, r22
+ aa8:	6a e0       	ldi	r22, 0x0A	; 10
+ aaa:	70 e0       	ldi	r23, 0x00	; 0
+ aac:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+	 if(thousands > 0)
+ ab0:	88 23       	and	r24, r24
+ ab2:	71 f0       	breq	.+28     	; 0xad0 <_Z22USART0_Transmit_Numberi+0x66>
+	 {
+		 USART0_Transmit('0'+thousands);
+ ab4:	80 5d       	subi	r24, 0xD0	; 208
+ ab6:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+		 started = true;
+	 }
+
+	 uint8_t hundreds	= (num/100)%10;
+ aba:	ce 01       	movw	r24, r28
+ abc:	64 e6       	ldi	r22, 0x64	; 100
+ abe:	70 e0       	ldi	r23, 0x00	; 0
+ ac0:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+ ac4:	cb 01       	movw	r24, r22
+ ac6:	6a e0       	ldi	r22, 0x0A	; 10
+ ac8:	70 e0       	ldi	r23, 0x00	; 0
+ aca:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+ ace:	0e c0       	rjmp	.+28     	; 0xaec <_Z22USART0_Transmit_Numberi+0x82>
+ ad0:	ce 01       	movw	r24, r28
+ ad2:	64 e6       	ldi	r22, 0x64	; 100
+ ad4:	70 e0       	ldi	r23, 0x00	; 0
+ ad6:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+ ada:	cb 01       	movw	r24, r22
+ adc:	6a e0       	ldi	r22, 0x0A	; 10
+ ade:	70 e0       	ldi	r23, 0x00	; 0
+ ae0:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+	 if(hundreds > 0 || started)
+ ae4:	81 11       	cpse	r24, r1
+ ae6:	02 c0       	rjmp	.+4      	; 0xaec <_Z22USART0_Transmit_Numberi+0x82>
+ ae8:	22 23       	and	r18, r18
+ aea:	c9 f0       	breq	.+50     	; 0xb1e <_Z22USART0_Transmit_Numberi+0xb4>
+	 {
+		 USART0_Transmit('0'+hundreds);
+ aec:	80 5d       	subi	r24, 0xD0	; 208
+ aee:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+		 started = true;
+	 }
+
+	 uint8_t tens		= (num/10)%10;
+ af2:	2a e0       	ldi	r18, 0x0A	; 10
+ af4:	30 e0       	ldi	r19, 0x00	; 0
+ af6:	ce 01       	movw	r24, r28
+ af8:	b9 01       	movw	r22, r18
+ afa:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+ afe:	cb 01       	movw	r24, r22
+ b00:	b9 01       	movw	r22, r18
+ b02:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+	 if(tens > 0 || started)
+	 {
+		 USART0_Transmit('0'+tens);
+ b06:	80 5d       	subi	r24, 0xD0	; 208
+ b08:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+		 started = true;
+	 }
+	 
+	 USART0_Transmit('0' + (num%10));
+ b0c:	ce 01       	movw	r24, r28
+ b0e:	6a e0       	ldi	r22, 0x0A	; 10
+ b10:	70 e0       	ldi	r23, 0x00	; 0
+ b12:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+ b16:	80 5d       	subi	r24, 0xD0	; 208
+ b18:	0e 94 bc 04 	call	0x978	; 0x978 <_Z15USART0_Transmitc>
+ }
+ b1c:	0d c0       	rjmp	.+26     	; 0xb38 <_Z22USART0_Transmit_Numberi+0xce>
+	 {
+		 USART0_Transmit('0'+hundreds);
+		 started = true;
+	 }
+
+	 uint8_t tens		= (num/10)%10;
+ b1e:	2a e0       	ldi	r18, 0x0A	; 10
+ b20:	30 e0       	ldi	r19, 0x00	; 0
+ b22:	ce 01       	movw	r24, r28
+ b24:	b9 01       	movw	r22, r18
+ b26:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+ b2a:	cb 01       	movw	r24, r22
+ b2c:	b9 01       	movw	r22, r18
+ b2e:	0e 94 c1 06 	call	0xd82	; 0xd82 <__divmodhi4>
+	 if(tens > 0 || started)
+ b32:	88 23       	and	r24, r24
+ b34:	59 f3       	breq	.-42     	; 0xb0c <_Z22USART0_Transmit_Numberi+0xa2>
+ b36:	e7 cf       	rjmp	.-50     	; 0xb06 <_Z22USART0_Transmit_Numberi+0x9c>
+		 USART0_Transmit('0'+tens);
+		 started = true;
+	 }
+	 
+	 USART0_Transmit('0' + (num%10));
+ }
+ b38:	df 91       	pop	r29
+ b3a:	cf 91       	pop	r28
+ b3c:	08 95       	ret
+
+00000b3e <_Z18usart_set_baudratemm>:
+ 
+ 
+ 
+ bool usart_set_baudrate(uint32_t baud, uint32_t cpu_hz)
+{
+ b3e:	8f 92       	push	r8
+ b40:	9f 92       	push	r9
+ b42:	af 92       	push	r10
+ b44:	bf 92       	push	r11
+ b46:	cf 92       	push	r12
+ b48:	df 92       	push	r13
+ b4a:	ef 92       	push	r14
+ b4c:	ff 92       	push	r15
+ b4e:	cf 93       	push	r28
+ b50:	6b 01       	movw	r12, r22
+ b52:	7c 01       	movw	r14, r24
+ b54:	49 01       	movw	r8, r18
+ b56:	5a 01       	movw	r10, r20
+	/* 8 = (2^0) * 8 * (2^0) = (2^BSCALE_MIN) * 8 * (BSEL_MIN) */
+	max_rate = cpu_hz / 8;
+	/* 4194304 = (2^7) * 8 * (2^12) = (2^BSCALE_MAX) * 8 * (BSEL_MAX+1) */
+	min_rate = cpu_hz / 4194304;
+
+	if (!(USARTC0_CTRLB & USART_CLK2X_bm)) {
+ b58:	80 91 a4 08 	lds	r24, 0x08A4	; 0x8008a4 <__TEXT_REGION_LENGTH__+0x7008a4>
+ b5c:	82 ff       	sbrs	r24, 2
+ b5e:	16 c0       	rjmp	.+44     	; 0xb8c <_Z18usart_set_baudratemm+0x4e>
+
+	/*
+	 * Check if the hardware supports the given baud rate
+	 */
+	/* 8 = (2^0) * 8 * (2^0) = (2^BSCALE_MIN) * 8 * (BSEL_MIN) */
+	max_rate = cpu_hz / 8;
+ b60:	da 01       	movw	r26, r20
+ b62:	c9 01       	movw	r24, r18
+ b64:	68 94       	set
+ b66:	12 f8       	bld	r1, 2
+ b68:	b6 95       	lsr	r27
+ b6a:	a7 95       	ror	r26
+ b6c:	97 95       	ror	r25
+ b6e:	87 95       	ror	r24
+ b70:	16 94       	lsr	r1
+ b72:	d1 f7       	brne	.-12     	; 0xb68 <_Z18usart_set_baudratemm+0x2a>
+	/* 4194304 = (2^7) * 8 * (2^12) = (2^BSCALE_MAX) * 8 * (BSEL_MAX+1) */
+	min_rate = cpu_hz / 4194304;
+ b74:	ba 01       	movw	r22, r20
+ b76:	a9 01       	movw	r20, r18
+ b78:	03 2e       	mov	r0, r19
+ b7a:	36 e1       	ldi	r19, 0x16	; 22
+ b7c:	76 95       	lsr	r23
+ b7e:	67 95       	ror	r22
+ b80:	57 95       	ror	r21
+ b82:	47 95       	ror	r20
+ b84:	3a 95       	dec	r19
+ b86:	d1 f7       	brne	.-12     	; 0xb7c <_Z18usart_set_baudratemm+0x3e>
+ b88:	30 2d       	mov	r19, r0
+ b8a:	15 c0       	rjmp	.+42     	; 0xbb6 <_Z18usart_set_baudratemm+0x78>
+
+	if (!(USARTC0_CTRLB & USART_CLK2X_bm)) {
+		max_rate /= 2;
+ b8c:	da 01       	movw	r26, r20
+ b8e:	c9 01       	movw	r24, r18
+ b90:	68 94       	set
+ b92:	13 f8       	bld	r1, 3
+ b94:	b6 95       	lsr	r27
+ b96:	a7 95       	ror	r26
+ b98:	97 95       	ror	r25
+ b9a:	87 95       	ror	r24
+ b9c:	16 94       	lsr	r1
+ b9e:	d1 f7       	brne	.-12     	; 0xb94 <_Z18usart_set_baudratemm+0x56>
+		min_rate /= 2;
+ ba0:	ba 01       	movw	r22, r20
+ ba2:	a9 01       	movw	r20, r18
+ ba4:	03 2e       	mov	r0, r19
+ ba6:	37 e1       	ldi	r19, 0x17	; 23
+ ba8:	76 95       	lsr	r23
+ baa:	67 95       	ror	r22
+ bac:	57 95       	ror	r21
+ bae:	47 95       	ror	r20
+ bb0:	3a 95       	dec	r19
+ bb2:	d1 f7       	brne	.-12     	; 0xba8 <_Z18usart_set_baudratemm+0x6a>
+ bb4:	30 2d       	mov	r19, r0
+	}
+
+	if ((baud > max_rate) || (baud < min_rate)) {
+ bb6:	8c 15       	cp	r24, r12
+ bb8:	9d 05       	cpc	r25, r13
+ bba:	ae 05       	cpc	r26, r14
+ bbc:	bf 05       	cpc	r27, r15
+ bbe:	08 f4       	brcc	.+2      	; 0xbc2 <_Z18usart_set_baudratemm+0x84>
+ bc0:	a7 c0       	rjmp	.+334    	; 0xd10 <_Z18usart_set_baudratemm+0x1d2>
+ bc2:	c4 16       	cp	r12, r20
+ bc4:	d5 06       	cpc	r13, r21
+ bc6:	e6 06       	cpc	r14, r22
+ bc8:	f7 06       	cpc	r15, r23
+ bca:	08 f4       	brcc	.+2      	; 0xbce <_Z18usart_set_baudratemm+0x90>
+ bcc:	a3 c0       	rjmp	.+326    	; 0xd14 <_Z18usart_set_baudratemm+0x1d6>
+		return false;
+	}
+
+	/* Check if double speed is enabled. */
+	if (!(USARTC0_CTRLB & USART_CLK2X_bm)) {
+ bce:	80 91 a4 08 	lds	r24, 0x08A4	; 0x8008a4 <__TEXT_REGION_LENGTH__+0x7008a4>
+ bd2:	82 fd       	sbrc	r24, 2
+ bd4:	04 c0       	rjmp	.+8      	; 0xbde <_Z18usart_set_baudratemm+0xa0>
+		baud *= 2;
+ bd6:	cc 0c       	add	r12, r12
+ bd8:	dd 1c       	adc	r13, r13
+ bda:	ee 1c       	adc	r14, r14
+ bdc:	ff 1c       	adc	r15, r15
+	}
+
+	/* Find the lowest possible exponent. */
+	limit = 0xfffU >> 4;
+	ratio = cpu_hz / baud;
+ bde:	c5 01       	movw	r24, r10
+ be0:	b4 01       	movw	r22, r8
+ be2:	a7 01       	movw	r20, r14
+ be4:	96 01       	movw	r18, r12
+ be6:	0e 94 d5 06 	call	0xdaa	; 0xdaa <__udivmodsi4>
+
+	for (exp = -7; exp < 7; exp++) {
+		if (ratio < limit) {
+ bea:	2f 3f       	cpi	r18, 0xFF	; 255
+ bec:	31 05       	cpc	r19, r1
+ bee:	41 05       	cpc	r20, r1
+ bf0:	51 05       	cpc	r21, r1
+ bf2:	08 f4       	brcc	.+2      	; 0xbf6 <_Z18usart_set_baudratemm+0xb8>
+ bf4:	91 c0       	rjmp	.+290    	; 0xd18 <_Z18usart_set_baudratemm+0x1da>
+ bf6:	8f ef       	ldi	r24, 0xFF	; 255
+ bf8:	90 e0       	ldi	r25, 0x00	; 0
+ bfa:	a0 e0       	ldi	r26, 0x00	; 0
+ bfc:	b0 e0       	ldi	r27, 0x00	; 0
+ bfe:	c9 ef       	ldi	r28, 0xF9	; 249
+ c00:	05 c0       	rjmp	.+10     	; 0xc0c <_Z18usart_set_baudratemm+0xce>
+ c02:	28 17       	cp	r18, r24
+ c04:	39 07       	cpc	r19, r25
+ c06:	4a 07       	cpc	r20, r26
+ c08:	5b 07       	cpc	r21, r27
+ c0a:	58 f0       	brcs	.+22     	; 0xc22 <_Z18usart_set_baudratemm+0xe4>
+			break;
+		}
+
+		limit <<= 1;
+ c0c:	88 0f       	add	r24, r24
+ c0e:	99 1f       	adc	r25, r25
+ c10:	aa 1f       	adc	r26, r26
+ c12:	bb 1f       	adc	r27, r27
+
+		if (exp < -3) {
+ c14:	cd 3f       	cpi	r28, 0xFD	; 253
+ c16:	0c f4       	brge	.+2      	; 0xc1a <_Z18usart_set_baudratemm+0xdc>
+			limit |= 1;
+ c18:	81 60       	ori	r24, 0x01	; 1
+ c1a:	cf 5f       	subi	r28, 0xFF	; 255
+
+	/* Find the lowest possible exponent. */
+	limit = 0xfffU >> 4;
+	ratio = cpu_hz / baud;
+
+	for (exp = -7; exp < 7; exp++) {
+ c1c:	c7 30       	cpi	r28, 0x07	; 7
+ c1e:	89 f7       	brne	.-30     	; 0xc02 <_Z18usart_set_baudratemm+0xc4>
+ c20:	4f c0       	rjmp	.+158    	; 0xcc0 <_Z18usart_set_baudratemm+0x182>
+	 * point.
+	 *
+	 * The formula for calculating BSEL is slightly different when exp is
+	 * negative than it is when exp is positive.
+	 */
+	if (exp < 0) {
+ c22:	cc 23       	and	r28, r28
+ c24:	0c f0       	brlt	.+2      	; 0xc28 <_Z18usart_set_baudratemm+0xea>
+ c26:	4c c0       	rjmp	.+152    	; 0xcc0 <_Z18usart_set_baudratemm+0x182>
+		/* We are supposed to subtract 1, then apply BSCALE. We want to
+		 * apply BSCALE first, so we need to turn everything inside the
+		 * parenthesis into a single fractional expression.
+		 */
+		cpu_hz -= 8 * baud;
+ c28:	d7 01       	movw	r26, r14
+ c2a:	c6 01       	movw	r24, r12
+ c2c:	88 0f       	add	r24, r24
+ c2e:	99 1f       	adc	r25, r25
+ c30:	aa 1f       	adc	r26, r26
+ c32:	bb 1f       	adc	r27, r27
+ c34:	88 0f       	add	r24, r24
+ c36:	99 1f       	adc	r25, r25
+ c38:	aa 1f       	adc	r26, r26
+ c3a:	bb 1f       	adc	r27, r27
+ c3c:	88 0f       	add	r24, r24
+ c3e:	99 1f       	adc	r25, r25
+ c40:	aa 1f       	adc	r26, r26
+ c42:	bb 1f       	adc	r27, r27
+ c44:	88 1a       	sub	r8, r24
+ c46:	99 0a       	sbc	r9, r25
+ c48:	aa 0a       	sbc	r10, r26
+ c4a:	bb 0a       	sbc	r11, r27
+		/* If we end up with a left-shift after taking the final
+		 * divide-by-8 into account, do the shift before the divide.
+		 * Otherwise, left-shift the denominator instead (effectively
+		 * resulting in an overall right shift.)
+		 */
+		if (exp <= -3) {
+ c4c:	ce 3f       	cpi	r28, 0xFE	; 254
+ c4e:	f4 f4       	brge	.+60     	; 0xc8c <_Z18usart_set_baudratemm+0x14e>
+			div = ((cpu_hz << (-exp - 3)) + baud / 2) / baud;
+ c50:	8d ef       	ldi	r24, 0xFD	; 253
+ c52:	9f ef       	ldi	r25, 0xFF	; 255
+ c54:	8c 1b       	sub	r24, r28
+ c56:	91 09       	sbc	r25, r1
+ c58:	c7 fd       	sbrc	r28, 7
+ c5a:	93 95       	inc	r25
+ c5c:	04 c0       	rjmp	.+8      	; 0xc66 <_Z18usart_set_baudratemm+0x128>
+ c5e:	88 0c       	add	r8, r8
+ c60:	99 1c       	adc	r9, r9
+ c62:	aa 1c       	adc	r10, r10
+ c64:	bb 1c       	adc	r11, r11
+ c66:	8a 95       	dec	r24
+ c68:	d2 f7       	brpl	.-12     	; 0xc5e <_Z18usart_set_baudratemm+0x120>
+ c6a:	d7 01       	movw	r26, r14
+ c6c:	c6 01       	movw	r24, r12
+ c6e:	b6 95       	lsr	r27
+ c70:	a7 95       	ror	r26
+ c72:	97 95       	ror	r25
+ c74:	87 95       	ror	r24
+ c76:	bc 01       	movw	r22, r24
+ c78:	cd 01       	movw	r24, r26
+ c7a:	68 0d       	add	r22, r8
+ c7c:	79 1d       	adc	r23, r9
+ c7e:	8a 1d       	adc	r24, r10
+ c80:	9b 1d       	adc	r25, r11
+ c82:	a7 01       	movw	r20, r14
+ c84:	96 01       	movw	r18, r12
+ c86:	0e 94 d5 06 	call	0xdaa	; 0xdaa <__udivmodsi4>
+ c8a:	37 c0       	rjmp	.+110    	; 0xcfa <_Z18usart_set_baudratemm+0x1bc>
+		} else {
+			baud <<= exp + 3;
+ c8c:	83 e0       	ldi	r24, 0x03	; 3
+ c8e:	8c 0f       	add	r24, r28
+ c90:	a7 01       	movw	r20, r14
+ c92:	96 01       	movw	r18, r12
+ c94:	04 c0       	rjmp	.+8      	; 0xc9e <_Z18usart_set_baudratemm+0x160>
+ c96:	22 0f       	add	r18, r18
+ c98:	33 1f       	adc	r19, r19
+ c9a:	44 1f       	adc	r20, r20
+ c9c:	55 1f       	adc	r21, r21
+ c9e:	8a 95       	dec	r24
+ ca0:	d2 f7       	brpl	.-12     	; 0xc96 <_Z18usart_set_baudratemm+0x158>
+			div = (cpu_hz + baud / 2) / baud;
+ ca2:	da 01       	movw	r26, r20
+ ca4:	c9 01       	movw	r24, r18
+ ca6:	b6 95       	lsr	r27
+ ca8:	a7 95       	ror	r26
+ caa:	97 95       	ror	r25
+ cac:	87 95       	ror	r24
+ cae:	bc 01       	movw	r22, r24
+ cb0:	cd 01       	movw	r24, r26
+ cb2:	68 0d       	add	r22, r8
+ cb4:	79 1d       	adc	r23, r9
+ cb6:	8a 1d       	adc	r24, r10
+ cb8:	9b 1d       	adc	r25, r11
+ cba:	0e 94 d5 06 	call	0xdaa	; 0xdaa <__udivmodsi4>
+ cbe:	1d c0       	rjmp	.+58     	; 0xcfa <_Z18usart_set_baudratemm+0x1bc>
+		}
+	} else {
+		/* We will always do a right shift in this case, but we need to
+		 * shift three extra positions because of the divide-by-8.
+		 */
+		baud <<= exp + 3;
+ cc0:	83 e0       	ldi	r24, 0x03	; 3
+ cc2:	8c 0f       	add	r24, r28
+ cc4:	a7 01       	movw	r20, r14
+ cc6:	96 01       	movw	r18, r12
+ cc8:	04 c0       	rjmp	.+8      	; 0xcd2 <_Z18usart_set_baudratemm+0x194>
+ cca:	22 0f       	add	r18, r18
+ ccc:	33 1f       	adc	r19, r19
+ cce:	44 1f       	adc	r20, r20
+ cd0:	55 1f       	adc	r21, r21
+ cd2:	8a 95       	dec	r24
+ cd4:	d2 f7       	brpl	.-12     	; 0xcca <_Z18usart_set_baudratemm+0x18c>
+		div = (cpu_hz + baud / 2) / baud - 1;
+ cd6:	da 01       	movw	r26, r20
+ cd8:	c9 01       	movw	r24, r18
+ cda:	b6 95       	lsr	r27
+ cdc:	a7 95       	ror	r26
+ cde:	97 95       	ror	r25
+ ce0:	87 95       	ror	r24
+ ce2:	bc 01       	movw	r22, r24
+ ce4:	cd 01       	movw	r24, r26
+ ce6:	68 0d       	add	r22, r8
+ ce8:	79 1d       	adc	r23, r9
+ cea:	8a 1d       	adc	r24, r10
+ cec:	9b 1d       	adc	r25, r11
+ cee:	0e 94 d5 06 	call	0xdaa	; 0xdaa <__udivmodsi4>
+ cf2:	21 50       	subi	r18, 0x01	; 1
+ cf4:	31 09       	sbc	r19, r1
+ cf6:	41 09       	sbc	r20, r1
+ cf8:	51 09       	sbc	r21, r1
+	}
+
+	USARTC0_BAUDCTRLB = (uint8_t)(((div >> 8) & 0X0F) | (exp << 4));
+ cfa:	83 2f       	mov	r24, r19
+ cfc:	8f 70       	andi	r24, 0x0F	; 15
+ cfe:	c2 95       	swap	r28
+ d00:	c0 7f       	andi	r28, 0xF0	; 240
+ d02:	c8 2b       	or	r28, r24
+ d04:	c0 93 a7 08 	sts	0x08A7, r28	; 0x8008a7 <__TEXT_REGION_LENGTH__+0x7008a7>
+	USARTC0_BAUDCTRLA = (uint8_t)div;
+ d08:	20 93 a6 08 	sts	0x08A6, r18	; 0x8008a6 <__TEXT_REGION_LENGTH__+0x7008a6>
+
+	return true;
+ d0c:	81 e0       	ldi	r24, 0x01	; 1
+ d0e:	18 c0       	rjmp	.+48     	; 0xd40 <_Z18usart_set_baudratemm+0x202>
+		max_rate /= 2;
+		min_rate /= 2;
+	}
+
+	if ((baud > max_rate) || (baud < min_rate)) {
+		return false;
+ d10:	80 e0       	ldi	r24, 0x00	; 0
+ d12:	16 c0       	rjmp	.+44     	; 0xd40 <_Z18usart_set_baudratemm+0x202>
+ d14:	80 e0       	ldi	r24, 0x00	; 0
+ d16:	14 c0       	rjmp	.+40     	; 0xd40 <_Z18usart_set_baudratemm+0x202>
+	if (exp < 0) {
+		/* We are supposed to subtract 1, then apply BSCALE. We want to
+		 * apply BSCALE first, so we need to turn everything inside the
+		 * parenthesis into a single fractional expression.
+		 */
+		cpu_hz -= 8 * baud;
+ d18:	d7 01       	movw	r26, r14
+ d1a:	c6 01       	movw	r24, r12
+ d1c:	88 0f       	add	r24, r24
+ d1e:	99 1f       	adc	r25, r25
+ d20:	aa 1f       	adc	r26, r26
+ d22:	bb 1f       	adc	r27, r27
+ d24:	88 0f       	add	r24, r24
+ d26:	99 1f       	adc	r25, r25
+ d28:	aa 1f       	adc	r26, r26
+ d2a:	bb 1f       	adc	r27, r27
+ d2c:	88 0f       	add	r24, r24
+ d2e:	99 1f       	adc	r25, r25
+ d30:	aa 1f       	adc	r26, r26
+ d32:	bb 1f       	adc	r27, r27
+ d34:	88 1a       	sub	r8, r24
+ d36:	99 0a       	sbc	r9, r25
+ d38:	aa 0a       	sbc	r10, r26
+ d3a:	bb 0a       	sbc	r11, r27
+
+	/* Find the lowest possible exponent. */
+	limit = 0xfffU >> 4;
+	ratio = cpu_hz / baud;
+
+	for (exp = -7; exp < 7; exp++) {
+ d3c:	c9 ef       	ldi	r28, 0xF9	; 249
+ d3e:	88 cf       	rjmp	.-240    	; 0xc50 <_Z18usart_set_baudratemm+0x112>
+
+	USARTC0_BAUDCTRLB = (uint8_t)(((div >> 8) & 0X0F) | (exp << 4));
+	USARTC0_BAUDCTRLA = (uint8_t)div;
+
+	return true;
+ d40:	cf 91       	pop	r28
+ d42:	ff 90       	pop	r15
+ d44:	ef 90       	pop	r14
+ d46:	df 90       	pop	r13
+ d48:	cf 90       	pop	r12
+ d4a:	bf 90       	pop	r11
+ d4c:	af 90       	pop	r10
+ d4e:	9f 90       	pop	r9
+ d50:	8f 90       	pop	r8
+ d52:	08 95       	ret
+
+00000d54 <_Z11USART0_Initmmb>:
+  }
+ 
+ void USART0_Init(uint32_t baud, uint32_t cpu_hz, bool doubleSpeed)
+ {	
+	 //set TX pin to output
+	 PORTC_DIR |= (1 << 3);
+ d54:	e0 e4       	ldi	r30, 0x40	; 64
+ d56:	f6 e0       	ldi	r31, 0x06	; 6
+ d58:	a0 81       	ld	r26, Z
+ d5a:	a8 60       	ori	r26, 0x08	; 8
+ d5c:	a0 83       	st	Z, r26
+	 /* Set baud rate */
+	 //UBRR1H = (unsigned char)(ubrr>>8);
+	 //UBRR1L = (unsigned char)ubrr;
+	 //USARTC0_BAUDCTRLB |= (unsigned char)(ubrr>>8);
+	 //USARTC0_BAUDCTRLA = (unsigned char)ubrr;
+	 usart_set_baudrate(baud,cpu_hz);
+ d5e:	0e 94 9f 05 	call	0xb3e	; 0xb3e <_Z18usart_set_baudratemm>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ d62:	2f ef       	ldi	r18, 0xFF	; 255
+ d64:	89 ef       	ldi	r24, 0xF9	; 249
+ d66:	90 e0       	ldi	r25, 0x00	; 0
+ d68:	21 50       	subi	r18, 0x01	; 1
+ d6a:	80 40       	sbci	r24, 0x00	; 0
+ d6c:	90 40       	sbci	r25, 0x00	; 0
+ d6e:	e1 f7       	brne	.-8      	; 0xd68 <_Z11USART0_Initmmb+0x14>
+ d70:	00 c0       	rjmp	.+0      	; 0xd72 <_Z11USART0_Initmmb+0x1e>
+ d72:	00 00       	nop
+	 //UCSR1A |= 1 << U2X1;
+	 /* Enable receiver and transmitter */
+	 //UCSR1B = (1<<RXEN1)|(1<<TXEN1);
+	 /* Set frame format: 8data, 2stop bit */
+	 //UCSR1C = (1<<USBS1)|(3<<UCSZ10);
+	 USARTC0_CTRLA = (1 << USART_RXCINTLVL1_bp)|(1 << USART_TXCINTLVL1_bp)|(1 << USART_DREINTLVL1_bp);
+ d74:	8a e2       	ldi	r24, 0x2A	; 42
+ d76:	80 93 a3 08 	sts	0x08A3, r24	; 0x8008a3 <__TEXT_REGION_LENGTH__+0x7008a3>
+	 USARTC0_CTRLB = (1 << USART_RXEN_bp)|(1 << USART_TXEN_bp);
+ d7a:	88 e1       	ldi	r24, 0x18	; 24
+ d7c:	80 93 a4 08 	sts	0x08A4, r24	; 0x8008a4 <__TEXT_REGION_LENGTH__+0x7008a4>
+ d80:	08 95       	ret
+
+00000d82 <__divmodhi4>:
+ d82:	97 fb       	bst	r25, 7
+ d84:	07 2e       	mov	r0, r23
+ d86:	16 f4       	brtc	.+4      	; 0xd8c <__divmodhi4+0xa>
+ d88:	00 94       	com	r0
+ d8a:	07 d0       	rcall	.+14     	; 0xd9a <__divmodhi4_neg1>
+ d8c:	77 fd       	sbrc	r23, 7
+ d8e:	09 d0       	rcall	.+18     	; 0xda2 <__divmodhi4_neg2>
+ d90:	0e 94 15 07 	call	0xe2a	; 0xe2a <__udivmodhi4>
+ d94:	07 fc       	sbrc	r0, 7
+ d96:	05 d0       	rcall	.+10     	; 0xda2 <__divmodhi4_neg2>
+ d98:	3e f4       	brtc	.+14     	; 0xda8 <__divmodhi4_exit>
+
+00000d9a <__divmodhi4_neg1>:
+ d9a:	90 95       	com	r25
+ d9c:	81 95       	neg	r24
+ d9e:	9f 4f       	sbci	r25, 0xFF	; 255
+ da0:	08 95       	ret
+
+00000da2 <__divmodhi4_neg2>:
+ da2:	70 95       	com	r23
+ da4:	61 95       	neg	r22
+ da6:	7f 4f       	sbci	r23, 0xFF	; 255
+
+00000da8 <__divmodhi4_exit>:
+ da8:	08 95       	ret
+
+00000daa <__udivmodsi4>:
+ daa:	a1 e2       	ldi	r26, 0x21	; 33
+ dac:	1a 2e       	mov	r1, r26
+ dae:	aa 1b       	sub	r26, r26
+ db0:	bb 1b       	sub	r27, r27
+ db2:	fd 01       	movw	r30, r26
+ db4:	0d c0       	rjmp	.+26     	; 0xdd0 <__udivmodsi4_ep>
+
+00000db6 <__udivmodsi4_loop>:
+ db6:	aa 1f       	adc	r26, r26
+ db8:	bb 1f       	adc	r27, r27
+ dba:	ee 1f       	adc	r30, r30
+ dbc:	ff 1f       	adc	r31, r31
+ dbe:	a2 17       	cp	r26, r18
+ dc0:	b3 07       	cpc	r27, r19
+ dc2:	e4 07       	cpc	r30, r20
+ dc4:	f5 07       	cpc	r31, r21
+ dc6:	20 f0       	brcs	.+8      	; 0xdd0 <__udivmodsi4_ep>
+ dc8:	a2 1b       	sub	r26, r18
+ dca:	b3 0b       	sbc	r27, r19
+ dcc:	e4 0b       	sbc	r30, r20
+ dce:	f5 0b       	sbc	r31, r21
+
+00000dd0 <__udivmodsi4_ep>:
+ dd0:	66 1f       	adc	r22, r22
+ dd2:	77 1f       	adc	r23, r23
+ dd4:	88 1f       	adc	r24, r24
+ dd6:	99 1f       	adc	r25, r25
+ dd8:	1a 94       	dec	r1
+ dda:	69 f7       	brne	.-38     	; 0xdb6 <__udivmodsi4_loop>
+ ddc:	60 95       	com	r22
+ dde:	70 95       	com	r23
+ de0:	80 95       	com	r24
+ de2:	90 95       	com	r25
+ de4:	9b 01       	movw	r18, r22
+ de6:	ac 01       	movw	r20, r24
+ de8:	bd 01       	movw	r22, r26
+ dea:	cf 01       	movw	r24, r30
+ dec:	08 95       	ret
+
+00000dee <__mulhisi3>:
+ dee:	0e 94 ff 06 	call	0xdfe	; 0xdfe <__umulhisi3>
+ df2:	33 23       	and	r19, r19
+ df4:	12 f4       	brpl	.+4      	; 0xdfa <__mulhisi3+0xc>
+ df6:	8a 1b       	sub	r24, r26
+ df8:	9b 0b       	sbc	r25, r27
+ dfa:	0c 94 10 07 	jmp	0xe20	; 0xe20 <__usmulhisi3_tail>
+
+00000dfe <__umulhisi3>:
+ dfe:	a2 9f       	mul	r26, r18
+ e00:	b0 01       	movw	r22, r0
+ e02:	b3 9f       	mul	r27, r19
+ e04:	c0 01       	movw	r24, r0
+ e06:	a3 9f       	mul	r26, r19
+ e08:	70 0d       	add	r23, r0
+ e0a:	81 1d       	adc	r24, r1
+ e0c:	11 24       	eor	r1, r1
+ e0e:	91 1d       	adc	r25, r1
+ e10:	b2 9f       	mul	r27, r18
+ e12:	70 0d       	add	r23, r0
+ e14:	81 1d       	adc	r24, r1
+ e16:	11 24       	eor	r1, r1
+ e18:	91 1d       	adc	r25, r1
+ e1a:	08 95       	ret
+
+00000e1c <__usmulhisi3>:
+ e1c:	0e 94 ff 06 	call	0xdfe	; 0xdfe <__umulhisi3>
+
+00000e20 <__usmulhisi3_tail>:
+ e20:	b7 ff       	sbrs	r27, 7
+ e22:	08 95       	ret
+ e24:	82 1b       	sub	r24, r18
+ e26:	93 0b       	sbc	r25, r19
+ e28:	08 95       	ret
+
+00000e2a <__udivmodhi4>:
+ e2a:	aa 1b       	sub	r26, r26
+ e2c:	bb 1b       	sub	r27, r27
+ e2e:	51 e1       	ldi	r21, 0x11	; 17
+ e30:	07 c0       	rjmp	.+14     	; 0xe40 <__udivmodhi4_ep>
+
+00000e32 <__udivmodhi4_loop>:
+ e32:	aa 1f       	adc	r26, r26
+ e34:	bb 1f       	adc	r27, r27
+ e36:	a6 17       	cp	r26, r22
+ e38:	b7 07       	cpc	r27, r23
+ e3a:	10 f0       	brcs	.+4      	; 0xe40 <__udivmodhi4_ep>
+ e3c:	a6 1b       	sub	r26, r22
+ e3e:	b7 0b       	sbc	r27, r23
+
+00000e40 <__udivmodhi4_ep>:
+ e40:	88 1f       	adc	r24, r24
+ e42:	99 1f       	adc	r25, r25
+ e44:	5a 95       	dec	r21
+ e46:	a9 f7       	brne	.-22     	; 0xe32 <__udivmodhi4_loop>
+ e48:	80 95       	com	r24
+ e4a:	90 95       	com	r25
+ e4c:	bc 01       	movw	r22, r24
+ e4e:	cd 01       	movw	r24, r26
+ e50:	08 95       	ret
+
+00000e52 <_exit>:
+ e52:	f8 94       	cli
+
+00000e54 <__stop_program>:
+ e54:	ff cf       	rjmp	.-2      	; 0xe54 <__stop_program>
