@@ -12,7 +12,8 @@ SPIClass spiSD(HSPI);
 
 AsyncWebServer server(80);
 
-// DNSServer dns;
+const char *host "arexx";
+DNSServer dns;
 
 void setup()
 {
