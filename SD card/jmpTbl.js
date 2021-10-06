@@ -470,12 +470,12 @@ var jumpTable =
   "SetRelay":
   {
     returnType: "void",
-    parameterTypes: ["int16_t", "int16_t"],
-    text: "Set relay %2 to %1",
+    parameterTypes: ["int16_t","int16_t"],
+    text: "%{BKY_BL_SETRELAY}",
     colour: "#4993AB",
     inline: true,
     category: "IO"
-  },
+  }
 }
 
 var categories =

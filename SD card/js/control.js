@@ -441,16 +441,6 @@ function onSaveFileLoaded()
 	}
 }
 
-function stopProgram()
-{
-	myUpdateFunction();
-    let xmlHttp = new XMLHttpRequest();
-    //xmlHttp.onreadystatechange = httpPostProcessRequest;
-    let formData = new FormData();
-    formData.append("hexFile", new Blob([hexFile], { type: "text/plain"}), "empty.hex");
-    xmlHttp.open("POST", "/edit");
-    xmlHttp.send(formData);
-}
 
 function runProgram()
 {

@@ -77,6 +77,7 @@ Blockly.Msg.BL_OPTOCOUPLERREAD            = "lees optocoupler %1";
 Blockly.Msg.BL_SELECTCOLOUR               = "%1";
 Blockly.Msg.BL_READCOLOURSENSOR           = "kleursensor";
 Blockly.Msg.BL_COMPARECOLOURS             = "kleur %1 == kleur %2";
+Blockly.Msg.BL_SETRELAY                   = "Stel relais %2 in als %1";
 
 // hardcoded blocks help
 //logic
