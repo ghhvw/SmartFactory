@@ -16,8 +16,9 @@ bool LoadFromSdCard(AsyncWebServerRequest *request)
     String path = request->url();
     String dataType = "text/plain";
 
-    if (path.endsWith("/"))
+    if (path.endsWith("/")){
         path += "index.html";
+    }
 
     if (path.endsWith(".src"))
         path = path.substring(0, path.lastIndexOf("."));
@@ -84,7 +85,6 @@ bool LoadFromSdCard(AsyncWebServerRequest *request)
         }
         return thisSize;
     });
-
     return true;
 }
 
@@ -97,7 +97,6 @@ void HandleDefault(AsyncWebServerRequest *request)
 
     if (LoadFromSdCard(request))
         return;
-
     String message = "\nNo Handler\r\n";
     message += "URI: ";
     message += request->url();
