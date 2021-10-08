@@ -1,21 +1,4 @@
-#include <Constants.h>
-
-// Global libraries
-#include <WiFi.h>
-#include <Wire.h>
-#include <ESPmDNS.h>
-#include <SD.h>
-#include <Preferences.h>
-
-// Project libraries
-#include <ESPAsyncWebServer.h>
-#include <ESPAsyncWiFiManager.h>
-
-// Custom files
-#include <WebHelper.h>
-
-//Debug level:
-#define LOG_LOCAL_LEVEL 4
+#include <main.h>
 
 /**
  * ===========================================
@@ -28,37 +11,6 @@
  * -Implement hardware button to switch from AP<->STA mode, instead of only on-website toggle
  */
 
-const char *host = "arexx";
-const uint32_t spi_speed = 4000000;
-const uint8_t max_files = 20; //vergroot dit wanneer je "VFSFileImpl(): fopen(/...) failed" errors krijgt en de webpage slecht laadt
-
-SPIClass spiSD(HSPI);
-
-AsyncWebServer server(80);
-DNSServer dns;
-
-Preferences preferences; //for using non-volatile storage on ESP32
-
-/**
- * PIN DEFINITIONS
- */
-//I2C pins:
-#define RESET_PIN 27
-#define SDA_PIN 16
-#define SCL_PIN 17
-
-//Sd SPI pins:
-#define SD_CS 5U
-#define SD_MOSI 23
-#define SD_MISO 19
-#define SD_SCLK 18
-
-#define DBG_OUT Serial
-#define BAUD_RATE 115200
-
-//Function prototypes:
-#define HEAP_DEBUG_DELAY 30000
-void heapTask(void *args); //For debugging print free heap memory
 
 void setup()
 {
@@ -66,23 +18,103 @@ void setup()
     disableCore0WDT();
     disableCore1WDT();
     disableLoopWDT();
+
+    initI2C();  //set pins for I2C
+    initDebug();
+
+    //Setup Preferences (Non volatile Storage)
+    preferences.begin("smartFactory", false);
+    
+    setWifiMode(CHANGE_WIFI_MODE);  //choose between AP and STA (Can be changed in main.h)
+    checkStatus(); 
+
+    //Upload new program to Atmega
+    server.on("/edit", HTTP_POST, returnOK, HandleSDUpload);
+
+    switchWifi();//possibility to switch between AP and STA
+
+    //Default handler:
+    server.onNotFound(HandleDefault);
+
+    //Start the server:
+    server.begin();
+    DBG_OUT.println("HTTP server started");
+
+    initSDCard();   //keep checking on SD card until it's initialized
+
+    //When debugging lauch the debug functions:
+    #if LOG_LOCAL_LEVEL > 3
+        xTaskCreatePinnedToCore(heapTask, "heap debug", 2048, NULL, 1, NULL, 1);
+    #endif
+}
+
+void loop(void)
+{
+
+    delay(1000);
+
+    if (!getATmegaStatus() && !getTransmissionRunning())
+    {
+        setATmegaStatus(true);
+        //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
+    }
+    
+    /*
+    if (!getATmegaStatus())
+    {
+        while (getTransmissionRunning())
+            ;
+        delay(500); //voorkom vastlopen i2c bus na upload
+        requestATmegaStatus();
+        //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
+    }
+    */
+}
+
+void initI2C(void)
+{
     // Enable I2C
     pinMode(RESET_PIN, OUTPUT);
     pinMode(SD_CS, OUTPUT);
     digitalWrite(RESET_PIN, HIGH);
     Wire.begin(SDA_PIN, SCL_PIN, 2000);
+}
 
-    // Debugging setup
+void initDebug(void)
+{
     esp_log_level_set("*", ESP_LOG_DEBUG);
     DBG_OUT.begin(BAUD_RATE);
     DBG_OUT.setDebugOutput(true);
+}
 
-    //Setup Preferences (Non volatile Storage)
-    preferences.begin("smartFactory", false);
+void initSDCard(void)
+{
+    //Ïnitialise the SPI bus for the SD card:
+    spiSD.begin(SD_SCLK, SD_MISO, SD_MOSI);
+
+    // Initialise the SD card:
+    while (!SD.begin(SD_CS, spiSD, spi_speed, "/sd", max_files))
+    {
+        DBG_OUT.println("SD initiatization failed. Retrying.");
+        delay(250);
+    }
+    DBG_OUT.println("SD Initialized.");
+}
+
+void heapTask(void *args)
+{
+    while (1)
+    {
+        DBG_OUT.printf("RSSI = %d dbm\n\r", WiFi.RSSI());
+        DBG_OUT.printf("Heap Size: %d bytes\n\r", esp_get_free_heap_size());
+        vTaskDelay(HEAP_DEBUG_DELAY / portTICK_PERIOD_MS);
+    }
+}
+
+void setWifiMode(wifi_mode_t wifi_mode)
+{
     //read NVS, Set default value to be AP:
     // wifi_mode_t wifi_mode = (wifi_mode_t)preferences.getUInt("wifimode", (uint32_t)WIFI_MODE_AP);
-    //Always use AP for now:
-    wifi_mode_t wifi_mode = WIFI_MODE_AP;
 
     // Wifi manager
     AsyncWiFiManager wifiManager(&server, &dns);
@@ -94,7 +126,7 @@ void setup()
     else if (wifi_mode == WIFI_MODE_AP)
     {
         ESP_LOGI("WiFi-Mode", "Starting in Wifi AP mode");
-        WiFi.softAP("Arexx Factory");
+        WiFi.softAP("Arexx Factory AP");
     }
     else
     {
@@ -111,7 +143,10 @@ void setup()
         DBG_OUT.print(host);
         DBG_OUT.println(".local/");
     }
+}
 
+void checkStatus(void)
+{
     //verzend status naar browser (connected/disconnected)
     server.on("/status", HTTP_GET, [](AsyncWebServerRequest *request)
               {
@@ -166,10 +201,10 @@ void setup()
                   }
                   request->send(200, "text/plain", String(reply).c_str());
               });
+}
 
-    //Upload new program to Atmega
-    server.on("/edit", HTTP_POST, returnOK, HandleSDUpload);
-
+void switchWifi(void)
+{
     //Switch between AP/STA mode:
     server.on("/switchWiFi", HTTP_POST, [](AsyncWebServerRequest *request)
               {
@@ -190,59 +225,4 @@ void setup()
                       esp_restart();
                   }
               });
-    //Default handler:
-    server.onNotFound(HandleDefault);
-
-    //Start the server:
-    server.begin();
-    DBG_OUT.println("HTTP server started");
-
-    //Ïnitialise the SPI bus for the SD card:
-    spiSD.begin(SD_SCLK, SD_MISO, SD_MOSI);
-
-    // Initialise the SD card:
-    while (!SD.begin(SD_CS, spiSD, spi_speed, "/sd", max_files))
-    {
-        DBG_OUT.println("SD initiatization failed. Retrying.");
-        delay(250);
-    }
-    DBG_OUT.println("SD Initialized.");
-
-//When debugging lauch the debug functions:
-#if LOG_LOCAL_LEVEL > 3
-xTaskCreatePinnedToCore(heapTask, "heap debug", 2048, NULL, 1, NULL, 1);
-#endif
-}
-
-void loop(void)
-{
-
-    delay(1000);
-
-#if 1
-    if (!getATmegaStatus() && !getTransmissionRunning())
-    {
-        setATmegaStatus(true);
-        //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
-    }
-#else
-    if (!getATmegaStatus())
-    {
-        while (getTransmissionRunning())
-            ;
-        delay(500); //voorkom vastlopen i2c bus na upload
-        requestATmegaStatus();
-        //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
-    }
-#endif
-}
-
-void heapTask(void *args)
-{
-    while (1)
-    {
-        DBG_OUT.printf("RSSI = %d dbm\n\r", WiFi.RSSI());
-        DBG_OUT.printf("Heap Size: %d bytes\n\r", esp_get_free_heap_size());
-        vTaskDelay(HEAP_DEBUG_DELAY / portTICK_PERIOD_MS);
-    }
 }
