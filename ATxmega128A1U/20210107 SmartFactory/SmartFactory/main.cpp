@@ -104,11 +104,11 @@ ISR(PORTK_INT1_vect) {
 	DEBUG_OUT("Entered INT1 ISR\r\n");
 	if(leftIsPressed){
 	 DEBUG_OUT("SorterArm switch LEFT was pressed\n\r");
-	 //TODO sorterarm ISR implementation
+	 SorterArmISR();
 	}
 	if(rightIsPressed){
 	 DEBUG_OUT("SorterArm switch RIGHT was pressed\n\r");
-	 //TODO SorterArm ISR implementation
+	 SorterArmISR();
 	 }
 
 	//Currently checks the PORTK register for which pin is pressed down

@@ -7,6 +7,12 @@
 
 #include "Kleursensor.h"
 
+#if DEBUG
+#define DEBUG_OUT(X) USART_TransmitString(USARTD0, X)
+#else
+#define DEBUG_OUT(X)
+#endif
+
 char colour[] = {'#','0','0','0','0','0','0'};
 
 
@@ -46,6 +52,9 @@ char* ReadColourSensor() {
 	}
 	
 	#ifdef COLOUR_AS_INDEX
+	DEBUG_OUT("Colour: #");
+	DEBUG_OUT(ValToColour(colourVal[0], colourVal[1], colourVal[2]));
+	DEBUG_OUT("\n");
 	return (uint16_t) ColourToIndex(ValToColour(colourVal[0], colourVal[1], colourVal[2]));
 	#else
 	return ValToColour(colourVal[0], colourVal[1], colourVal[2]);

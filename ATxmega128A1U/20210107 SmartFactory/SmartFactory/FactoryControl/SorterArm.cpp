@@ -8,6 +8,13 @@
  #include "SorterArm.h"
  #include "Stepperdriver.h"
 
+//Macro for Logging debug info to serial monitor:
+#if DEBUG
+#define DEBUG_OUT(X) USART_TransmitString(USARTD0, X)
+#else
+#define DEBUG_OUT(X)
+#endif
+
 // Variabellen voor sorterarm interupts
 bool saDirection; // Richting die de arm op moet gaan, links of rechts
 volatile bool saIsLeft, saIsRight; // Sorterarm is links of rechts van zijn uiterste rijkweidte
@@ -16,16 +23,19 @@ volatile bool saIsLeft, saIsRight; // Sorterarm is links of rechts van zijn uite
 // Interrupt ISR
 void SorterArmISR(){
 	if (!(PORTK_IN & sa1.switch_pin_left)){
+		DEBUG_OUT("----------------Stop sorter arm----------------\n");
 		StopSorterArm();
 		saIsLeft = true;
 		saIsRight = false;
 	}
 	else if (!(PORTK_IN & sa1.switch_pin_right)){
+		DEBUG_OUT("----------------Stop sorter arm----------------\n");
 		StopSorterArm();
 		saIsLeft = false;
 		saIsRight = true;
 	}
 	else {
+		DEBUG_OUT("----------------Don't stop sorter arm----------------\n");
 		saIsLeft = false;
 		saIsRight = false;
 	}
@@ -77,7 +87,7 @@ bool ConfigSorterArm(){
 void StopSorterArm()
 {
 	char data[] = { MOTOR_OFF };
-	uint16_t motor_id = 0x0A;
+	uint16_t motor_id = SORTER_MOTOR_ID;
 	stepperWriteRegister(MOTOR_ENABLE_REG, data, sizeof(data) / sizeof(*data), motor_id, USARTE1);
 }
 
@@ -107,22 +117,22 @@ void MoveSorterArmTo(uint16_t toPosition){
 	
 	if (ConfigSorterArm() == 1){
 	
-	if (toPosition <= sa1.position){
-		direction = 1;
-		steps = toPosition - sa1.position;
-	}
-	else if (toPosition >= sa1.position){
-		direction = 0;
-		steps = sa1.position - toPosition;
-	}
+		if (toPosition <= sa1.position){
+			direction = 1;
+			steps = toPosition - sa1.position;
+		}
+		else if (toPosition >= sa1.position){
+			direction = 0;
+			steps = sa1.position - toPosition;
+		}
 	
-	uint16_t motor_id = SORTER_MOTOR_ID;
-	uint16_t motor_speed = 400;
+		uint16_t motor_id = SORTER_MOTOR_ID;
+		uint16_t motor_speed = 400;
 	
-	char directiondata[] = { direction };
-	stepperWriteRegister(DIRECTION_REG, directiondata, sizeof(directiondata) / sizeof(*directiondata), motor_id, USARTE1);
-	char data[] = { (uint8_t)(motor_speed >> 8),(uint8_t)motor_speed,(uint8_t)(steps >> 8),(uint8_t)steps,direction,MOTOR_STEP_FULL,MOTOR_ON };
-	stepperWriteRegister(STEPS_PS_HREG, data, sizeof(data) / sizeof(*data), motor_id, USARTE1);
+		char directiondata[] = { direction };
+		stepperWriteRegister(DIRECTION_REG, directiondata, sizeof(directiondata) / sizeof(*directiondata), motor_id, USARTE1);
+		char data[] = { (uint8_t)(motor_speed >> 8),(uint8_t)motor_speed,(uint8_t)(steps >> 8),(uint8_t)steps,direction,MOTOR_STEP_FULL,MOTOR_ON };
+		stepperWriteRegister(STEPS_PS_HREG, data, sizeof(data) / sizeof(*data), motor_id, USARTE1);
 	}
 }
 
