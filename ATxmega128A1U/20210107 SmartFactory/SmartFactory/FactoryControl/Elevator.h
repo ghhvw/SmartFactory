@@ -58,13 +58,7 @@ extern "C" {
      * \return void
      */
     void ElevatorButtonInISR(bool ElevatorIsUp);
-
-	//No implementation exists. What is this function intended for?
-    void ElevatorButtonOutISR();
-
-
-    void resetElevator();
-
+	
 
 	void ElevatorInit();
 

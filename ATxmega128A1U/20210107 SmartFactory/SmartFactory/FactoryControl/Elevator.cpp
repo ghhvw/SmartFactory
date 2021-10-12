@@ -113,21 +113,6 @@ void ElevatorButtonInISR(bool ElevatorIsUp) {
 	}
 }
 
-
-
-// Reset de liftknoppen
-void resetElevator() {
-	uint8_t resetValue= 0xFF;
-	// REVIEW: What the fuck does this function do?
-	// |= the switch bitmask into a value that is already 0xFF? What?!
-	resetValue |= EV_SWITCH_PIN_UP;
-	resetValue |= EV_SWITCH_PIN_DOWN;
-
-	// PORTK_INT0MASK &= ~(LF_SWITCH_PINN_UPP);
-	// PORTK_INT0MASK &= ~(LF_SWITCH_PINN_DOWN);
-}
-
-
 // Inputs voor de lift worden op Input-Pullup gezet
 void ElevatorInit() {
 	PORTK_DIR &= ~(EV_SWITCH_PIN_UP); // Set pin as input
