@@ -14,6 +14,9 @@ volatile bool elevatorIsUp, elevatorIsDown;	// Boleans om de stand van de lift b
 void MoveElevator(bool direction) {
 	elevatorDirection = direction;
 	if (ConfigElevator(direction)) {
+		//DEBUGGEN of de lift hierin komt
+		//Interrupts voor een bepaalde tijd disablen zodat de lift eerst van de switch af beweegt
+		//als de lift hier niet in komt, configelevator() aanpassen
 		
 		uint16_t motor_id = ELEVATOR_MOTOR_ID; // Motor ID van lift
 		bool Direction = !direction;
@@ -97,16 +100,16 @@ bool ConfigElevator(bool direction) {
 
 
 // ISR, switch is ingedrukt
-void ElevatorButtonInISR(bool UPdown) {
-	if (UPdown == elevatorDirection) { //Elevator stops moving if it reaches switch opposite to moving direction (ev_richting 1 = up, 0 = down)
-		elevatorIsUp = true;
-		elevatorIsDown = false;
-		StopElevator(); 
-	}
-	if (UPdown == elevatorDirection) { //Elevator stops moving if it reaches switch opposite to moving direction (ev_richting 1 = up, 0 = down)
-		elevatorIsUp = false;
-		elevatorIsDown = true;
-		StopElevator(); 
+void ElevatorButtonInISR(bool ElevatorIsUp) {
+	if (ElevatorIsUp == elevatorDirection){ //Elevator stops moving if it reaches switch opposite to moving direction
+		if(elevatorDirection == true){ //(ev_richting 1 = up, 0 = down)
+			elevatorIsUp = true;
+			elevatorIsDown = false;
+		}else { //(ev_richting 1 = up, 0 = down)
+			elevatorIsUp = false;
+			elevatorIsDown = true;
+		}
+		StopElevator();
 	}
 }
 

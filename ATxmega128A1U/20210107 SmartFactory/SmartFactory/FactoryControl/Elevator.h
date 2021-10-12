@@ -53,11 +53,11 @@ extern "C" {
     /**
      * \brief - 
      * 
-     * \param UPdown - True for up-switch, false for down switch
+     * \param ElevatorIsUp - True for up-switch, false for down switch
      * 
      * \return void
      */
-    void ElevatorButtonInISR(bool UPdown);
+    void ElevatorButtonInISR(bool ElevatorIsUp);
 
 	//No implementation exists. What is this function intended for?
     void ElevatorButtonOutISR();

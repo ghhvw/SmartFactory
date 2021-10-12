@@ -65,8 +65,6 @@ void requestResult() { TWI_Write(TWIC, Result); }
 
 /* ISR INT0, gebruikt voor lift interrupts */
 ISR(PORTK_INT0_vect) {
-	//Optional debounce delay, uncomment if ISR is unstable	(delay in ISR not recommended!)
-	//_delay_ms(10);	//Switch debounce time
 	bool elevatorUpPressed = !(PORTK_IN & EV_SWITCH_PIN_UP); //Pin use pull-ups, invert to give true on pressed
 	bool elevatorDownPressed = !(PORTK_IN & EV_SWITCH_PIN_DOWN);
 
@@ -82,21 +80,12 @@ ISR(PORTK_INT0_vect) {
 		DEBUG_OUT("Elevator Switch UP was pressed\n\r");
 		ElevatorButtonInISR(true); //Run with parameter true to indicate UP
 	}
-
-
-	/**
-	*	ISR - PORTK INT0 checks the Lift Interrupt switches. It gets triggered when either the top or bottom switch is pressed.
-	*	The ISR will not detect which of the switches has changed, but can read what switches are pressed by reading PORTK_IN.
-	*	Since only one switch should be pressed at a single time, it is not an issue that it does not detect which one has changed.
-	*/
 }
 
 
 ///* ISR INT1, gebruikt voor sorterarm interrupts */
 ISR(PORTK_INT1_vect) {
-	//If instability occurs, uncomment debounce delay (delay in ISR is not recommended)
-	//_delay_ms(10); //Debounce delay
-
+	
 	//Read the PORTK register on the SorterArm pins:
 	bool leftIsPressed = !(PORTK_IN & sa1.switch_pin_left); //Pin use pull-ups, invert to give true on pressed
 	bool rightIsPressed = !(PORTK_IN & sa1.switch_pin_right);

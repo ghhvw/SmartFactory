@@ -52,7 +52,7 @@ char* ReadColourSensor() {
 	}
 	
 	#ifdef COLOUR_AS_INDEX
-	DEBUG_OUT("Colour: #");
+	DEBUG_OUT("Color: ");
 	DEBUG_OUT(ValToColour(colourVal[0], colourVal[1], colourVal[2]));
 	DEBUG_OUT("\n");
 	return (uint16_t) ColourToIndex(ValToColour(colourVal[0], colourVal[1], colourVal[2]));
@@ -64,7 +64,7 @@ char* ReadColourSensor() {
 
 /* stel de kleursensor in en lees 1x een kleur */
 uint16_t ReadOneColour(uint8_t colour) {
-//	PORTJ_DIR &= ~(PIN6_bm);	//set pin as input
+	PORTJ_DIR &= ~(PIN6_bm);	//set pin as input
 	PORTH_DIR |= PIN6_bm | PIN7_bm;	//set pins as output	
 	switch (colour) {
 		case 0: //red
