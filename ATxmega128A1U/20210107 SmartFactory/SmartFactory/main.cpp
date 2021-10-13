@@ -68,9 +68,6 @@ ISR(PORTK_INT0_vect) {
 	bool elevatorUpPressed = !(PORTK_IN & EV_SWITCH_PIN_UP); //Pin use pull-ups, invert to give true on pressed
 	bool elevatorDownPressed = !(PORTK_IN & EV_SWITCH_PIN_DOWN);
 
-	DEBUG_OUT("Entered INT0 ISR\r\n");
-
-
 	if(elevatorDownPressed){
 		DEBUG_OUT("Elevator Switch DOWN was pressed\n\r");
 		ElevatorButtonInISR(false); //Run with parameter false to indicate DOWN

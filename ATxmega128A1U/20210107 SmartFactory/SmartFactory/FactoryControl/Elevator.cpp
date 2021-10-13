@@ -14,7 +14,7 @@ volatile bool elevatorIsUp, elevatorIsDown;	// Boleans om de stand van de lift b
 void MoveElevator(bool direction) {
 	elevatorDirection = direction;
 	if (ConfigElevator(direction)) {
-		DEBUG_OUT("Move Elevator\n");
+		DEBUG_OUT("-----MOVING ELEVATOR------ \n\r");
 		
 		uint16_t motor_id = ELEVATOR_MOTOR_ID; // Motor ID van lift
 		bool Direction = !direction;
@@ -29,7 +29,7 @@ void MoveElevator(bool direction) {
 
 /* blockly functie */
 void StopElevator() {
-	USART_TransmitString(USARTD0, "\n\r -----STOPPING ELEVATOR------ \n\r");
+	DEBUG_OUT("-----STOPPING ELEVATOR------ \n\r");
 	uint16_t motor_id = ELEVATOR_MOTOR_ID;
 	char data[] = { MOTOR_OFF };
 	stepperWriteRegister(MOTOR_ENABLE_REG, data, sizeof(data) / sizeof(*data), motor_id, USARTE1); // Stopt lift motor
@@ -55,8 +55,6 @@ bool ElevatorIsReady() {
 
 
 bool ConfigElevator(bool direction) {
-	ElevatorInit(); // Liftpinnen worden als input ingesteld
-	_delay_ms(30); // Debounce tijd
 
 	bool start = 0;
 
@@ -119,6 +117,7 @@ void ElevatorInit() {
 
 
 	//Set the PINnCTRL of the down switch to PULLUP and falling edge
+	//This is to print the Pinout for the elevator
 	switch (EV_SWITCH_PIN_DOWN)
 	{
 		case PIN0_bm: PORTK_PIN0CTRL = PORT_OPC_PULLUP_gc; PORTK_PIN0CTRL = PORT_ISC_FALLING_gc; USART_TransmitString(USARTD0, "Set PIN0CTRL for DOWN\n\r"); break;
