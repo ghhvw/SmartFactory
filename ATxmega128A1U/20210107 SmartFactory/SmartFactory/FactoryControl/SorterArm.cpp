@@ -15,10 +15,11 @@
 #define DEBUG_OUT(X)
 #endif
 
+uint16_t sorterarmPosition = 0;
+
 // Variabellen voor sorterarm interupts
 bool saDirection; // Richting die de arm op moet gaan, links of rechts
 volatile bool saIsLeft, saIsRight; // Sorterarm is links of rechts van zijn uiterste rijkweidte
-
 
 // Interrupt ISR
 void SorterArmISR(){
@@ -41,9 +42,11 @@ void SorterArmISR(){
 	}
 }
 
+//TO DO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 bool SorterarmIsFinnished(){
 	return 0;
 }
+//TO DO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 bool ConfigSorterArm(){
 	SaSetInput(sa1.switch_pin_left, sa1.switch_pin_right);
@@ -112,27 +115,27 @@ void MoveSorterArm(bool direction)
 }
 
 void MoveSorterArmTo(uint16_t toPosition){
-	bool direction;
-	uint16_t steps;
-	
+	bool direction = 0;
+	uint16_t steps = 0;
+		
 	if (ConfigSorterArm() == 1){
-	
-		if (toPosition <= sa1.position){
-			direction = 1;
-			steps = toPosition - sa1.position;
+		if(toPosition >= sa1.minpos || toPosition <= sa1.maxpos){
+			if (toPosition < sorterarmPosition){
+				direction = 1;
+				steps = toPosition * 200;
+				//steps = toPosition - sa1.position;
+			}
+			else if (toPosition > sorterarmPosition){
+				direction = 0;
+				steps = toPosition * 200;
+				//steps = sa1.position - toPosition;
+			}else{
+				steps = 0;
+			}
+		
+			MoveSorterArmDistance(direction, steps);
+			sorterarmPosition = toPosition;
 		}
-		else if (toPosition >= sa1.position){
-			direction = 0;
-			steps = sa1.position - toPosition;
-		}
-	
-		uint16_t motor_id = SORTER_MOTOR_ID;
-		uint16_t motor_speed = 400;
-	
-		char directiondata[] = { direction };
-		stepperWriteRegister(DIRECTION_REG, directiondata, sizeof(directiondata) / sizeof(*directiondata), motor_id, USARTE1);
-		char data[] = { (uint8_t)(motor_speed >> 8),(uint8_t)motor_speed,(uint8_t)(steps >> 8),(uint8_t)steps,direction,MOTOR_STEP_FULL,MOTOR_ON };
-		stepperWriteRegister(STEPS_PS_HREG, data, sizeof(data) / sizeof(*data), motor_id, USARTE1);
 	}
 }
 

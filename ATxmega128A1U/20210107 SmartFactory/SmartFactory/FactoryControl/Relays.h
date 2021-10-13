@@ -43,7 +43,7 @@
 
 void set_relay(bool value, uint8_t relay)
 {
-	DEBUG_OUT("Setting a relay!");
+//	DEBUG_OUT("Setting a relay!");
 	switch (relay)
 	{	
 		//Use conditional operator to check for SET or CLR for relay:

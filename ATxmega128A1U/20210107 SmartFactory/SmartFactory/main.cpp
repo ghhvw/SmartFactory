@@ -87,7 +87,7 @@ ISR(PORTK_INT1_vect) {
 	bool leftIsPressed = !(PORTK_IN & sa1.switch_pin_left); //Pin use pull-ups, invert to give true on pressed
 	bool rightIsPressed = !(PORTK_IN & sa1.switch_pin_right);
 
-	DEBUG_OUT("Entered INT1 ISR\r\n");
+	//DEBUG_OUT("Entered INT1 ISR\r\n");
 	if(leftIsPressed){
 	 DEBUG_OUT("SorterArm switch LEFT was pressed\n\r");
 	 SorterArmISR();

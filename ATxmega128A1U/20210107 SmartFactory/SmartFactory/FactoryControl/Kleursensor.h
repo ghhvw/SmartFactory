@@ -49,7 +49,7 @@ uint8_t ColourToGreen(char *colour);
 uint8_t ColourToBlue(char *colour);
 char* ValToColour(uint8_t r, uint8_t g, uint8_t b);
 uint8_t RoundColourVal(uint8_t val);
-uint8_t FrequencyToColourVal(uint16_t freq, uint8_t colour);
+void FrequencyToColourVal(uint16_t freq, uint8_t colour);
 
 uint16_t ArrAvg(uint16_t *a, uint8_t size);
 bool CompareStrings(char *c1, char *c2, uint8_t length);
