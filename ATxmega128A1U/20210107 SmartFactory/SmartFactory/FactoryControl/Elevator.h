@@ -13,6 +13,7 @@
 #include "IO_mappings.h"
 #include "UART.h"
 
+#define DEBUG_OUT(X) USART_TransmitString(USARTD0, X)
 
 #ifdef __cplusplus
 extern "C" {

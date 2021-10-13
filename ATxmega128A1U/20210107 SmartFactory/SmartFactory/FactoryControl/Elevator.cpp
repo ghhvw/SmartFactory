@@ -14,9 +14,7 @@ volatile bool elevatorIsUp, elevatorIsDown;	// Boleans om de stand van de lift b
 void MoveElevator(bool direction) {
 	elevatorDirection = direction;
 	if (ConfigElevator(direction)) {
-		//DEBUGGEN of de lift hierin komt
-		//Interrupts voor een bepaalde tijd disablen zodat de lift eerst van de switch af beweegt
-		//als de lift hier niet in komt, configelevator() aanpassen
+		DEBUG_OUT("Move Elevator\n");
 		
 		uint16_t motor_id = ELEVATOR_MOTOR_ID; // Motor ID van lift
 		bool Direction = !direction;
