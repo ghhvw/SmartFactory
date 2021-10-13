@@ -12,12 +12,12 @@ volatile bool elevatorIsUp, elevatorIsDown;	// Boleans om de stand van de lift b
 
 /* blockly functie */
 void MoveElevator(bool direction) {
-	elevatorDirection = direction;
-	if (ConfigElevator(direction)) {
+	elevatorDirection = !direction;//if up is called the elevator moves down, this is fixed using the !
+	if (ConfigElevator(!direction)) {
 		DEBUG_OUT("-----MOVING ELEVATOR------ \n\r");
 		
 		uint16_t motor_id = ELEVATOR_MOTOR_ID; // Motor ID van lift
-		bool Direction = !direction;
+		bool Direction = direction;
 
 		char directiondata[] = { Direction };
 		stepperWriteRegister(DIRECTION_REG, directiondata, sizeof(directiondata) / sizeof(*directiondata), motor_id, USARTE1);
