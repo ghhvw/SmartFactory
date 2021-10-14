@@ -75,9 +75,7 @@ main.d main.o: .././main.cpp ../src/asf.h \
  ../FactoryControl/Elevator.h ../FactoryControl/Stepperdriver.h \
  ../FactoryControl/IO_mappings.h ../FactoryControl/SorterArm.h \
  ../FactoryControl/SharpSensor.h ../FactoryControl/Kleursensor.h \
- ../FactoryControl/pulseIn.h \
- c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\string.h \
- ../FactoryControl/DigitalIO.h
+ ../FactoryControl/pulseIn.h
 
 ../src/asf.h:
 
@@ -266,7 +264,3 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\
 ../FactoryControl/Kleursensor.h:
 
 ../FactoryControl/pulseIn.h:
-
-c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\string.h:
-
-../FactoryControl/DigitalIO.h:

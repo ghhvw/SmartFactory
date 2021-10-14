@@ -20,8 +20,8 @@ extern "C" {
 #endif
 
 	//Elevator pin defines
-	#define EV_SWITCH_PIN_UP DIO2 // Limit Switch for Elevator UP
-	#define EV_SWITCH_PIN_DOWN DIO3 // Limit Switch for Elevator DOWN
+	#define EV_SWITCH_PIN_UP DIO2 // Limit Switch for Elevator DOWN
+	#define EV_SWITCH_PIN_DOWN DIO3 // Limit Switch for Elevator UP
 
 
 

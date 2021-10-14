@@ -69,12 +69,12 @@ ISR(PORTK_INT0_vect) {
 	bool elevatorDownPressed = !(PORTK_IN & EV_SWITCH_PIN_DOWN);
 
 	if(elevatorDownPressed){
-		DEBUG_OUT("Elevator Switch DOWN was pressed\n\r");
+		DEBUG_OUT("Elevator Switch UP was pressed\n\r");
 		ElevatorButtonInISR(false); //Run with parameter false to indicate DOWN
 
 	}
 	if(elevatorUpPressed){
-		DEBUG_OUT("Elevator Switch UP was pressed\n\r");
+		DEBUG_OUT("Elevator Switch DOWN was pressed\n\r");
 		ElevatorButtonInISR(true); //Run with parameter true to indicate UP
 	}
 }
@@ -153,7 +153,8 @@ int main(void)
 	//SaSetInput(sa1.switch_pin_left, sa1.switch_pin_right);
 	//SaSetInterrupt(sa1.switch_pin_left, sa1.switch_pin_right);
 
-
+	initColorSensor();
+	
 	USB_TransmitString("TEST\n"); // Test serial working
 
 	
