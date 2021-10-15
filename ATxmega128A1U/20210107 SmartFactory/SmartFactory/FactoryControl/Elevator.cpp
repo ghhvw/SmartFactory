@@ -7,6 +7,8 @@
 
 #include "Elevator.h"
 
+#define DEBUG_OUT(X) USART_TransmitString(USARTD0, X)
+
 bool elevatorDirection;							// Richting van de lift
 volatile bool elevatorIsUp, elevatorIsDown;	// Boleans om de stand van de lift bij te houden
 
