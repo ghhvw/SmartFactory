@@ -78,6 +78,10 @@ uint8_t FrequencyToColourVal(uint16_t freq, uint8_t color) {
     uint8_t RGBValue = 0;
 	switch (color) {
         //if the frequency is low there is a high color occurance
+		/**
+		  * @brief  color sensor (arduino)
+		  * @reference https://randomnerdtutorials.com/arduino-color-sensor-tcs230-tcs3200/
+		  */
 		case REDCASE: //red
 		    RGBValue = map(freq, MINREDFREQ, MAXREDFREQ, 255, 0);
             break;
