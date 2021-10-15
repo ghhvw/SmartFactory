@@ -43,17 +43,27 @@ uint16_t ReadColourSensor(void){
     uint8_t redColor     = RedGreenBlue[REDCASE];
     uint8_t greenColor   = RedGreenBlue[GREENCASE];
     uint8_t blueColor    = RedGreenBlue[BLUECASE];
-
+	
+	DEBUG_OUT("color = #");
+	USART_Transmit_Number(USARTD0, (uint16_t) redColor);
+	DEBUG_OUT(" ");
+	USART_Transmit_Number(USARTD0, (uint16_t) greenColor);
+	DEBUG_OUT(" ");
+	USART_Transmit_Number(USARTD0, (uint16_t) blueColor);
+	DEBUG_OUT("\n\r");
+	
     if (redColor < blueColor && redColor < greenColor && redColor < 20){ //color is red
-        DEBUG_OUT("color is RED\n\r");
-    }else if (blueColor < redColor && blueColor < greenColor && blueColor>50){  //color is blue
+        DEBUG_OUT("color is ORANGE\n\r");
+		return 4; //4 equals orange in blockly
+    }else if (blueColor < redColor && blueColor < greenColor && greenColor>190){  //color is blue
         DEBUG_OUT("color is BLUE\n\r");
+		return 1; //1 equals blue in blockly
     }else if (greenColor < redColor && greenColor < blueColor){ //color is green
         DEBUG_OUT("color is GREEN\n\r");
+		return 2; //2 equals green in blockly
     }else{
-		DEBUG_OUT("NO color found\n\r");
+		return 0; //0 equals black in blockly
 	}
-	return 0;
 }
 
 /**
@@ -137,7 +147,9 @@ uint16_t calcAverageArray(uint16_t *a, uint8_t size) {
 }
 
 /* blockly functie - functie ter vervanging van werking met char* omdat blockly problemen met kleuren => assembly heeft */
-uint16_t SelectColour(uint16_t i) { return i; }
+uint16_t SelectColour(uint16_t i) { 
+	return i; 
+}
 
 /* blockly functie */
 bool CompareColours(uint16_t c1, uint16_t c2) {
