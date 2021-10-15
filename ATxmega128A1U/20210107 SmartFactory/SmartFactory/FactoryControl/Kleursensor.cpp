@@ -55,7 +55,7 @@ uint16_t ReadColourSensor(void){
     if (redColor < blueColor && redColor < greenColor && redColor < 20){ //color is red
         DEBUG_OUT("color is ORANGE\n\r");
 		return 4; //4 equals orange in blockly
-    }else if (blueColor < redColor && blueColor < greenColor && greenColor>190){  //color is blue
+    }else if (blueColor < redColor && blueColor < greenColor && greenColor > 210){  //color is blue
         DEBUG_OUT("color is BLUE\n\r");
 		return 1; //1 equals blue in blockly
     }else if (greenColor < redColor && greenColor < blueColor){ //color is green
