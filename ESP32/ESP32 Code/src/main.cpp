@@ -1,16 +1,18 @@
-#include <main.h>
-
 /**
  * ===========================================
  * Arexx Engineering - Smart Factory ESP32 Code
  * 
- * 15-7-2021
+ * 4/11/2021
  * 
- * TODO:
- * -Implement Network STA timeout and switch to AP mode
- * -Implement hardware button to switch from AP<->STA mode, instead of only on-website toggle
+ * Author: Yannick de Graaf & 
+ *         Matthijs Oostingh
+ * 
+ * The ESP32 is currently configured as AP, this can be changed if wifi_mode is set STA
  */
 
+#include "main.h"
+
+#define AP_OR_STA WIFI_MODE_AP //this can either be WIFI_MODE_AP or WIFI_MODE_STA
 
 void setup()
 {
@@ -19,19 +21,12 @@ void setup()
     disableCore1WDT();
     disableLoopWDT();
 
-    initI2C();  //set pins for I2C
-    initDebug();
+    initCommunication();
+    initWifi();
+    initHTML();
+    initServer();
 
-    //Setup Preferences (Non volatile Storage)
-    preferences.begin("smartFactory", false);
-    
-    setWifiMode(CHANGE_WIFI_MODE);  //choose between AP and STA (Can be changed in main.h)
-    checkStatus(); 
-
-    //Upload new program to Atmega
-    server.on("/edit", HTTP_POST, returnOK, HandleSDUpload);
-
-    switchWifi();//possibility to switch between AP and STA
+    switchWifiMode();
 
     //Default handler:
     server.onNotFound(HandleDefault);
@@ -40,17 +35,11 @@ void setup()
     server.begin();
     DBG_OUT.println("HTTP server started");
 
-    initSDCard();   //keep checking on SD card until it's initialized
-
-    //When debugging lauch the debug functions:
-    #if LOG_LOCAL_LEVEL > 3
-        xTaskCreatePinnedToCore(heapTask, "heap debug", 2048, NULL, 1, NULL, 1);
-    #endif
+    initSDCard();
 }
 
 void loop(void)
 {
-
     delay(1000);
 
     if (!getATmegaStatus() && !getTransmissionRunning())
@@ -58,47 +47,6 @@ void loop(void)
         setATmegaStatus(true);
         //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
     }
-    
-    /*
-    if (!getATmegaStatus())
-    {
-        while (getTransmissionRunning())
-            ;
-        delay(500); //voorkom vastlopen i2c bus na upload
-        requestATmegaStatus();
-        //start-feedback wordt bij de eerstvolgende HTTP_GET geupdated in de browser
-    }
-    */
-}
-
-void initI2C(void)
-{
-    // Enable I2C
-    pinMode(RESET_PIN, OUTPUT);
-    pinMode(SD_CS, OUTPUT);
-    digitalWrite(RESET_PIN, HIGH);
-    Wire.begin(SDA_PIN, SCL_PIN, 2000);
-}
-
-void initDebug(void)
-{
-    esp_log_level_set("*", ESP_LOG_DEBUG);
-    DBG_OUT.begin(BAUD_RATE);
-    DBG_OUT.setDebugOutput(true);
-}
-
-void initSDCard(void)
-{
-    //Ïnitialise the SPI bus for the SD card:
-    spiSD.begin(SD_SCLK, SD_MISO, SD_MOSI);
-
-    // Initialise the SD card:
-    while (!SD.begin(SD_CS, spiSD, spi_speed, "/sd", max_files))
-    {
-        DBG_OUT.println("SD initiatization failed. Retrying.");
-        delay(250);
-    }
-    DBG_OUT.println("SD Initialized.");
 }
 
 void heapTask(void *args)
@@ -111,10 +59,28 @@ void heapTask(void *args)
     }
 }
 
-void setWifiMode(wifi_mode_t wifi_mode)
+void initCommunication(void)
 {
+    // Enable I2C
+    pinMode(RESET_PIN, OUTPUT);
+    pinMode(SD_CS, OUTPUT);
+    digitalWrite(RESET_PIN, HIGH);
+    Wire.begin(SDA_PIN, SCL_PIN, 2000);
+
+    // Debugging setup
+    esp_log_level_set("*", ESP_LOG_DEBUG);
+    DBG_OUT.begin(BAUD_RATE);
+    DBG_OUT.setDebugOutput(true);
+}
+
+void initWifi(void)
+{
+    //Setup Preferences (Non volatile Storage)
+    preferences.begin("smartFactory", false);
     //read NVS, Set default value to be AP:
     // wifi_mode_t wifi_mode = (wifi_mode_t)preferences.getUInt("wifimode", (uint32_t)WIFI_MODE_AP);
+    //Always use AP for now:
+    wifi_mode_t wifi_mode = AP_OR_STA;
 
     // Wifi manager
     AsyncWiFiManager wifiManager(&server, &dns);
@@ -126,14 +92,17 @@ void setWifiMode(wifi_mode_t wifi_mode)
     else if (wifi_mode == WIFI_MODE_AP)
     {
         ESP_LOGI("WiFi-Mode", "Starting in Wifi AP mode");
-        WiFi.softAP("Arexx Factory AP");
+        WiFi.softAP("Arexx Factory");
     }
     else
     {
         ESP_LOGI("WiFi-Mode", "Invalid Wi-Fi mode read! Writing AP mode in NVS");
         preferences.putUInt("wifimode", (uint32_t)WIFI_MODE_AP);
     }
+}
 
+void initHTML(void)
+{
     // Custom DNS settings
     if (MDNS.begin(host))
     {
@@ -145,7 +114,7 @@ void setWifiMode(wifi_mode_t wifi_mode)
     }
 }
 
-void checkStatus(void)
+void initServer(void)
 {
     //verzend status naar browser (connected/disconnected)
     server.on("/status", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -201,10 +170,15 @@ void checkStatus(void)
                   }
                   request->send(200, "text/plain", String(reply).c_str());
               });
+
+    //Upload new program to Atmega
+    server.on("/edit", HTTP_POST, returnOK, HandleSDUpload);
 }
 
-void switchWifi(void)
+void switchWifiMode(void)
 {
+    //TODO: Doesnt work yet
+
     //Switch between AP/STA mode:
     server.on("/switchWiFi", HTTP_POST, [](AsyncWebServerRequest *request)
               {
@@ -225,4 +199,23 @@ void switchWifi(void)
                       esp_restart();
                   }
               });
+}
+
+void initSDCard(void)
+{
+    //Ïnitialise the SPI bus for the SD card:
+    spiSD.begin(SD_SCLK, SD_MISO, SD_MOSI);
+
+    // Initialise the SD card:
+    while (!SD.begin(SD_CS, spiSD, spi_speed, "/sd", max_files))
+    {
+        DBG_OUT.println("SD initiatization failed. Retrying.");
+        delay(250);
+    }
+    DBG_OUT.println("SD Initialized.");
+
+//When debugging lauch the debug functions:
+#if LOG_LOCAL_LEVEL > 3
+    xTaskCreatePinnedToCore(heapTask, "heap debug", 2048, NULL, 1, NULL, 1);
+#endif
 }

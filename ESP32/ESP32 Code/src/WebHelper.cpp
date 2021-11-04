@@ -16,7 +16,8 @@ bool LoadFromSdCard(AsyncWebServerRequest *request)
     String path = request->url();
     String dataType = "text/plain";
 
-    if (path.endsWith("/")){
+    if (path.endsWith("/"))
+    {
         path += "index.html";
     }
 
@@ -74,17 +75,18 @@ bool LoadFromSdCard(AsyncWebServerRequest *request)
 
     // I'm not happy with this, it needs rework
     request->_tempObject = (void *)fileObj;
-    request->send(dataType, fileObj->dataFile.size(), [request](uint8_t *buffer, size_t maxlen, size_t index) -> size_t {
-        fileBlk *fileObj = (fileBlk *)request->_tempObject;
-        size_t thisSize = fileObj->dataFile.read(buffer, maxlen);
-        if ((index + thisSize) >= fileObj->dataFile.size())
-        {
-            fileObj->dataFile.close();
-            request->_tempObject = NULL;
-            delete fileObj;
-        }
-        return thisSize;
-    });
+    request->send(dataType, fileObj->dataFile.size(), [request](uint8_t *buffer, size_t maxlen, size_t index) -> size_t
+                  {
+                      fileBlk *fileObj = (fileBlk *)request->_tempObject;
+                      size_t thisSize = fileObj->dataFile.read(buffer, maxlen);
+                      if ((index + thisSize) >= fileObj->dataFile.size())
+                      {
+                          fileObj->dataFile.close();
+                          request->_tempObject = NULL;
+                          delete fileObj;
+                      }
+                      return thisSize;
+                  });
     return true;
 }
 

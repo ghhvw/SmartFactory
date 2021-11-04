@@ -1,3 +1,6 @@
+#ifndef __MAIN_H__
+#define __MAIN_H__
+
 #include <Constants.h>
 
 // Global libraries
@@ -14,23 +17,6 @@
 // Custom files
 #include <WebHelper.h>
 
-//Debug level:
-#define LOG_LOCAL_LEVEL 4
-
-const char *host = "arexx";
-const uint32_t spi_speed = 4000000;
-const uint8_t max_files = 20; //vergroot dit wanneer je "VFSFileImpl(): fopen(/...) failed" errors krijgt en de webpage slecht laadt
-
-SPIClass spiSD(HSPI);
-
-AsyncWebServer server(80);
-DNSServer dns;
-
-Preferences preferences; //for using non-volatile storage on ESP32
-
-/**
- * PIN DEFINITIONS
- */
 //I2C pins:
 #define RESET_PIN 27
 #define SDA_PIN 16
@@ -45,17 +31,28 @@ Preferences preferences; //for using non-volatile storage on ESP32
 #define DBG_OUT Serial
 #define BAUD_RATE 115200
 
-#define HEAP_DEBUG_DELAY 30000
+//constant variables
+const char *host = "arexx";
+const uint32_t spi_speed = 4000000; //DO NOT TOUCH
+const uint8_t max_files = 20;       //vergroot dit wanneer je "VFSFileImpl(): fopen(/...) failed" errors krijgt en de webpage slecht laadt
 
-#define CHANGE_WIFI_MODE WIFI_MODE_STA
+SPIClass spiSD(HSPI);
+
+AsyncWebServer server(80);
+DNSServer dns;
+
+Preferences preferences; //for using non-volatile storage on ESP32
 
 //Function prototypes:
+#define HEAP_DEBUG_DELAY 30000
 void heapTask(void *args); //For debugging print free heap memory
 
-void initI2C(void);
-void initDebug(void);
+void initCommunication(void);
+void initWifi(void);
+void initHTML(void);
+void initServer(void);
 void initSDCard(void);
-void setWifiMode(wifi_mode_t wifi_mode);
-void checkStatus(void);
-void switchWifi(void);
 
+void switchWifiMode(void);
+
+#endif //end if __MAIN_H__
