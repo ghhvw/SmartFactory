@@ -5,7 +5,7 @@
  * 4/11/2021
  * 
  * Author: Yannick de Graaf & 
- *         Matthijs Oostingh
+ *         Matthijs Oostingh.
  * 
  * The ESP32 is currently configured as AP, this can be changed if wifi_mode is set STA
  */
