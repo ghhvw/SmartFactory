@@ -15,9 +15,6 @@
 
 char colour[] = {'#','0','0','0','0','0','0'};
 
-bool colorIsRed;
-bool colorIsGreen;
-bool colorIsBlue;
 
 /* blockly functie - functie ter vervanging van werking met char* omdat blockly problemen met kleuren => assembly heeft */
 uint16_t SelectColour(uint16_t i) { return i; }
@@ -50,35 +47,16 @@ char* ReadColourSensor() {
 			buf[i] = ReadOneColour(j);
 		}
 		//frequency mappen naar RGB value defined in blockly
-//		colourVal[j] = RoundColourVal(FrequencyToColourVal(ArrAvg(buf, READVALTIMES), j));
-		//colourVal[j] = FrequencyToColourVal(ArrAvg(buf, READVALTIMES), j);
-		FrequencyToColourVal(ArrAvg(buf, READVALTIMES), j);
+		colourVal[j] = RoundColourVal(FrequencyToColourVal(ArrAvg(buf, READVALTIMES), j));
+//		colourVal[j] = FrequencyToColourVal(ArrAvg(buf, READVALTIMES), j);
 	}
-		if(colorIsRed)
-		{
-			DEBUG_OUT("red\n\r");
-		}
-		if(colorIsGreen)
-		{
-			DEBUG_OUT("green\n\r");
-		}
-		if(colorIsBlue)
-		{
-			DEBUG_OUT("blue\n\r");
-		}
-		colorIsBlue = false;
-		colorIsGreen = false;
-		colorIsRed = false;
 	
 	#ifdef COLOUR_AS_INDEX
-	//DEBUG_OUT("Color: ");
-	//DEBUG_OUT(ValToColour(colourVal[0], colourVal[1], colourVal[2]));
-	//DEBUG_OUT("\n\r");
-	return (uint16_t) ColourToIndex(ValToColour(colourVal[0], colourVal[1], colourVal[2]));
-	#else
 	DEBUG_OUT("Color: ");
 	DEBUG_OUT(ValToColour(colourVal[0], colourVal[1], colourVal[2]));
-	DEBUG_OUT("\n\r");
+	DEBUG_OUT("\n");
+	return (uint16_t) ColourToIndex(ValToColour(colourVal[0], colourVal[1], colourVal[2]));
+	#else
 	return ValToColour(colourVal[0], colourVal[1], colourVal[2]);
 	#endif
 }
@@ -190,23 +168,22 @@ uint8_t RoundColourVal(uint8_t val) {
 
 
 /* map the frequency from sensor to RGB value 0...255 */
-void FrequencyToColourVal(uint16_t freq, uint8_t colour) {
-	//if (0 == freq) { return 0; } //slechte frequentie read niet als 255 returnen
-	//long val = 0;
+uint8_t FrequencyToColourVal(uint16_t freq, uint8_t colour) {
+	if (0 == freq) { return 0; } //slechte frequentie read niet als 255 returnen
+	long val = 0;
 	switch (colour) {
 		case 0: //red
-		//val = map(freq, MINREDFREQ, MAXREDFREQ, 0, 255);
-		colorIsRed = (bool) map(freq, MINREDFREQ, MAXREDFREQ, 1, 0);
+		val = map(freq, MINREDFREQ, MAXREDFREQ, 0, 255);
+		
 		case 1: //green
-		//val = map(freq, MINGREENFREQ, MAXGREENFREQ, 0, 255);
-		colorIsGreen = (bool) map(freq, MINGREENFREQ, MAXGREENFREQ, 1, 0);
+		val = map(freq, MINGREENFREQ, MAXGREENFREQ, 0, 255);
+		
 		case 2: //blue
-		//val = map(freq, MINBLUEFREQ, MAXBLUEFREQ, 0, 255);
-		colorIsBlue = (bool) map(freq, MINBLUEFREQ, MAXBLUEFREQ, 1, 0);
+		val = map(freq, MINBLUEFREQ, MAXBLUEFREQ, 0, 255);
 	}
-	//if (val<0) { val = 0; }
-	//if (val>255) { val = 255; }
-	//return (uint8_t) val;
+	if (val<0) { val = 0; }
+	if (val>255) { val = 255; }
+	return (uint8_t) val;
 }
 
 
