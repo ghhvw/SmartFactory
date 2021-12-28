@@ -2,6 +2,7 @@ html {
     
 }
 
+
 body {
 	background-color: #272727;
 	color: #f90302;
@@ -47,10 +48,10 @@ body {
 }
 
 #help_button{
-	content: url('https://api.iconify.design/fa-info.svg?height=14&inline=true');
+	content: url('icons/fa-info.svg?height=14&inline=true');
 	vertical-align: -0.143em;
 
-	//background: url('https://api.iconify.design/fa-info.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa-info.svg') no-repeat center center / contain;
 }
 
 .help_button{
@@ -61,20 +62,20 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 0;
-	background: url('https://api.iconify.design/fa-info.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_info.svg') no-repeat center center / contain;
 }
 
 .help_button.selected{
-	background: url('https://api.iconify.design/fa:info.svg?color=%23006622') no-repeat center center / contain;
+	background: url('icons/fa_info.svg') no-repeat center center / contain;
 }
 
 .help_button:hover{
 	color: white;
-	background: url('https://api.iconify.design/fa:info.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_info.svg') no-repeat center center / contain;
 }
 
 #languageMenu{
-	content: url('https://api.iconify.design/fa:globe.svg?color=%230000cc&height=14&inline=true');
+	content: url('icons/fa_globe.svg');
 	vertical-align: -0.143em;
 }
 
@@ -86,20 +87,20 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 0;
-	background: url('https://api.iconify.design/fa:globe.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_globe.svg') no-repeat center center / contain;
 }
 
 .languageMenu.selected{
-	background: url('https://api.iconify.design/fa:globe.svg?color=%23006622') no-repeat center center / contain;
+	background: url('icons/fa_globe.svg') no-repeat center center / contain;
 }
 
 .languageMenu:hover{
 	color: #ffffff;
-	background: url('https://api.iconify.design/fa:globe.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_globe.svg') no-repeat center center / contain;
 }
 
 #download_button{
-	content: url('https://api.iconify.design/fa:floppy-o.svg?color=%230000cc&height=14&inline=true');
+	content: url('icons/fa_floppy-o.svg');
 	vertical-align: -0.143em;
 }
 
@@ -111,20 +112,20 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 0;
-	background: url('https://api.iconify.design/fa:floppy-o.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_floppy-o.svg') no-repeat center center / contain;
 }
 
 .download_button.selected{
-	background: url('https://api.iconify.design/fa:floppy-o.svg?color=%23006622') no-repeat center center / contain;
+	background: url('icons/fa_floppy-o.svg') no-repeat center center / contain;
 }
 
 .download_button:hover{
 	color: white;
-	background: url('https://api.iconify.design/fa:floppy-o.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_floppy-o.svg') no-repeat center center / contain;
 }
 
 #load_button{
-	content: url('https://api.iconify.design/fa:arrow-circle-up.svg?color=%230000cc&height=14&inline=true');
+	content: url('icons/fa_arrow-circle-up.svg');
 	vertical-align: -0.143em;
 
 }
@@ -138,20 +139,20 @@ body {
 	padding-right: 15px;
 	border: 0;
 
-	background: url('https://api.iconify.design/fa:upload.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_upload.svg') no-repeat center center / contain;
 }
 
 .load_button.selected{
-	background: url('https://api.iconify.design/fa:upload.svg?color=%23006622') no-repeat center center / contain;
+	background: url('icons/fa_upload.svg') no-repeat center center / contain;
 }
 
 .load_button:hover{
 	color: white;
-	background: url('https://api.iconify.design/fa:upload.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_upload.svg') no-repeat center center / contain;
 }
 
 #build_button{
-	content: url('https://api.iconify.design/fa:wrench.svg?color=%230000cc&height=14&inline=true');
+	content: url('icons/fa_wrench.svg');
 	vertical-align: -0.143em;
 
 }
@@ -164,20 +165,20 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 0;
-	background: url('https://api.iconify.design/fa:wrench.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_wrench.svg') no-repeat center center / contain;
 }
 
 .build_button.selected{
-	background: url('https://api.iconify.design/fa:wrench.svg?color=%23006622') no-repeat center center / contain;
+	background: url('icons/fa_wrench.svg') no-repeat center center / contain;
 }
 
 .build_button:hover{
 	color: white;
-	background: url('https://api.iconify.design/fa:wrench.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_wrench.svg') no-repeat center center / contain;
 }
 
 #stop_button{
-	content: url('https://api.iconify.design/fa:play.svg?color=%230000cc&height=14&inline=true');
+	content: url('icons/fa_play.svg');
 	vertical-align: -0.143em;
 }
 
@@ -189,20 +190,20 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 0;
-	background: url('https://api.iconify.design/fa:stop.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_stop.svg') no-repeat center center / contain;
 }
 
 .stop_button.selected{
-	background: url('https://api.iconify.design/fa:stop.svg?color=%23006622') no-repeat center center / contain;
+	background: url('icons/fa_stop.svg') no-repeat center center / contain;
 }
 
 .stop_button:hover{
 	color: white;
-	background: url('https://api.iconify.design/fa:stop.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_stop.svg') no-repeat center center / contain;
 }
 
 #start_button{
-	content: url('https://api.iconify.design/fa:play.svg?color=%230000cc&height=14&inline=true');
+	content: url('icons/fa_play.svg');
 	vertical-align: -0.143em;
 
 }
@@ -216,20 +217,20 @@ body {
 	padding-right: 15px;
 	border: 0;
 
-	background: url('https://api.iconify.design/fa:play.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_play.svg') no-repeat center center / contain;
 }
 
 .start_button.selected{
-	background: url('https://api.iconify.design/fa:play.svg?color=%23006622') no-repeat center center / contain;
+	background: url('icons/fa_play.svg') no-repeat center center / contain;
 }
 
 .start_button:hover{
 	color: white;
-	background: url('https://api.iconify.design/fa:play.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_play.svg') no-repeat center center / contain;
 }
 
 #test_button{
-	content: url('https://api.iconify.design/fa:wrench.svg?color=%230000cc&height=14&inline=true');
+	content: url('icons/fa_wrench.svg');
 	vertical-align: -0.143em;
 
 }
@@ -242,20 +243,20 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 0;
-	background: url('https://api.iconify.design/fa:cog.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_cog.svg') no-repeat center center / contain;
 }
 
 .test_button.selected{
-	background: url('https://api.iconify.design/fa:cog.svg?color=%23006622') no-repeat center center / contain;
+	background: url('icons/fa_cog.svg') no-repeat center center / contain;
 }
 
 .test_button:hover{
 	color: white;
-	background: url('https://api.iconify.design/fa:cog.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_cog.svg') no-repeat center center / contain;
 }
 
 #layout_button{
-	content: url('https://api.iconify.design/fa:wrench.svg?color=%230000cc&height=14&inline=true');
+	content: url('icons/fa_wrench.svg');
 	vertical-align: -0.143em;
 }
 
@@ -267,15 +268,15 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 0;
-	background: url('https://api.iconify.design/fa:map-o.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_map-o.svg') no-repeat center center / contain;
 }
 
 .layout_button.selected{
-	background: url('https://api.iconify.design/fa:map-o.svg?color=%23006622') no-repeat center center / contain;
+	background: url('icons/fa_map-o.svg') no-repeat center center / contain;
 }
 
 .layout_button:hover{
-	background: url('https://api.iconify.design/fa:map-o.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_map-o.svg') no-repeat center center / contain;
 }
 
 .status{
@@ -285,11 +286,11 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 0;
-	background: url('https://api.iconify.design/fa:wifi.svg?color=%2366ff33') no-repeat center center / contain;
+	background: url('icons/fa_wifi.svg') no-repeat center center / contain;
 }
 
 .status_no_wifi{
-	background: url('https://api.iconify.design/fa:wifi.svg?color=%23ff0000') no-repeat center center / contain;
+	background: url('icons/fa_wifi.svg') no-repeat center center / contain;
 }
 
 .close_button{
@@ -300,11 +301,11 @@ body {
 	padding-left: 15px;
 	padding-right: 15px;
 	border: 0;
-	background: url('https://api.iconify.design/fa:angle-double-right.svg?color=%230000cc') no-repeat center center / contain;
+	background: url('icons/fa_angle-double-right.svg') no-repeat center center / contain;
 }
 
 .close_button:hover{
-	background: url('https://api.iconify.design/fa:angle-double-right.svg?color=%234d4dff') no-repeat center center / contain;
+	background: url('icons/fa_angle-double-right.svg') no-repeat center center / contain;
 }
 
 #band_1_button{
