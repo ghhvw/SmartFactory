@@ -115,7 +115,16 @@ void HandleDefault(AsyncWebServerRequest *request)
     request->send(404, "text/plain", message);
 }
 
-void HandleSDUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final)
-{
-    programATmega(data, len);
-}
+//------------------------------------------------------------------------------------------------------------------------
+// Onderstaande functie wordt bij grotere blocky programma's meerdere malen aangeroepen.
+// Het argument 'final' is true bij laatst ontvangen ethernet pakket.
+//------------------------------------------------------------------------------------------------------------------------
+//============================================================
+//  HANDLE UPLOAD REQUEST (aangepast, hvw202201272008)
+//============================================================
+void HandleSDUpload(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
+
+    //zend de blockly naar atmega instructies geconverteerde data naar de atmega uC via I2C
+    programATmega(data, len, final);
+
+}//HandleSDUpload
