@@ -8,6 +8,8 @@
  *         Matthijs Oostingh
  * 
  * The ESP32 is currently configured as AP, this can be changed if wifi_mode is set STA
+ * 
+ * This is now hosted on Github
  */
 
 #include "main.h"
