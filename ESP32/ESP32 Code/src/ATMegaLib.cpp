@@ -5,7 +5,7 @@
 
 bool transmissionRunning = false;
 uint8_t ATmegaStatus = 1; //wordt 0 vóór transmission
-
+bool    FbFirstReceivedEthernetPacket = true;
 
 void resetATmega() {
     // Reset processor

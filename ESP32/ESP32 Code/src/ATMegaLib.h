@@ -10,7 +10,7 @@
 
 // Methods
 void resetATmega();
-void programATmega(uint8_t *data, size_t length);
+void programATmega(uint8_t *data, size_t length, bool final);
 uint8_t getATmegaStatus();
 void setATmegaStatus(uint8_t i);
 bool getTransmissionRunning();
